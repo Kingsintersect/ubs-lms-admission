@@ -8,7 +8,6 @@ import Typewriter from "@/components/TypeWritter";
 import { Button } from "@/components/ui/button";
 
 const navigation = {
-   applicationFormUrl: `${baseUrl}/dashboard/student/complete-application`,
    acceptanceFeeUrl: `${baseUrl}/dashboard/student/acceptance`,
    tuitionFeeUrl: `${baseUrl}/dashboard/student/tuition`,
 }
@@ -26,10 +25,7 @@ const StudentBanner = ({ student }: { student: StudentType }) => {
    useEffect(() => {
       if (!student) return;
 
-      if (student.is_applied === 0) {
-         setGoto(navigation.applicationFormUrl);
-         return;
-      } else if (student.acceptance_fee_payment_status === 0) {
+      if (student.acceptance_fee_payment_status === 0) {
          setGoto(navigation.acceptanceFeeUrl);
          return;
       } else if (student.tuition_payment_status === 0) {

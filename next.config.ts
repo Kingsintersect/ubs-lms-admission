@@ -8,8 +8,11 @@ const nextConfig: NextConfig = {
 		ignoreDuringBuilds: true,
 	},
 	images: {
-		domains: ["res.cloudinary.com", "another-domain.com"],
 		remotePatterns: [
+			{
+				protocol: "http",
+				hostname: "localhost",
+			},
 			{
 				protocol: "https",
 				hostname: "res.cloudinary.com",
@@ -21,8 +24,8 @@ const nextConfig: NextConfig = {
 		removeConsole:
 			process.env.NODE_ENV === "production"
 				? {
-						exclude: ["error", "warn"],
-				  }
+					exclude: ["error", "warn"],
+				}
 				: false,
 	},
 	async headers() {

@@ -158,18 +158,6 @@ export const StudentNavMain: SidebarNavConfig = {
 			display: true,
 		},
 		{
-			title: "PROCESS ADMISSION",
-			url: "#",
-			icon: GraduationCap,
-			items: [
-				{
-					title: "Application Form",
-					url: "/dashboard/student/complete-application",
-				},
-			],
-			display: true,
-		},
-		{
 			title: "PAYMENTS",
 			url: "#",
 			icon: DollarSign,

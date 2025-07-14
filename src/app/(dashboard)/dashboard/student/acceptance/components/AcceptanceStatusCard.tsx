@@ -69,7 +69,7 @@ const AcceptanceStatusCard = ({ student }: { student: StudentType }) => {
 									</div>
 									<h3 className="text-xl font-medium text-red-700 dark:text-red-300 mb-2">Application Yet To Be completed...</h3>
 									<Button variant={"destructive"} asChild className='animate-bounce'>
-										<Link href={`${baseUrl}/dashboard/student/complete-application`} className='text-white'>
+										<Link href={`${baseUrl}/admission/form`} className='text-white'>
 											COMPLETE YOUR APPLICATION
 										</Link>
 									</Button>

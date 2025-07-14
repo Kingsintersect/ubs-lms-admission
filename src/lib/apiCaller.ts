@@ -1,3 +1,4 @@
+import { remoteApiUrl } from "@/config";
 import { ApiResponse } from "@/types/generic.types";
 import axios, { Method, AxiosRequestConfig, AxiosError } from "axios";
 
@@ -9,32 +10,53 @@ type IParam = {
 	throwError?: boolean;
 };
 
-export const apiCaller = async <T>({
+
+type FetchMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+interface FetchOptions<T> {
+	url: string;
+	method?: FetchMethod;
+	data?: T;
+	accessToken?: string;
+}
+export const apiCall = async <TRequest = unknown, TResponse = unknown>({
 	url,
-	method,
+	method = "GET",
 	data,
-	headers,
-	throwError,
-}: IParam): Promise<T> => {
+	accessToken,
+}: FetchOptions<TRequest>): Promise<TResponse | null> => {
+	const isFormData = typeof FormData !== "undefined" && data instanceof FormData;
+
+	const headers: HeadersInit = {};
+	if (!isFormData) {
+		headers["Content-Type"] = "application/json";
+	}
+	if (accessToken) {
+		headers["Authorization"] = `Bearer ${accessToken}`;
+	}
+
 	try {
-		const res = await axios<T>({
-			url,
+		const response = await fetch(`${remoteApiUrl}${url}`, {
 			method,
-			data,
 			headers,
+			body: method !== "GET"
+				? isFormData
+					? data as FormData
+					: JSON.stringify(data)
+				: undefined,
 		});
-		return res.data;
-	} catch (error: any) {
-		if (!throwError) return error.response.data;
-		const err = error as AxiosError;
-		throw {
-			statusCode: err.response?.status,
-			...(typeof err.response?.data === "object"
-				? err.response.data
-				: { message: err.message }),
-		};
+
+		const contentType = response.headers.get("content-type");
+		if (contentType && contentType.includes("application/json")) {
+			return await response.json();
+		} else {
+			return null;
+		}
+	} catch (err) {
+		console.error("NETWORK ERROR:", err);
+		return null;
 	}
 };
+
 
 export const apiCallerBeta = async <T>({
 	url,
