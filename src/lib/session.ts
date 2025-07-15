@@ -163,3 +163,99 @@ export async function deleteSession() {
 	});
 	cookieStore.delete("session");
 }
+
+export async function updateSession<T = any>(
+	key: string,
+	updates: Partial<T> | T
+): Promise<void> {
+	try {
+		const allSession = await getFullSession();
+
+		if (!allSession) {
+			console.error('No session found to update');
+			return;
+		}
+
+		const currentValue = allSession[key];
+
+		// Automatic merge strategy
+		if (currentValue === undefined || currentValue === null) {
+			allSession[key] = updates;
+		} else if (typeof updates === 'object' && updates !== null && !Array.isArray(updates) &&
+			typeof currentValue === 'object' && currentValue !== null && !Array.isArray(currentValue)) {
+			// Deep merge objects
+			allSession[key] = {
+				...currentValue,
+				...updates,
+				...Object.entries(updates).reduce((acc, [nestedKey, nestedValue]) => {
+					if (typeof nestedValue === 'object' && nestedValue !== null && !Array.isArray(nestedValue) &&
+						currentValue[nestedKey] && typeof currentValue[nestedKey] === 'object' && !Array.isArray(currentValue[nestedKey])) {
+						acc[nestedKey] = {
+							...currentValue[nestedKey],
+							...nestedValue
+						};
+					}
+					return acc;
+				}, {} as Record<string, any>)
+			};
+		} else {
+			// Replace non-object values
+			allSession[key] = updates;
+		}
+
+		await saveSession(allSession);
+	} catch (error) {
+		console.error('Failed to update session:', error);
+		throw new Error('Session update failed');
+	}
+}
+
+// Helper function to save the full session (implementation depends on your storage)
+/**
+ * Saves the full session data by encrypting and setting it as a cookie
+ * @param sessionData The complete session data to be saved
+ * @param duration Optional duration string to override current expiration (default: preserve existing)
+ */
+export async function saveSession(
+	sessionData: any,
+	duration?: string
+): Promise<void> {
+	try {
+		// Preserve existing expiration if no duration is provided
+		let expiresAt = sessionData.expiresAt || sessionData.exp;
+		let durationToUse = "1h"; // Default fallback
+
+		if (duration) {
+			// If new duration is provided, calculate new expiration
+			expiresAt = getExpiryDuration(duration, 1);
+			durationToUse = duration;
+		} else if (expiresAt) {
+			// If no duration provided but we have existing expiration, calculate duration string
+			const remainingSeconds = expiresAt - Math.floor(Date.now() / 1000);
+			durationToUse = `${remainingSeconds}s`;
+		}
+
+		// Prepare session data with expiration
+		const sessionDataWithExpiry = {
+			...sessionData,
+			expiresAt,
+			exp: expiresAt,
+		};
+
+		// Encrypt the session data
+		const encryptedSession = await encrypt(sessionDataWithExpiry, durationToUse);
+
+		// Set the cookie
+		const cookieStore = await cookies();
+		cookieStore.set("ubs_session", encryptedSession, {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === 'production',
+			// expires: new Date(expiresAt * 1000),
+			sameSite: "lax",
+			path: "/",
+		});
+	} catch (error) {
+		console.error("Failed to save session:", error);
+		throw new Error("Session save failed");
+	}
+}

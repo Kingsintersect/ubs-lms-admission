@@ -1,6 +1,6 @@
 import { remoteApiUrl } from "@/config";
 import { apiCallerBeta } from "@/lib/apiCaller";
-import { ObjectType } from "@/types/generic.types";
+import { FormObjectPayloaddType, ObjectType } from "@/types/generic.types";
 
 export const applicationPurchase = async (studentData: ObjectType) => {
 	const response = (await apiCallerBeta({
@@ -28,7 +28,7 @@ export const accessAdmissionFormRequest = async (data: ObjectType) => {
 	return response;
 };
 
-export const UploadPassport = async (formData: ObjectType) => {
+export const UploadPassport = async (formData: FormObjectPayloaddType) => {
 	const response = (await apiCallerBeta({
 		url: `${remoteApiUrl}/application/upload-passport`,
 		method: "POST",

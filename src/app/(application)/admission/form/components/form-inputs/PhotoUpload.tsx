@@ -1,22 +1,40 @@
 "use client";
 
+import { UploadPassport } from "@/app/actions/student";
 import { XButton } from "@/components/XButton";
+import { notify } from "@/contexts/ToastProvider";
 import { AlertCircle, Camera, Upload } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
 export const PhotoUpload = ({
     onFileChange,
-    error
+    error,
+    setValue,
 }: {
     onFileChange: (file: File | null) => void;
     error?: string;
+    setValue
 }) => {
     const [preview, setPreview] = useState<string | null>(null);
     const [dragActive, setDragActive] = useState(false);
 
+    const savePassportPhotograph = async (file: File) => {
+        const { success, error } = await UploadPassport({ ["passport"]: file });
+        if (success) {
+            notify({ message: success.message, variant: "success", timeout: 5000 });
+            setValue("passport", success.image_url);
+            return true;
+        } else {
+            console.error("Upload failed:", error);
+            notify({ message: 'Document Upload Failed. Try Again', variant: "error", timeout: 5000 });
+            return false;
+        }
+    }
+
     const handleFileChange = (file: File | null) => {
         if (file) {
+            if (!savePassportPhotograph(file)) return
             const reader = new FileReader();
             reader.onloadend = () => {
                 setPreview(reader.result as string);

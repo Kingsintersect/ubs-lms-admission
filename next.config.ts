@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
 	/* config options here */
+	experimental: {
+		serverActions: {
+			bodySizeLimit: '10mb', //increasing the body size limit for server actions
+		},
+	},
 	eslint: {
 		// Warning: This allows production builds to successfully complete even if
 		// your project has ESLint errors.

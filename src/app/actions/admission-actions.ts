@@ -34,15 +34,19 @@ export const submitAdmissionForm = async (data: AdmissionFormData, access_token:
     formData.append("hometown_address", data.hometown_address);
     formData.append("contact_address", data.contact_address);
     formData.append("religion", data.religion);
+    formData.append("awaiting_result", data.awaiting_result ? "1" : "0");
 
     // Append images
     (data.images ?? []).forEach((file) => {
-        formData.append("image_url[]", file);
+        formData.append("images[]", file);
     });
 
     // Passport photo
     if (data.passportPhoto) {
         formData.append("passportPhoto", data.passportPhoto);
+    }
+    if (data.passport) {
+        formData.append("passport", data.passport);
     }
     const res = await fetch(`${remoteApiUrl}/application/application-form`, {
         method: "POST",
@@ -62,7 +66,7 @@ export const submitAdmissionForm = async (data: AdmissionFormData, access_token:
 
     return res.json();
 
-    // // Simulate API call
+    // Simulate API call
     // await new Promise(resolve => setTimeout(resolve, 2000));
     // console.log('data', data)
     // // Simulate random success/failure for demo

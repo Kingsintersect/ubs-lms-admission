@@ -10,23 +10,35 @@ import { z } from 'zod';
 import { cn } from '@/lib/utils';
 import { InputFormField } from '@/components/ui/inputs/FormFields';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 
 type SigninFormData = z.infer<typeof SigninSchema>;
 
 export default function AuthPage() {
+    const searchParams = useSearchParams();
+    const referenceNumber = searchParams.get('transRef') || '';
     const { studentSignin, loading } = useAuth();
     // const { mutate, isPending } = useSignInMutation();
     const {
         register,
         handleSubmit,
+        setValue,
         formState: { errors, isSubmitting, isValid },
     } = useForm<SigninFormData>({
         resolver: zodResolver(SigninSchema),
         defaultValues: {
-            reference: '',
+            reference: referenceNumber || undefined,
             password: ''
         }
     });
+
+    useEffect(() => {
+        if (referenceNumber) {
+            // If reference number is present, set it in the form
+            setValue('reference', referenceNumber);
+        }
+    }, [referenceNumber, setValue]);
 
     const onSubmit: SubmitHandler<SigninFormData> = async (data) => {
         await studentSignin(data);

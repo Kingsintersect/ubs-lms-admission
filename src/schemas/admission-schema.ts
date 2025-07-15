@@ -49,8 +49,16 @@ export const admissionSchema = z.object({
     studyMode: z.string().min(1, 'Study mode is required'),
 
     // Essays
-    personalStatement: z.string().min(100, 'Personal statement must be at least 100 characters'),
-    careerGoals: z.string().min(100, 'Career goals must be at least 100 characters'),
+    personalStatement: z
+        .string()
+        .min(100, 'Personal statement must be at least 100 characters')
+        .max(255, "Personal statement must be under 255 characters")
+        .nonempty("Personal statement is required"),
+    careerGoals: z
+        .string()
+        .min(100, 'Career goals must be at least 100 characters')
+        .max(150, "Career goals must be under 150 characters")
+        .nonempty("Career goals is required"),
 
     // Additional Information
     disability: z.boolean().default(false),
@@ -68,7 +76,8 @@ export const admissionSchema = z.object({
     // Profile Picture
     passportPhoto: z.instanceof(File).optional(),
 
-    image_url: z.string().optional().default('/defailt-result-image.png'),
+    passport: z.string().optional(),
+    awaiting_result: z.boolean().default(true),
 });
 
 export type AdmissionFormData = z.infer<typeof admissionSchema>;

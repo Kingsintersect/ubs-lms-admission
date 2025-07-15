@@ -90,7 +90,7 @@ export default function useSignInMultiStepViewModel() {
         formState: { errors },
     } = useForm<SignupFormData>({
         resolver: zodResolver(SignupSchema),
-        mode: "onBlur",
+        mode: "onChange",
     });
 
     // React Query - Get all programs

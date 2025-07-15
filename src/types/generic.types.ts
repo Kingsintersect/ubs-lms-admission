@@ -15,8 +15,12 @@ export type ApiResponse<T> = {
 // // e.g., { data: { name: "John" }, meta: { page: 1 } }
 // // e.g., { message: "Success", code: 200 }
 export type ObjectType =
-	| Record<string, string | number | boolean | Date>
-	| Record<string, string | number | boolean | Date | null | undefined>;
+	// | Record<string, string | number | boolean | Date | File>
+	Record<string, string | number | boolean | Date | File | null | undefined>;
+export type FormObjectPayloaddType = Record<
+	string,
+	string | number | boolean | Date | File | Blob | null | undefined
+>;
 
 // export type Params = Promise<{ slug: string }>;
 // export type SearchParams = Promise<{ query?: string }>;

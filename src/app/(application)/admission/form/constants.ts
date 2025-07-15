@@ -48,7 +48,7 @@ export const STEPS: Step[] = [
 ];
 
 export const GENDER = [
-    { value: 'MALE', label: 'MAle' },
+    { value: 'MALE', label: 'MALE' },
     { value: 'FEMALE', label: 'FEMALE' },
 ];
 

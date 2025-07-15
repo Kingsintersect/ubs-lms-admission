@@ -10,7 +10,7 @@ import {
     studentSignin,
     adminSignin,
     logout as serverLogout,
-    getCurrentUser as fetchCurrentUser
+    refetchUserData as fetchCurrentUser
 } from '@/app/actions/auth-actions';
 import { notify } from './ToastProvider';
 import { baseUrl, Roles } from '@/config';
@@ -20,6 +20,7 @@ interface AuthContextType extends AuthState {
     adminSignin: (data: GenericDataType) => Promise<any>;
     logout: () => Promise<void>;
     refreshUser: () => Promise<void>;
+    updateUser: (newUser: Partial<AuthState['user']>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -219,6 +220,50 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
+    const updateUser = (newUser: Partial<AuthState['user']>) => {
+        setAuthState((prev) => {
+            if (!prev.user) return prev;
+
+            if (prev.user.role === Roles.STUDENT) {
+                return {
+                    ...prev,
+                    user: {
+                        ...prev.user,
+                        ...newUser,
+                        role: Roles.STUDENT,
+                    },
+                };
+            }
+
+            if (prev.user.role === Roles.TEACHER) {
+                return {
+                    ...prev,
+                    user: {
+                        ...prev.user,
+                        ...newUser,
+                        role: Roles.TEACHER,
+                    },
+                };
+            }
+
+            if (prev.user.role === Roles.ADMIN) {
+                return {
+                    ...prev,
+                    user: {
+                        ...prev.user,
+                        ...newUser,
+                        role: Roles.ADMIN,
+                    },
+                };
+            }
+
+            return prev;
+        });
+    };
+
+
+
+
     return (
         <AuthContext.Provider
             value={{
@@ -226,7 +271,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 studentSignin: handleStudentLogin,
                 adminSignin: handleAdminLogin,
                 logout: handleLogout,
-                refreshUser
+                refreshUser,
+                updateUser
             }}
         >
             {children}

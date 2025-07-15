@@ -193,7 +193,6 @@ export const completeApplicationSchema = z.object({
 // Inferred TypeScript type (if needed)
 export type CompleteApplicationFormData = z.infer<typeof completeApplicationSchema>;
 
-
 export interface FormValidationProps {
 	register: UseFormRegister<CompleteApplicationFormData>;
 	errors: FieldErrors<CompleteApplicationFormData>;

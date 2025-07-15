@@ -7,6 +7,7 @@ import {
 	deleteSessionKey,
 	getSession,
 	setSession,
+	updateSession,
 } from "@/lib/session";
 import { apiCallerBeta } from "@/lib/apiCaller";
 import { SessionData } from "@/types/auth";
@@ -93,24 +94,22 @@ export async function logout() {
 	redirect(`/auth/signin`);
 	return false;
 }
-
-export async function getCurrentUser() {
-	const loginSessionData = (await getSession(
-		loginSessionKey
-	)) as SessionData | null;
-
-	if (!loginSessionData) {
-		return { error: { message: "No active session" }, success: null };
-	}
-
-	return { success: loginSessionData, error: null };
+interface UserResponse {
+	user: StudentType; // StudentType is the actual user data
+	// ... other possible response fields
 }
-
-export const getUser = async () => {
+interface ApiResponse<T> {
+	error?: {
+		message: string;
+		// ... other error properties
+	};
+	success?: T;
+}
+export const getUser = async (): Promise<ApiResponse<UserResponse>> => {
 	const loginSession = (await getSession(loginSessionKey)) as SessionData;
 
 	if (!loginSession) {
-		return { error: { message: "No active session" }, success: null };
+		return { error: { message: "No active session" } };
 	}
 
 	const res = await apiCallerBeta({
@@ -120,8 +119,33 @@ export const getUser = async () => {
 			Authorization: `Bearer ${loginSession.access_token}`,
 		},
 	});
-	return res;
+	return res as ApiResponse<UserResponse>;
 };
+
+export async function refetchUserData() {
+	const { error, success } = await getUser();
+	if (error) {
+		return { error, success: null };
+	}
+	const newUser = success?.user;
+	try {
+		await updateSession(loginSessionKey, {
+			user: newUser
+		});
+
+		const loginSessionData = (await getSession(
+			loginSessionKey
+		)) as SessionData | null;
+
+		if (!loginSessionData) {
+			return { error: { message: "No active session" }, success: null };
+		}
+
+		return { success: loginSessionData, error: null };
+	} catch {
+		return { error: { message: "Failed to update session" }, success: null };
+	}
+}
 
 export const ChangeUserPassword = async (
 	access_token: string,

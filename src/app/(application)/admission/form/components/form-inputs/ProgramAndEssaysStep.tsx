@@ -17,6 +17,7 @@ export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ cont
                 <PhotoUpload
                     onFileChange={(file) => setValue('passportPhoto', file ?? undefined)}
                     error={errors.passportPhoto?.message}
+                    setValue={setValue}
                 />
             </div>
             <div className=" flex flex-col gap-4">

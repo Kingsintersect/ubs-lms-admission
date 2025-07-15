@@ -62,3 +62,31 @@ export function displayErrors(errorObject) {
 	}
 	return errorMsg;
 }
+
+export const getFriendlyError = (error: unknown): string => {
+	if (
+		typeof error === "object" &&
+		error !== null &&
+		"message" in error &&
+		typeof (error as any).message === "string"
+	) {
+		const rawMessage = (error as any).message as string;
+
+		// Extract JSON from the message string
+		const match = rawMessage.match(/{.*}/);
+		if (match) {
+			try {
+				const parsed = JSON.parse(match[0]);
+				return parsed.message || "An error occurred. Please try again.";
+			} catch {
+				return "An error occurred. Please try again.";
+			}
+		}
+
+		return rawMessage;
+	}
+
+	return "An unexpected error occurred. Please try again.";
+};
+
+

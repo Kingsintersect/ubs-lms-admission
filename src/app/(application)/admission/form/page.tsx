@@ -20,9 +20,10 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { SponsorInformationStep } from "./components/form-inputs/SponsorInformationStep";
+import { getFriendlyError } from '@/lib/errorsHandler';
 
 const AdmissionForm: React.FC = () => {
-    const { logout, access_token } = useAuth();
+    const { logout, access_token, updateUser, refreshUser } = useAuth();
     const [currentStep, setCurrentStep] = useState(0);
     const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -42,6 +43,7 @@ const AdmissionForm: React.FC = () => {
             agreeToTerms: false,
             startTerm: "2024/2025",
             studyMode: 'online',
+            awaiting_result: true,
         }
     });
 
@@ -52,8 +54,10 @@ const AdmissionForm: React.FC = () => {
             }
             return submitAdmissionForm(data, access_token);
         },
-        onSuccess: () => {
+        onSuccess: async () => {
             setIsSubmitted(true);
+            await refreshUser();
+            updateUser({ is_applied: Number(true) });
         },
     });
 
@@ -183,7 +187,7 @@ const AdmissionForm: React.FC = () => {
                                 <Alert className="border-red-200 bg-red-50">
                                     <AlertCircle className="h-4 w-4 text-red-600" />
                                     <AlertDescription className="text-red-700">
-                                        {mutation.error?.message || 'An error occurred. Please try again.'}
+                                        {getFriendlyError(mutation.error)}
                                     </AlertDescription>
                                 </Alert>
                             )}
@@ -242,3 +246,6 @@ const AdmissionForm: React.FC = () => {
 };
 
 export default AdmissionForm;
+
+
+// https://ubs-lms-admission.vercel.app/admission/payments/verify-admission?transAmount=35000.00&reference=1429qraR3J1752585820&transRef=O8ml0025Is14hB6g29Bm&errorMessage=Approved+by+Financial+Institution&redirectOnError=0&currency=NGN&gateway=&channelId=0&status=0
