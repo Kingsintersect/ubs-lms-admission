@@ -10,7 +10,8 @@ import {
     studentSignin,
     adminSignin,
     logout as serverLogout,
-    refetchUserData as fetchCurrentUser
+    refetchUserSessionData as refreshCurrentUser,
+    refetchUserData
 } from '@/app/actions/auth-actions';
 import { notify } from './ToastProvider';
 import { baseUrl, Roles } from '@/config';
@@ -38,7 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const { success } = await fetchCurrentUser();
+                const { success } = await refreshCurrentUser();
 
                 if (success && success.user) {
                     setAuthState({
@@ -91,7 +92,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
                 if (success.user.role === Roles.STUDENT) {
                     redirectUrl = (!success.user.is_applied)
-                        ? `${redirectUrl}/complete-application`
+                        ? `/admission/form`
+                        // ? `${redirectUrl}/complete-application`
                         : `${redirectUrl}`;
                 }
                 router.push(`${redirectUrl}`);
@@ -189,7 +191,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setAuthState({ ...authState, loading: true });
 
         try {
-            const { success } = await fetchCurrentUser();
+            const { success } = await refetchUserData();
 
             if (success && success.user) {
                 setAuthState({

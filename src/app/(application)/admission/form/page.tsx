@@ -82,20 +82,6 @@ const AdmissionForm: React.FC = () => {
         } else {
             toast.error("Access token is missing or invalid");
         }
-        //     try {
-        //         const res = await fetch("/api/submit-admission-form", {
-        //             method: "POST",
-        // headers: {
-        //     "Content-Type": "application/json", // or omit for FormData
-        // },
-        //             body: JSON.stringify(data), // or use FormData if you need files
-        //         });
-
-        //         const result = await res.json();
-        //         console.log("Server response:", result);
-        //     } catch (err) {
-        //         console.error("Submission error", err);
-        //     }
     };
 
     const handleReset = () => {

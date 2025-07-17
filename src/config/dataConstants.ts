@@ -54,6 +54,10 @@ export const AdminNavMain: SidebarNavConfig = {
 			icon: GraduationCap,
 			items: [
 				{
+					title: "Admission Listing",
+					url: "/dashboard/admin/student-admissions",
+				},
+				{
 					title: "Student Listing",
 					url: "/dashboard/admin/users",
 				},

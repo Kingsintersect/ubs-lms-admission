@@ -4,8 +4,16 @@ import { Roles } from "@/config";
 import { getSession } from "@/lib/session";
 import { loginSessionKey } from "@/lib/definitions";
 
-const publicRoutes = ["/auth/signin", "/auth/signup", "/admission/payments/verify-admission", "/admission/payments/verify-admission/signin"];
-const protectedRoutes = ["/dashboard", "/admission"];
+const publicRoutes = [
+	"/auth/signin",
+	"/auth/signup",
+	"/admission/payments/verify-admission",
+	"/admission/payments/verify-admission/signin"
+];
+const protectedRoutes = [
+	"/dashboard",
+	"/admission"
+];
 const staticPaths = ["/_next", "/favicon.ico", "/images", /\.(png|jpg|jpeg|gif|svg)$/];
 
 export default async function middleware(req: NextRequest) {
@@ -24,9 +32,11 @@ export default async function middleware(req: NextRequest) {
 	// 1. Handle public routes
 	if (publicRoutes.includes(path)) {
 		if (user) {
-			const redirectPath = hasApplied
-				? `/dashboard/${role.toLowerCase()}`
-				: '/admission/form';
+			const redirectPath = (role === Roles.STUDENT)
+				? hasApplied
+					? '/dashboard/student'
+					: '/admission/form'
+				: `/dashboard/${role.toLowerCase()}`;
 			return NextResponse.redirect(new URL(redirectPath, req.url));
 		}
 		return NextResponse.next();
@@ -40,34 +50,37 @@ export default async function middleware(req: NextRequest) {
 		return NextResponse.next();
 	}
 
-	// 3. Role-based access control
-	// const basePath = path.split('/')[1];
-	const subPath = path.split('/')[2];
-
-	// Admission form special case
-	if (path.startsWith('/admission')) {
-		if (hasApplied && role === Roles.STUDENT) {
-			return NextResponse.redirect(new URL('/dashboard/student', req.url));
-		}
-		if (role !== Roles.STUDENT) {
-			return NextResponse.redirect(new URL('/auth/signin', req.url));
-		}
-		return NextResponse.next();
-	}
-
-	// Dashboard routes
-	if (path.startsWith('/dashboard')) {
-		// Check if user has applied (for students)
-		if (role === Roles.STUDENT && !hasApplied) {
-			return NextResponse.redirect(new URL('/admission/form', req.url));
+	// For loged in users, handle specific paths
+	if (user) {
+		// Admission form special case
+		if (path.startsWith('/admission')) {
+			if (hasApplied && role === Roles.STUDENT) {
+				return NextResponse.redirect(new URL('/dashboard/student', req.url));
+			}
+			if (role !== Roles.STUDENT) {
+				return NextResponse.redirect(new URL(`/dashboard/${role.toLowerCase()}`, req.url));
+			}
+			return NextResponse.next();
 		}
 
-		// Verify role matches route
-		const rolePath = role.toLowerCase();
-		if (subPath && subPath !== rolePath) {
-			return NextResponse.redirect(new URL(`/dashboard/${rolePath}`, req.url));
-		}
+		// Dashboard routes
+		if (path.startsWith('/dashboard')) {
+			const subPath = path.split('/')[2]?.toLowerCase();
+			const rolePath = role.toLowerCase();
 
+			if (role === Roles.STUDENT && !hasApplied) {
+				return NextResponse.redirect(new URL('/admission/form', req.url));
+			}
+
+			const currentUrl = new URL(req.url);
+			const expectedPath = `/dashboard/${rolePath}`;
+
+			if (subPath !== rolePath && currentUrl.pathname !== expectedPath) {
+				return NextResponse.redirect(new URL(expectedPath, req.url));
+			}
+
+			return NextResponse.next();
+		}
 		return NextResponse.next();
 	}
 

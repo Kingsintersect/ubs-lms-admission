@@ -3,28 +3,27 @@
 import { remoteApiUrl } from "@/config";
 import { apiCallerBeta } from "@/lib/apiCaller";
 import { ApiResponse } from "@/types/generic.types";
-import { useRouter } from "next/navigation";
 
 export async function GetTotalStudentList(access_token: string) {
-    const response = (await apiCallerBeta({
-        url: `${remoteApiUrl}/teacher/total-students`,
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${access_token}`,
-        },
-    })) as any;
-    return response;
+  const response = (await apiCallerBeta({
+    url: `${remoteApiUrl}/teacher/total-students`,
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  })) as any;
+  return response;
 }
 
 export async function GetTotalCoursesList(access_token: string) {
-    const response = (await apiCallerBeta({
-        url: `${remoteApiUrl}/teacher/courses`,
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${access_token}`,
-        },
-    })) as any;
-    return response;
+  const response = (await apiCallerBeta({
+    url: `${remoteApiUrl}/teacher/courses`,
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  })) as any;
+  return response;
 }
 
 
@@ -48,7 +47,7 @@ export async function ViewSingleCourse(
     if (response.error) {
       return {
         success: null,
-        error:  "Failed to fetch course",
+        error: "Failed to fetch course",
       };
     }
 
@@ -64,7 +63,7 @@ export async function ViewSingleCourse(
   }
 }
 // export async function GetCourseDetails(
-//   access_token: string, 
+//   access_token: string,
 //   courseId: string
 // ): Promise<ApiResponse<{ course: any; students: any[] }>> {
 //   try {

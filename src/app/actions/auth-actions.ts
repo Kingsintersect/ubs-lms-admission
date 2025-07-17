@@ -7,7 +7,7 @@ import {
 	deleteSessionKey,
 	getSession,
 	setSession,
-	updateSession,
+	updateSessionKey,
 } from "@/lib/session";
 import { apiCallerBeta } from "@/lib/apiCaller";
 import { SessionData } from "@/types/auth";
@@ -122,16 +122,24 @@ export const getUser = async (): Promise<ApiResponse<UserResponse>> => {
 	return res as ApiResponse<UserResponse>;
 };
 
-export async function refetchUserData() {
-	const { error, success } = await getUser();
-	if (error) {
-		return { error, success: null };
-	}
-	const newUser = success?.user;
+export async function refetchUserSessionData() {
 	try {
-		await updateSession(loginSessionKey, {
-			user: newUser
-		});
+		const loginSessionData = (await getSession(
+			loginSessionKey
+		)) as SessionData | null;
+
+		if (!loginSessionData) {
+			return { error: { message: "No active session" }, success: null };
+		}
+
+		return { success: loginSessionData, error: null };
+	} catch {
+		return { error: { message: "Failed to update session" }, success: null };
+	}
+}
+
+export async function refetchUserData() {
+	try {
 
 		const loginSessionData = (await getSession(
 			loginSessionKey
@@ -140,6 +148,19 @@ export async function refetchUserData() {
 		if (!loginSessionData) {
 			return { error: { message: "No active session" }, success: null };
 		}
+
+		const { error, success } = await getUser() as ApiResponse<UserResponse>
+		if (error) {
+			return { error, success: null };
+		};
+
+		const newUser = success?.user;
+		await updateSessionKey(loginSessionKey, {
+			user: {
+				...newUser
+			}
+		});
+
 
 		return { success: loginSessionData, error: null };
 	} catch {

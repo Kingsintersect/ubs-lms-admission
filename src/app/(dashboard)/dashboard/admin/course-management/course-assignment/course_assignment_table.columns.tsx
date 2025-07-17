@@ -3,8 +3,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableCheckboxColumn, DataTableColumnHeader } from "@/components/ui/datatable/DataTableColumnHeader";
 import { ActionMenu } from "@/components/ui/datatable/ActionMenu";
-import { DeleteSingleCourseAssignment, UpdateSingleCourseAssignment } from "@/app/actions/server.admin";
-import { StatusCell } from "@/components/StatusToggle";
 import { baseUrl } from "@/config";
 
 // This type is used to define the shape of our data.
@@ -21,18 +19,18 @@ export const course_assignment_columns: ColumnDef<Partial<CourseAssignmentTableC
     {
         accessorKey: "short_code",
         header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="COURSE CODE" />
+            <DataTableColumnHeader column={column} title="COURSE CODE" />
         ),
     },
     {
         id: "actions",
         header: "Actions",
         cell: ({ row }) => <ActionMenu
-            row={row.original  as CourseAssignmentTableColumType}
+            row={row.original as CourseAssignmentTableColumType}
             onCopy={(id) => navigator.clipboard.writeText(id)}
             // onDelete={DeleteSingleCourseAssignment}
             menu={[
-                {title: "Edit Data", url:`${basePath}/${row.original.id}/details`},
+                { title: "Edit Data", url: `${basePath}/${row.original.id}/details` },
             ]}
         />,
     },

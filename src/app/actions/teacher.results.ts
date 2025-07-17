@@ -1,11 +1,5 @@
 import { remoteApiUrl } from "@/config";
 import { apiCallerBeta } from "@/lib/apiCaller";
-import { ObjectType } from "@/types/generic.types";
-
-
-
-
-
 
 interface ApiResponse<T> {
     success: boolean;
@@ -63,7 +57,7 @@ export const fetchStudentScores = async (courseId: string | number, access_token
     return response.success;
 };
 
-export const    ExportScores = async (courseId: string | number, access_token: string) => {
+export const ExportScores = async (courseId: string | number, access_token: string) => {
     const res = await fetch(`${remoteApiUrl}/admin/course/process-gradings/${courseId}`, {
         method: "PUT",
         headers: {
