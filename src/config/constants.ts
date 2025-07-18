@@ -1,22 +1,22 @@
-export const baseUrl = process.env.NEXT_PUBLIC_BASE_URL_ubs ?? "";
-export const apiUrl = process.env.NEXT_PUBLIC_API_URL_ubs ?? "";
+export const baseUrl = process.env.NEXT_PUBLIC_BASE_URL_UBS ?? "";
+export const apiUrl = process.env.NEXT_PUBLIC_API_URL_UBS ?? "";
 
-export const remoteApiUrl = process.env.NEXT_PUBLIC_REMOTE_API_URL_ubs ?? "";
-export const lmsLoginUrl = process.env.NEXT_PUBLIC_LMS_LOGIN_URL_ubs ?? "";
+export const remoteApiUrl = process.env.NEXT_PUBLIC_REMOTE_API_URL_UBS ?? "";
+export const lmsLoginUrl = process.env.NEXT_PUBLIC_LMS_LOGIN_URL_UBS ?? "";
 
 export const accessTokenSecret =
-	process.env.NEXT_PUBLIC_ACCESS_TOKEN_SECRET_ubs ?? "";
+	process.env.NEXT_PUBLIC_ACCESS_TOKEN_SECRET_UBS ?? "";
 export const refreshTokenSecret =
-	process.env.NEXT_PUBLIC_REFRESH_TOKEN_SECRET_ubs ?? "";
+	process.env.NEXT_PUBLIC_REFRESH_TOKEN_SECRET_UBS ?? "";
 
-export const sessionSecret = process.env.NEXT_PUBLIC_SESSION_SECRET_ubs ?? "";
+export const sessionSecret = process.env.NEXT_PUBLIC_SESSION_SECRET_UBS ?? "";
 export const sessionPassword =
-	process.env.NEXT_PUBLIC_SESSION_PASSWORD_ubs ?? "";
+	process.env.NEXT_PUBLIC_SESSION_PASSWORD_UBS ?? "";
 
-export const clientId = process.env.NEXT_PUBLIC_CLIENT_ID_ubs ?? "";
-export const clientSecret = process.env.NEXT_PUBLIC_CLIENT_SECRET_ubs ?? "";
+export const clientId = process.env.NEXT_PUBLIC_CLIENT_ID_UBS ?? "";
+export const clientSecret = process.env.NEXT_PUBLIC_CLIENT_SECRET_UBS ?? "";
 
-const secretKey = process.env.NEXT_PUBLIC_SESSION_SECRET_ubs;
+const secretKey = process.env.NEXT_PUBLIC_SESSION_SECRET_UBS;
 export const encodedKey = new TextEncoder().encode(secretKey);
 export const SITE_NAME = "UNIZIK BUSINESS SCHOOL LMS"
 

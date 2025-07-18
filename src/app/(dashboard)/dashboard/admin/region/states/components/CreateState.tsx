@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { InputFormField } from '@/components/ui/inputs/FormFields';
 import { Button } from '@/components/ui/button';
 import { extractErrorMessages } from '@/lib/errorsHandler';
+import { Country } from '@/config/Types';
 
 const CreateState = ({ access_token }: { access_token: string, country: Country[] }) => {
    const {

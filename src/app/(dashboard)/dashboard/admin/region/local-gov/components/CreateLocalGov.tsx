@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { InputFormField, SelectFormField } from '@/components/ui/inputs/FormFields';
 import { extractErrorMessages } from '@/lib/errorsHandler';
+import { State } from '@/config/Types';
 
 const CreateLocalGov = ({ access_token, states }: { access_token: string, states: State[] }) => {
    const {

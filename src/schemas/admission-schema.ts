@@ -1,3 +1,4 @@
+import { StudentType } from "@/config/Types";
 import z from "zod";
 
 
@@ -7,6 +8,8 @@ const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/web
 
 // Zod validation schema
 export const admissionSchema = z.object({
+    id: z.string().optional(),
+
     // Personal Information
     lga: z.string().min(1, 'Local Gov. Area is required'),
     religion: z.string().min(2, 'Religion is required'),
@@ -81,3 +84,6 @@ export const admissionSchema = z.object({
 });
 
 export type AdmissionFormData = z.infer<typeof admissionSchema>;
+export interface ApplicationDetailsType extends StudentType {
+    application: AdmissionFormData;
+}

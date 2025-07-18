@@ -1,5 +1,5 @@
 const BASE_IMAGE_URL_DEV = "http://localhost:3000";
-const BASE_IMAGE_URL_PROD = "https://ubs-lms-admission.vercel.app/storage";
+const BASE_IMAGE_URL_PROD = "https://uni-portal-system-backend.qverselearning.org/storage";
 
 export function FormatImageUrl(imagePath: string | null | undefined): string {
 	if (

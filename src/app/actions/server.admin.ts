@@ -1,4 +1,5 @@
 import { remoteApiUrl } from "@/config";
+import { CLassSubject, Country, Course, CourseAssignment, CourseCategory, Department, Faculty, LocalGov, State, SubjectGrade } from "@/config/Types";
 import { apiCallerBeta } from "@/lib/apiCaller";
 import { ApiResponse } from "@/types/generic.types";
 

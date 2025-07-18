@@ -19,7 +19,7 @@ const AcceptancePayment = () => {
             <AdmissionDeniedBanner statement={student.reason_for_denial as string} />
             :
             <>
-               {(student?.acceptance_fee_payment_status === 0) ?
+               {(student?.acceptance_fee_payment_status === "UNPAID") ?
                   <Card className="w-full sm:w-3/4 md:w-3/5 lg:w-5/7 flex-1">
                      <h5 className="flex flex-col justify-between items-center mb-5 space-y-5">
                         <div className="text-xl sm:text-2xl md:text-4xl font-bold text-cyan-800 capitalize ">Acceptance Fee</div>

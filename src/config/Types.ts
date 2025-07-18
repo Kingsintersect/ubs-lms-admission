@@ -1,40 +1,47 @@
-type SideNavItem = {
+import { Roles } from "./constants";
+
+export type SideNavItem = {
 	title: string;
 	path: string;
 	icon?: string;
 	submenu?: boolean;
 	submenuItems?: SideNavItem[];
 };
-type MenuItemWithSubmenuProps = {
+export type MenuItemWithSubmenuProps = {
 	item: SideNavItem;
 	toggleOpen: () => void;
 };
 
-type Program = Array<string>;
+export type Program = Array<string>;
 
-type Subject = {
+export type Subject = {
 	id: number;
 	label: string;
 	value: string;
 };
 
-type Grade = {
+export type Grade = {
 	id: number;
 	label: string;
 	value: string;
 };
 
-type SelectedCourse = {
-	course: Subject;
-	grade: Grade;
-};
-
-type SittingCourse = {
+export type SittingCourse = {
 	subject: string;
 	Grade: string;
 };
 
-interface StudentType {
+export enum AdmissionStatusType {
+	admitted = "admitted",
+	pending = "pending",
+	"not_admitted" = "not admitted"
+}
+export enum StatusType {
+	FULLY_PAID = "FULLY_PAID",
+	PART_PAID = "PART_PAID",
+	UNPAID = "UNPAID"
+}
+export interface StudentType extends Record<string, unknown> {
 	id: number | null;
 	pictureRef: string | null;
 	last_name: string | null;
@@ -53,18 +60,18 @@ interface StudentType {
 	reg_number: string | null;
 	is_applied: number | null;
 	reason_for_denial: string | null;
-	admission_status: "admitted" | "pending" | "not admitted";
-	acceptance_fee_payment_status: number;
-	tuition_payment_status: number;
-	application_payment_status: number;
+	admission_status: AdmissionStatusType;
+	acceptance_fee_payment_status: StatusType;
+	tuition_payment_status: StatusType;
+	application_payment_status: StatusType;
 	created_at: Date | string | null;
 	updated_at: Date | string | null;
 	deleted_at: Date | string | null;
-	role: "STUDENT" | "ADMIN" | "TEACHER" | "MANAGER";
+	role: Roles;
 	level: string | null;
 	tuition_amount_paid: number | null;
 }
-interface StudentApplicationType extends StudentType {
+export interface StudentApplicationType extends StudentType {
 	religion: string;
 	gender: string;
 	disability: string;
@@ -80,7 +87,7 @@ interface StudentApplicationType extends StudentType {
 	sponsor_contact_address: string;
 	application: Record<string, any>;
 }
-interface Profile {
+export interface Profile {
 	id: number | null;
 	first_name: string | null;
 	last_name: string | null;
@@ -96,13 +103,13 @@ interface Profile {
 	level: string | null;
 }
 
-type User = {
+export type User = {
 	id: string;
 	role: string;
 	access_token: string;
 };
 
-type Department = {
+export type Department = {
 	id: string;
 	department_name: string;
 	faculty_id: string;
@@ -110,21 +117,21 @@ type Department = {
 	description?: string;
 };
 
-type Faculty = {
+export type Faculty = {
 	id: string;
 	faculty_name: string;
 	status?: number;
 	description?: string;
 };
 
-type Course = {
+export type Course = {
 	id: string;
 	course_title: string;
 	course_code: string;
 	description?: string | null;
 };
 
-type CourseCategory = {
+export type CourseCategory = {
 	id: string;
 	faculty_id: string;
 	program: string;
@@ -134,50 +141,50 @@ type CourseCategory = {
 	short_code?: string;
 };
 
-type AssignedCourse = {
+export type AssignedCourse = {
 	course_id: number;
 	course_code: string;
 	credit_load: number;
 };
-type CourseAssignment = {
+export type CourseAssignment = {
 	course_category_id: string;
 	assignedCourses?: AssignedCourse[];
 };
 
-type CreditLoad = {
+export type CreditLoad = {
 	id: string;
 	score: string;
 };
-type LabelValueType = {
+export type LabelValueType = {
 	label: string;
 	value: string;
 };
-type SemestersType = {
+export type SemestersType = {
 	label: string;
 	value: string;
 };
 
-type Country = {
+export type Country = {
 	id: string;
 	name: string;
 };
-type State = {
+export type State = {
 	id: string;
 	name: string;
 	// parent: number;
 };
-type LocalGov = {
+export type LocalGov = {
 	id: string;
 	lga: string;
 	name?: string;
 	lgas?: Array<String>;
 	state_id: string;
 };
-type CLassSubject = {
+export type CLassSubject = {
 	id: string;
 	name: string;
 };
-type SubjectGrade = {
+export type SubjectGrade = {
 	id: string;
 	name: string;
 };

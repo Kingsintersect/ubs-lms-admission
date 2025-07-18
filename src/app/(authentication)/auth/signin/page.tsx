@@ -19,7 +19,6 @@ export default function AuthPage() {
     const searchParams = useSearchParams();
     const referenceNumber = searchParams.get('transRef') || '';
     const { studentSignin, loading } = useAuth();
-    // const { mutate, isPending } = useSignInMutation();
     const {
         register,
         handleSubmit,

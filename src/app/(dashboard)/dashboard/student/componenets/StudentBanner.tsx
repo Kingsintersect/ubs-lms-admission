@@ -6,8 +6,10 @@ import { baseUrl } from "@/config";
 import { useRouter } from "next/navigation";
 import Typewriter from "@/components/TypeWritter";
 import { Button } from "@/components/ui/button";
+import { StudentType } from "@/config/Types";
 
 const navigation = {
+   applicationFormUrl: `${baseUrl}/admission/form`,
    acceptanceFeeUrl: `${baseUrl}/dashboard/student/acceptance`,
    tuitionFeeUrl: `${baseUrl}/dashboard/student/tuition`,
 }
@@ -25,10 +27,13 @@ const StudentBanner = ({ student }: { student: StudentType }) => {
    useEffect(() => {
       if (!student) return;
 
-      if (student.acceptance_fee_payment_status === 0) {
+      if (student.is_applied === 0) {
+         setGoto(navigation.applicationFormUrl);
+         return;
+      } else if (student.acceptance_fee_payment_status === "UNPAID") {
          setGoto(navigation.acceptanceFeeUrl);
          return;
-      } else if (student.tuition_payment_status === 0) {
+      } else if (student.tuition_payment_status === "UNPAID") {
          setGoto(navigation.tuitionFeeUrl);
          return;
       }

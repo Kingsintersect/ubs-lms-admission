@@ -1,7 +1,7 @@
 "use client";
 import Search from '@/components/ui/inputs/Search';
 import { baseUrl } from '@/config';
-import { Loader2, PlusIcon } from 'lucide-react';
+import { PlusIcon } from 'lucide-react';
 import Link from 'next/link';
 import React, { useEffect, useMemo, useState } from 'react'
 import { Card } from "@/components/ui/card"
@@ -43,7 +43,7 @@ const CoursesPage = () => {
          } else if (error) {
             setError(error.message || "Failed to fetch courses");
          }
-      } catch (err) {
+      } catch {
          setError("An unexpected error occurred.");
       } finally {
          setLoading(false);

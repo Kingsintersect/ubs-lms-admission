@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { StudentType } from "@/config/Types";
 import { ClipboardCopy, BookOpen, Building, GraduationCap } from "lucide-react";
 import { useEffect, useState } from "react";
 

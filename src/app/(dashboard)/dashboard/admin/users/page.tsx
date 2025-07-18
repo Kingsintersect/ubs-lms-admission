@@ -46,6 +46,7 @@ const StudentApplications = () => {
          if (access_token) {
             setIsLoading(true)
             const { success, error } = await fetchAllStudentApplications(access_token)
+            console.log('success', success)
             if (success) {
                const descendingData = [...success.data].sort((a, b) => b.is_applied - a.is_applied);
                setUserData(descendingData);

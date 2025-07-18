@@ -41,7 +41,7 @@ const Department = () => {
          } else if (error) {
             setError(error.message || "Failed to fetch Departments");
          }
-      } catch (err) {
+      } catch {
          setError("An unexpected error occurred.");
       } finally {
          setLoading(false);

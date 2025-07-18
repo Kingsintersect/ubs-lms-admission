@@ -14,6 +14,7 @@ import { SessionData } from "@/types/auth";
 import { ObjectType } from "@/types/generic.types";
 import { GenericDataType } from "@/types/generic.types";
 import { redirect } from "next/navigation";
+import { StudentType } from "@/config/Types";
 
 export const studentSignin = async (
 	data: ObjectType

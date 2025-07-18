@@ -5,12 +5,13 @@ import { StudentFormData } from "../(dashboard)/dashboard/admin/users/create/new
 
 export async function fetchAllStudentApplications(access_token: string) {
 	const response = (await apiCallerBeta({
-		url: `${remoteApiUrl}/admin/all-applications`,
+		url: `${remoteApiUrl}/admin/all-applications?startTerm=2024/2025`,
 		method: "GET",
 		headers: {
 			Authorization: `Bearer ${access_token}`,
 		},
 	})) as any;
+
 	return response;
 }
 

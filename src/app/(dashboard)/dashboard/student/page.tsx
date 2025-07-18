@@ -9,18 +9,14 @@ import { CalendarWidget } from "../components/calendar-widget";
 import { CourseProgress } from "../components/course-progress";
 import { UpcomingAssignments } from "../components/upcoming-assignments";
 import dynamic from 'next/dynamic';
+import { StatusType } from "@/config/Types";
 
 const ProtectedRoute = dynamic(() => import('@/components/ProtectedRoute'), { ssr: false });
 
-type statusType = 1 | 0;
 const StudentHome = () => {
    const { user } = useAuth();
    const student = user;
    const today = new Date();
-
-   if (student?.tuition_amount_paid && student?.tuition_amount_paid > 0) {
-      student.tuition_payment_status = 2;
-   }
 
    const events = [
       {
@@ -123,7 +119,7 @@ const StudentHome = () => {
                      <StatusCheckCard
                         admission={student.admission_status}
                         url="/admission/application/payment"
-                        dataStatus={student.application_payment_status as statusType}
+                        dataStatus={student.application_payment_status as StatusType}
                         title={"APPLICATION FEE"}
                      />
 
@@ -134,14 +130,14 @@ const StudentHome = () => {
                      <StatusCheckCard
                         admission={student.admission_status}
                         url="/dashboard/student/acceptance"
-                        dataStatus={student.acceptance_fee_payment_status as statusType}
+                        dataStatus={student.acceptance_fee_payment_status as StatusType}
                         title={"ACCEPTANCE FEE"}
                      />
 
                      <StatusCheckCard
                         admission={student.admission_status}
                         url="/dashboard/student/tuition"
-                        dataStatus={student.tuition_payment_status as statusType}
+                        dataStatus={student.tuition_payment_status as StatusType}
                         title={"TUITION FEE"}
                      />
                   </div>

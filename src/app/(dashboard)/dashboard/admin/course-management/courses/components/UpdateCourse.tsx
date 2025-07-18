@@ -11,6 +11,7 @@ import { ArrowRightIcon, Loader2 } from "lucide-react";
 import { InputFormField, TextareaFormField } from '@/components/ui/inputs/FormFields';
 import { Button } from '@/components/ui/button';
 import { extractErrorMessages } from '@/lib/errorsHandler';
+import { Course } from '@/config/Types';
 
 const UpdateCourse = ({ access_token, course }: { access_token: string, course: Course }) => {
    const {

@@ -11,6 +11,7 @@ import { ArrowRightIcon, Loader2 } from "lucide-react";
 import { SelectFormField } from '@/components/ui/inputs/FormFields';
 import { Button } from '@/components/ui/button';
 import { GenericDataType } from '@/types/generic.types';
+import { CourseCategory, Department, Faculty, LabelValueType, Program, SemestersType } from '@/config/Types';
 
 const UpdateCourseCategory = ({ access_token, courseCategory, programs, faculties, departments, studyLevels, semesters }: { access_token: string, courseCategory: CourseCategory, programs: Program[], faculties: Faculty[], departments: Department[], studyLevels: LabelValueType[], semesters: SemestersType[] }) => {
    const {

@@ -15,6 +15,7 @@ import { PagePropsWithId } from "@/types/generic.types"
 import { useAuth } from "@/contexts/AuthContext"
 import { notify } from "@/contexts/ToastProvider"
 import { FULL_TUITION_FEE } from "@/config"
+import { StudentType } from "@/config/Types"
 
 // API service functions
 const userService = {

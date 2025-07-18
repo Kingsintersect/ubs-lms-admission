@@ -12,12 +12,13 @@ import { AdmissionFormData } from "@/schemas/admission-schema";
 import { getSafeImageUrl } from "@/lib/imageUrl";
 import { XButton } from "@/components/XButton";
 interface AcademicImageUploaderProps {
-    productId: number;
+    productId?: number | null;
     imagesUrlArray: string[] | undefined;
-    register: UseFormReturn<AdmissionFormData>['register'];
-    setValue: UseFormReturn<AdmissionFormData>['setValue'];
+    register?: UseFormReturn<AdmissionFormData>['register'] | null;
+    setValue?: UseFormReturn<AdmissionFormData>['setValue'] | null;
+    canupload?: boolean;
 }
-const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register }: AcademicImageUploaderProps) => {
+const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register, canupload = true }: AcademicImageUploaderProps) => {
     const [images, setImages] = useState<AcademicImage[]>([]);
     const [selectedImage, setSelectedImage] = useState<AcademicImage | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -25,7 +26,7 @@ const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register }: A
     useEffect(() => {
         const converted = convertImageUrlsToPictures(imagesUrlArray ?? []);
         setImages(converted);
-        setValue("images", []);
+        if (setValue) setValue("images", []);
     }, [imagesUrlArray, setValue]);
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,11 +61,12 @@ const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register }: A
 
     const updateFormImagesField = (images: AcademicImage[]) => {
         const fileImages = images.filter((img) => img.file).map((img) => img.file!);
-        setValue("images", fileImages);
+        if (setValue) setValue("images", fileImages);
     };
 
     const deleteImageMutation = useMutation({
         mutationFn: async (imageUrl: string) => {
+            if (!productId) return;
             await deleteAcademicImage(productId, [imageUrl]);
             return imageUrl;
         },
@@ -132,13 +134,13 @@ const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register }: A
                                 )}
                             </div>
 
-                            {image.primary && (
+                            {(canupload && image.primary) && (
                                 <div className="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded">
                                     Primary
                                 </div>
                             )}
 
-                            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                            {canupload && <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
                                 {!image.primary && (
                                     <button
                                         onClick={() => setPrimaryImage(image.id)}
@@ -155,11 +157,11 @@ const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register }: A
                                 >
                                     <X className="w-3 h-3" />
                                 </button>
-                            </div>
+                            </div>}
                         </div>
                     ))}
 
-                    <div
+                    {canupload && <div
                         className="w-full aspect-[4/4] border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center hover:border-gray-400 cursor-pointer"
                         onClick={() => fileInputRef.current?.click()}
                     >
@@ -175,11 +177,11 @@ const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register }: A
                             ref={fileInputRef}
                             onChange={handleFileUpload}
                         />
-                    </div>
+                    </div>}
                 </div>
             </div>
 
-            <input type="hidden" {...register("images")} />
+            {register && <input type="hidden" {...register("images")} />}
 
             {selectedImage && (
                 <div

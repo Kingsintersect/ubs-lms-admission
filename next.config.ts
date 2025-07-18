@@ -23,6 +23,16 @@ const nextConfig: NextConfig = {
 				hostname: "res.cloudinary.com",
 				pathname: "**",
 			},
+			{
+				protocol: "https",
+				hostname: "ubs-lms-admission.vercel.app",
+				pathname: "**",
+			},
+			{
+				protocol: "https",
+				hostname: "uni-portal-system-backend.qverselearning.org",
+				pathname: "**",
+			},
 		],
 	},
 	compiler: {

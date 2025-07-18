@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { InputFormField, SelectFormField } from '@/components/ui/inputs/FormFields';
 import { Button } from '@/components/ui/button';
 import { extractErrorMessages } from '@/lib/errorsHandler';
+import { Faculty, Department } from '@/config/Types';
 
 const UpdateDeparment = ({ faculties, department, access_token }: { faculties: Faculty[], department: Department, access_token: string }) => {
    const {

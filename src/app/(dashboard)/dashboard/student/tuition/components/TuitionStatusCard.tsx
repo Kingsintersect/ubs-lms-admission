@@ -10,6 +10,7 @@ import { HandCoins } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { baseUrl } from '@/config';
+import { StudentType } from '@/config/Types';
 
 // Primary color: #701401 (deep burgundy)
 // Complementary colors: #014670 (deep blue), #407010 (olive green)
@@ -17,8 +18,8 @@ import { baseUrl } from '@/config';
 const TuitionStatusCard = ({ student }: { student: StudentType }) => {
 	const { user } = useAuth();
 	const { handleOpenModal, hasPiadAcceptanceFee, calculateOutstandingBalance } = useTuitionPayment();
-	const isPaid = student?.tuition_payment_status === 1;
-	const hasPartialPayment = Number(student?.tuition_amount_paid || 0) > 0;
+	const isPaid = student?.tuition_payment_status === "FULLY_PAID";
+	const hasPartialPayment = student?.tuition_payment_status === "PART_PAID";
 	const outstandingBalance = calculateOutstandingBalance(student?.tuition_amount_paid || 0);
 
 	return (

@@ -26,11 +26,6 @@ export async function GetTotalCoursesList(access_token: string) {
   return response;
 }
 
-
-
-
-
-
 export async function ViewSingleCourse(
   access_token: string,
   courseId: string

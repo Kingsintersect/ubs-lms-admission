@@ -11,13 +11,14 @@ import Link from 'next/link';
 import { baseUrl } from '@/config';
 import { formatToCurrency } from '@/lib/utils';
 import { ACCEPTANCE_FEE } from "@/config"
+import { StudentType } from '@/config/Types';
 
 // Primary color: #701401 (deep burgundy)
 // Complementary colors: #014670 (deep blue), #407010 (olive green)
 
 const AcceptanceStatusCard = ({ student }: { student: StudentType }) => {
 	const { handleOpenModal, hasAppliedForAdmission, hasBeenAdmitted } = useAcceptancePayment();
-	const isPaid = student?.acceptance_fee_payment_status === 1;
+	const isPaid = student?.acceptance_fee_payment_status === "FULLY_PAID";
 
 	return (
 		<motion.div

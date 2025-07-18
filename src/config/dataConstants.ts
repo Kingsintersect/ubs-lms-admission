@@ -13,6 +13,7 @@ import {
 	LucideIcon
 } from "lucide-react";
 import { ObjectType } from "@/types/generic.types";
+import { CreditLoad, Grade, Subject } from "./Types";
 
 export interface SidebarNavItem {
 	title: string;
@@ -54,8 +55,8 @@ export const AdminNavMain: SidebarNavConfig = {
 			icon: GraduationCap,
 			items: [
 				{
-					title: "Admission Listing",
-					url: "/dashboard/admin/student-admissions",
+					title: "Manage Admission",
+					url: "/dashboard/admin/manage-admissions",
 				},
 				{
 					title: "Student Listing",

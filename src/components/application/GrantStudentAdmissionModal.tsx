@@ -15,6 +15,7 @@ import {
    DialogHeader,
    DialogTrigger,
 } from "@/components/ui/dialog"
+import { Department, Faculty } from "@/config/Types";
 
 const GrantStudentAdmissionModal = ({ id, faculty_id, department_id }: { confirmHandler?: () => void, id: any, faculty_id: string | null, department_id: string | null }) => {
    const [openModal, setOpenModal] = useState(false);

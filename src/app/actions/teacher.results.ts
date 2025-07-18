@@ -1,12 +1,11 @@
 import { remoteApiUrl } from "@/config";
 import { apiCallerBeta } from "@/lib/apiCaller";
 
-interface ApiResponse<T> {
-    success: boolean;
-    data?: T;
-    error?: string;
-}
-
+// interface ApiResponse<T> {
+//     success: boolean;
+//     data?: T;
+//     error?: string;
+// }
 
 // result system
 export const fetchStudentsResults = async (access_token: string) => {

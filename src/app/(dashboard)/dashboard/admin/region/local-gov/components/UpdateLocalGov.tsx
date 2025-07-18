@@ -7,11 +7,12 @@ import { z } from 'zod';
 import { Loader2 } from "lucide-react";
 import { UpdateSingleLocalGov } from '@/app/actions/server.admin';
 import { notify } from '@/contexts/ToastProvider';
-import { baseUrl, State } from '@/config';
+import { baseUrl } from '@/config';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { InputFormField, SelectFormField } from '@/components/ui/inputs/FormFields';
 import { extractErrorMessages } from '@/lib/errorsHandler';
+import { LocalGov, State } from '@/config/Types';
 
 const UpdateLocalGov = ({ access_token, localGov, states, }: { access_token: string, states: State[], localGov: LocalGov }) => {
    const {

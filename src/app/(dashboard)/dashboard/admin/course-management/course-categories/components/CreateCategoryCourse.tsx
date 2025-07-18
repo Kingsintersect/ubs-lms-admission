@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { SelectFormField } from '@/components/ui/inputs/FormFields';
 import { extractErrorMessages } from '@/lib/errorsHandler';
 import { GenericDataType } from '@/types/generic.types';
+import { Faculty, Program, SemestersType } from '@/config/Types';
 
 const CreateCourseCategory = ({ access_token, programs, faculties, studyLevels, semesters }: { access_token: string, programs: Program[], faculties: Faculty[], studyLevels: GenericDataType[], semesters: SemestersType[] }) => {
    const {

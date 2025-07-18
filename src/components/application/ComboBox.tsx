@@ -2,6 +2,7 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import { useAppContext } from "@/contexts/AppContext";
 import { courses, grades } from "@/config";
+import { SittingCourse } from "@/config/Types";
 
 const ComboBox = ({ identifire }: { identifire: string }) => {
    const { setFirstSittingGrade, setSecondSittingGrade } = useAppContext()

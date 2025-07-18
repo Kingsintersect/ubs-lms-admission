@@ -1,4 +1,6 @@
 "use client";
+import { Roles } from '@/config';
+import { AdmissionStatusType, SittingCourse, StatusType, StudentType } from '@/config/Types';
 import { ensureClient } from '@/lib/ensureClient';
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
@@ -59,14 +61,14 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
          reg_number: null,
          is_applied: 0,
          reason_for_denial: null,
-         admission_status: "pending",
-         acceptance_fee_payment_status: 0,
-         tuition_payment_status: 0,
-         application_payment_status: 0,
+         admission_status: AdmissionStatusType.pending,
+         acceptance_fee_payment_status: StatusType.UNPAID,
+         tuition_payment_status: StatusType.UNPAID,
+         application_payment_status: StatusType.UNPAID,
          created_at: null,
          updated_at: null,
          deleted_at: null,
-         role: "STUDENT",
+         role: Roles.STUDENT,
          level: null,
          tuition_amount_paid: 0,
       },

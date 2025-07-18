@@ -1,4 +1,5 @@
 import { Roles } from "@/config";
+import { StudentType } from "@/config/Types";
 import { ObjectType } from "@/types/generic.types";
 
 export interface User {

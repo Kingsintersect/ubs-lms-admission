@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { InputFormField } from '@/components/ui/inputs/FormFields';
 import { extractErrorMessages } from '@/lib/errorsHandler';
+import { Country } from '@/config/Types';
 
 const UpdateCountry = ({ country, access_token }: { country: Country, access_token: string }) => {
    const {

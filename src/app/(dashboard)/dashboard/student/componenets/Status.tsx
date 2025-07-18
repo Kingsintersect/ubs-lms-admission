@@ -2,9 +2,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
 import { CheckCircle, CircleAlert, XCircle } from "lucide-react";
-
-type AdmissionStatusType = 'admitted' | 'pending' | 'not admitted';
-export type StatusType = 0 | 1 | 2;
+import { AdmissionStatusType, StatusType } from '@/config/Types';
 
 export function AdmissionStatus({ admissionStatus }: { admissionStatus: AdmissionStatusType }) {
    const status = admissionStatusConfig[admissionStatus];
@@ -49,7 +47,7 @@ export function StatusCheckCard({
    url?: string;
    // flag?: string;
 }) {
-   const statusKey = Number(dataStatus) as StatusType;
+   const statusKey = dataStatus as StatusType;
 
    const status = statusConfig[statusKey];
 
@@ -66,7 +64,7 @@ export function StatusCheckCard({
    }
 
    const Icon = status.icon;
-   const isLinkActive = admission === "admitted" && statusKey === 0;
+   const isLinkActive = admission === AdmissionStatusType.admitted && statusKey !== StatusType.FULLY_PAID;
 
    return (
       <Card className={status.backgroundColor}>
@@ -87,45 +85,45 @@ export function StatusCheckCard({
 
 
 const statusConfig = {
-   1: {
+   [StatusType.FULLY_PAID]: {
       iconColor: "text-green-400 dark:text-green-200",
       textColor: "text-green-500",
       backgroundColor: "bg-[#e1fff4]",
       message: "Paid",
       icon: CheckCircle,
    },
-   0: {
-      iconColor: "text-red-400 dark:text-red-200",
-      textColor: "text-red-500",
-      backgroundColor: "bg-[#fff4f4]",
-      message: "Not Paid",
-      icon: XCircle
-   },
-   2: {
+   [StatusType.PART_PAID]: {
       iconColor: "text-lime-400 dark:text-lime-200",
       textColor: "text-lime-500",
       backgroundColor: "bg-lime-50",
       message: "PART PAID",
       icon: CheckCircle,
    },
+   [StatusType.UNPAID]: {
+      iconColor: "text-red-400 dark:text-red-200",
+      textColor: "text-red-500",
+      backgroundColor: "bg-[#fff4f4]",
+      message: "Not Paid",
+      icon: XCircle
+   },
 }
 
 const admissionStatusConfig = {
-   admitted: {
+   [AdmissionStatusType.admitted]: {
       iconColor: "text-green-400 dark:text-green-200",
       textColor: "text-green-500",
       backgroundColor: "bg-[#e1fff4]",
       message: "GRANTED",
       icon: CheckCircle,
    },
-   pending: {
+   [AdmissionStatusType.pending]: {
       iconColor: "text-cyan-400 dark:text-cyan-200",
       textColor: "text-cyan-500",
       backgroundColor: "bg-[#e6f6f8]",
       message: "PENDING",
       icon: CircleAlert
    },
-   "not admitted": {
+   [AdmissionStatusType.not_admitted]: {
       iconColor: "text-red-400 dark:text-red-200",
       textColor: "text-red-500",
       backgroundColor: "bg-[#fff4f4]",
