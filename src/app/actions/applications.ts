@@ -7,22 +7,10 @@ import { apiCall } from "@/lib/apiCaller";
 import { loginSessionKey } from "@/lib/definitions";
 import { getSession } from "@/lib/session";
 import { ApplicationDetailsType } from "@/schemas/admission-schema";
+import { ApiResponseArray, ApiResponseSingle } from "@/types/api.types";
 import { Application, ApplicationStatus } from "@/types/application";
 import { SessionData } from "@/types/auth";
 
-interface ApiResponseArray {
-    status: number | boolean;
-    message?: string;
-    data: {
-        data: StudentType[];
-        total: number
-    }
-}
-interface ApiResponseSingle {
-    status: number | boolean;
-    message?: string;
-    data: ApplicationDetailsType;
-}
 export async function getAdmissionApplicants(options?: UseDataTableOptions): Promise<{ data: StudentType[]; total: number }> {
     const loginSession = (await getSession(loginSessionKey)) as SessionData;
     const {
@@ -43,7 +31,7 @@ export async function getAdmissionApplicants(options?: UseDataTableOptions): Pro
         ...filters,
     });
 
-    const response = await apiCall<undefined, ApiResponseArray>({
+    const response = await apiCall<undefined, ApiResponseArray<StudentType>>({
         url: `/admin/all-applications?academicSession=2024/2025&${query.toString()}`,
         method: "GET",
         accessToken: loginSession.access_token
@@ -80,7 +68,7 @@ export async function getAdmittedApplicants(options?: UseDataTableOptions): Prom
         ...filters,
     });
 
-    const response = await apiCall<undefined, ApiResponseArray>({
+    const response = await apiCall<undefined, ApiResponseArray<StudentType>>({
         url: `/admin/all-applications?academicSession=2024/2025&${query.toString()}`,
         method: "GET",
         accessToken: loginSession.access_token
@@ -100,7 +88,7 @@ export async function getAdmittedApplicants(options?: UseDataTableOptions): Prom
 export async function getStudentApplicantion(id: string): Promise<{ data: ApplicationDetailsType | null }> {
     const loginSession = (await getSession(loginSessionKey)) as SessionData;
 
-    const response = await apiCall<undefined, ApiResponseSingle>({
+    const response = await apiCall<undefined, ApiResponseSingle<ApplicationDetailsType>>({
         url: `/admin/single-application?id=${id}`,
         method: "GET",
         accessToken: loginSession.access_token
@@ -118,7 +106,7 @@ export async function getStudentApplicantion(id: string): Promise<{ data: Applic
 
 export async function ApproveStudentApplicantion(data: object): Promise<boolean> {
     const loginSession = (await getSession(loginSessionKey)) as SessionData;
-    const response = await apiCall<object, ApiResponseSingle>({
+    const response = await apiCall<object, ApiResponseSingle<ApplicationDetailsType>>({
         url: `/admin/approve-application`,
         method: "POST",
         data: data,
@@ -135,7 +123,7 @@ interface payLoad { reason: string, application_id: number | string }
 export async function RejectStudentApplicantion(data: payLoad): Promise<boolean> {
     const loginSession = (await getSession(loginSessionKey)) as SessionData;
 
-    const response = await apiCall<payLoad, ApiResponseSingle>({
+    const response = await apiCall<payLoad, ApiResponseSingle<ApplicationDetailsType>>({
         url: `/admin/reject-application`,
         method: "DELETE",
         data: data,

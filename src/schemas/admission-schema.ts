@@ -48,6 +48,7 @@ export const admissionSchema = z.object({
 
     // Program Selection
     program: z.string().min(1, 'Program selection is required'),
+    program_id: z.string().min(1, 'Program selection is required'),
     startTerm: z.string().min(1, 'Start term is required'),
     studyMode: z.string().min(1, 'Study mode is required'),
 

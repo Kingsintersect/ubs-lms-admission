@@ -19,7 +19,7 @@ export interface Student {
     reg_number: string | null;
     is_applied: number | null;
     reason_for_denial: string | null;
-    admission_status: "admitted" | "pending" | "not admitted";
+    admission_status: "ADMITTED" | "PENDING" | "NOT_ADMITTED";
     acceptance_fee_payment_status: number;
     tuition_payment_status: number;
     application_payment_status: number;

@@ -31,7 +31,7 @@ const TuitionPaymentContainer = () => {
         );
     }
 
-    if (user.admission_status === "not admitted") {
+    if (user.admission_status === "NOT_ADMITTED") {
         return <AdmissionDeniedBanner statement={user.reason_for_denial as string} />;
     }
 

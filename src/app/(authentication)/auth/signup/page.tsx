@@ -26,11 +26,11 @@ export default function SignupPage() {
         errors,
         isSubmitting,
         steps,
-        parentPrograms,
-        childPrograms,
-        selectedProgramId,
-        isProgramsLoading,
-        handleProgramChange,
+        // parentPrograms,
+        // childPrograms,
+        // selectedProgramId,
+        // isProgramsLoading,
+        // handleProgramChange,
         delta,
         APPLICATION_FEE,
     } = useSignInMultiStepViewModel();
@@ -139,7 +139,7 @@ export default function SignupPage() {
                         </FormFieldSet>
                     </motion.div>
                 )}
-                {currentStep == 2 && (
+                {/* {currentStep == 2 && (
                     <motion.div
                         initial={{ x: delta >= 1 ? '80%' : '-80%', opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
@@ -174,8 +174,8 @@ export default function SignupPage() {
                             </FormFieldSet>
                         )}
                     </motion.div>
-                )}
-                {currentStep == 3 && (
+                )} */}
+                {currentStep == 2 && (
                     <motion.div
                         initial={{ x: delta >= 1 ? '80%' : '-80%', opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
@@ -222,7 +222,7 @@ export default function SignupPage() {
                         </FormFieldSet>
                     </motion.div>
                 )}
-                {currentStep == 4 && (
+                {currentStep == 3 && (
                     <motion.div
                         initial={{ x: delta >= 1 ? '80%' : '-80%', opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}

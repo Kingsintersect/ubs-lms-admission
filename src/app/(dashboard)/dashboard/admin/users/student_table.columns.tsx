@@ -88,11 +88,11 @@ export const student_columns: ColumnDef<Partial<StudentTableColumnsType>>[] = [
         cell: ({ row }) => {
             const student = row.original as StudentTableColumnsType;
             switch (student.admission_status) {
-                case "admitted":
+                case "ADMITTED":
                     return <span className="text-green-400 font-semibold">{student.admission_status}</span>;
-                case "pending":
+                case "PENDING":
                     return <span className="text-cyan-400 font-semibold">{student.admission_status}</span>;
-                case "not admitted":
+                case "NOT_ADMITTED":
                     return <span className="text-red-400 font-semibold">{student.admission_status}</span>;
                 default:
                     return <span className="text-gray-400 font-semibold">Unknown</span>;

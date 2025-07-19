@@ -1,18 +1,19 @@
 import GrantStudentAdmissionModal from '@/components/application/GrantStudentAdmissionModal';
 import RejectStudentAdmissionModal from '@/components/application/RejectStudentAdmissionModal';
 import { Card } from '@/components/ui/card';
+import { AdmissionStatusType } from '@/config/Types';
 import { CheckCircle, XCircle } from 'lucide-react';
 import React from 'react'
 
 interface AdmissionActionButtonsProps {
     id: string;
-    status: 'pending' | 'not admitted' | 'admitted';
+    status: AdmissionStatusType;
     facultyId: string;
     departmentId: string;
 }
 
 const AdmissionActionButtons = ({ id, status, facultyId, departmentId }: AdmissionActionButtonsProps) => {
-    if (status === "pending") {
+    if (status === "PENDING") {
         return (
             <Card className="p-7">
                 <div className="flex items-center justify-between">
@@ -21,7 +22,7 @@ const AdmissionActionButtons = ({ id, status, facultyId, departmentId }: Admissi
                 </div>
             </Card>
         );
-    } else if (status === "not admitted") {
+    } else if (status === "NOT_ADMITTED") {
         return (
             <Card className="p-7">
                 <div className="flex items-center justify-around">

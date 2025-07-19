@@ -114,6 +114,8 @@ const AdmissionForm: React.FC = () => {
         return <SuccessScreen onReset={handleReset} />;
     }
 
+
+
     return (
         <div className="relative min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
             <button
@@ -235,6 +237,3 @@ const AdmissionForm: React.FC = () => {
 };
 
 export default AdmissionForm;
-
-
-// https://ubs-lms-admission.vercel.app/admission/payments/verify-admission?transAmount=35000.00&reference=1429qraR3J1752585820&transRef=O8ml0025Is14hB6g29Bm&errorMessage=Approved+by+Financial+Institution&redirectOnError=0&currency=NGN&gateway=&channelId=0&status=0

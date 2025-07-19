@@ -25,11 +25,11 @@ const paymentFilterOptions = [
 ];
 const statusFilterOptions = [
    { label: "All", value: "all" },
-   { label: "Pending Confirmation", value: "pending" },
+   { label: "Pending Confirmation", value: "PENDING" },
    { label: "Applied", value: "applied" },
    { label: "Not Applied", value: "notapplied" },
-   { label: "Admitted", value: "admitted" },
-   { label: "Not Admitted", value: "not admitted" },
+   { label: "Admitted", value: "ADMITTED" },
+   { label: "Not Admitted", value: "NOT_ADMITTED" },
 ];
 
 const StudentApplications = () => {
@@ -74,9 +74,9 @@ const StudentApplications = () => {
             !statusFilter || statusFilter === "all" ||
             (statusFilter === "applied" && student.is_applied === 1) ||
             (statusFilter === "notapplied" && student.is_applied === 0) ||
-            (statusFilter === "admitted" && student.admission_status === "admitted") ||
-            (statusFilter === "pending" && student.admission_status === "pending" && student.is_applied === 1) ||
-            (statusFilter === "not admitted" && student.admission_status === "not admitted");
+            (statusFilter === "ADMITTED" && student.admission_status === "ADMITTED") ||
+            (statusFilter === "PENDING" && student.admission_status === "PENDING" && student.is_applied === 1) ||
+            (statusFilter === "NOT_ADMITTED" && student.admission_status === "NOT_ADMITTED");
 
          return matchesPayment && matchesStatus;
       });

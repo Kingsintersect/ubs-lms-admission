@@ -2,10 +2,10 @@
 
 import React, { useState } from 'react';
 import { Users, GraduationCap } from 'lucide-react';
-import StudentsInCourse from './components/StudentsInCourse';
 import { ApplicantsDataTable } from './components/ApplicantsDataTable';
 import { SITE_NAME } from '@/config';
 import { Badge } from '@/components/ui/badge';
+import { AdmittedStudentDataTable } from './components/AdmittedStudentDataTable';
 
 const StudentApplicationsPage = () => {
     const [activeTab, setActiveTab] = useState('applicants');
@@ -68,7 +68,7 @@ const StudentApplicationsPage = () => {
                 )}
 
                 {activeTab === 'students' && (
-                    <StudentsInCourse />
+                    <AdmittedStudentDataTable />
                 )}
             </div>
         </div>

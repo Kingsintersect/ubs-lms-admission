@@ -1,17 +1,14 @@
 "use client";
 
 import { ApproveStudentApplicantion, RejectStudentApplicantion } from '@/app/actions/applications';
-import { GetSingleDepartment, GetSingleFaculty } from '@/app/actions/server.admin';
 import { Textarea } from '@/components/ui/textarea';
-import { Department, Faculty } from '@/config/Types';
-import { useAuth } from '@/contexts/AuthContext';
 import { toastApiError, toastSuccess } from '@/lib/toastApiError';
 import { ApplicationDetailsType } from '@/schemas/admission-schema';
 import { applicationReview, ApplicationReviewFormValues } from '@/schemas/applicationReview-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form';
 
 interface DecisionModalProps {
@@ -21,10 +18,12 @@ interface DecisionModalProps {
     application: ApplicationDetailsType | null | undefined;
 }
 export const DecisionModal = ({ decisionType, setShowDecisionModal, submitDecision, application }: DecisionModalProps) => {
-    const { access_token } = useAuth();
     const queryClient = useQueryClient();
-    const [facultyData, setFacultyData] = useState<Faculty | null>(null)
-    const [departmentData, setDepartmentData] = useState<Department | null>(null)
+    // const [facultyData, setFacultyData] = useState<Faculty | null>(null)
+    // const [departmentData, setDepartmentData] = useState<Department | null>(null)
+    const program = application?.program as string;
+    const study_mode = application?.application.studyMode as string;
+    const startTerm = application?.application.startTerm as string;
 
     const {
         handleSubmit,
@@ -68,8 +67,8 @@ export const DecisionModal = ({ decisionType, setShowDecisionModal, submitDecisi
         if (application) {
             approveAdmissionMutation.mutate({
                 application_id: application.id,
-                faculty_id: 6,//application.faculty_id,
-                department_id: 17,//application.department_id,
+                program: application.program,
+                program_id: String(application.program_id),
                 semester: "1SM",//application.accademic_semester,
                 accademic_session: application.accademic_session
             });
@@ -80,24 +79,25 @@ export const DecisionModal = ({ decisionType, setShowDecisionModal, submitDecisi
         rejectAdmissionMutation.mutate({ ...values, application_id: application.id });
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            if (access_token && application?.department_id && application.faculty_id) {
-                try {
-                    const [faculty, department] = await Promise.all([
-                        GetSingleFaculty(access_token, "6"),
-                        GetSingleDepartment("17", access_token),
-                    ]);
-                    setFacultyData(faculty.success.data);
-                    setDepartmentData(department.success.data);
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                }
-            }
-        };
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         if (access_token && application?.department_id && application.faculty_id) {
+    //             try {
+    //                 const [faculty, department] = await Promise.all([
+    //                     GetSingleFaculty(access_token, "6"),
+    //                     GetSingleDepartment("17", access_token),
+    //                 ]);
+    //                 setFacultyData(faculty.success.data);
+    //                 setDepartmentData(department.success.data);
+    //             } catch (error) {
+    //                 console.error('Error fetching data:', error);
+    //             }
+    //         }
+    //     };
 
-        fetchData();
-    }, [access_token, application?.department_id, application?.faculty_id]);
+    //     fetchData();
+    // }, [access_token, application?.department_id, application?.faculty_id]);
+
     // useEffect(() => {
     //     const fetchData = async () => {
     //         if (access_token && application?.department_id && application.faculty_id) {
@@ -147,17 +147,16 @@ export const DecisionModal = ({ decisionType, setShowDecisionModal, submitDecisi
                         <div className="space-y-4">
                             <div className="w-full space-y-5 my-10 text-left">
                                 <div className="flex flex-row gap-5">
-                                    <div className="w-32 font-bold text-lg text-orange-950">FACULTY: </div>
-                                    <div className="grow text-gray-700">{facultyData && facultyData.faculty_name}</div>
-                                    {/* <div className="grow text-gray-700">{facultyData && facultyData.faculty_name}</div> */}
+                                    <div className="w-32 font-bold text-lg text-orange-950">PROGRAM: </div>
+                                    <div className="grow text-gray-700">{program}</div>
                                 </div>
                                 <div className="flex flex-row gap-5">
-                                    <div className="w-32 font-bold text-lg text-orange-950">DEPARTMENT: </div>
-                                    <div className="grow text-gray-700">{departmentData && departmentData.department_name}</div>
+                                    <div className="w-32 font-bold text-lg text-orange-950">STUDY MODE: </div>
+                                    <div className="grow text-gray-700">{study_mode}</div>
                                 </div>
                                 <div className="flex flex-row gap-5">
-                                    <div className="w-32 font-bold text-lg text-orange-950">SEMESTER: </div>
-                                    <div className="grow text-gray-700">{"1st Semester"}</div>
+                                    <div className="w-32 font-bold text-lg text-orange-950">BEGINS: </div>
+                                    <div className="grow text-gray-700">{startTerm}</div>
                                 </div>
                             </div>
                         </div>
@@ -175,10 +174,10 @@ export const DecisionModal = ({ decisionType, setShowDecisionModal, submitDecisi
                                 className={`px-4 py-2 text-white rounded-lg bg-green-600 hover:bg-green-700`}
                             >
                                 {approveAdmissionMutation.isPending ? (
-                                    <>
-                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                    <div className='flex items-center justify-center gap-2'>
+                                        <Loader2 className="w-5 h-5 animate-spin" />
                                         <span>Sending request...</span>
-                                    </>
+                                    </div>
                                 ) : (
                                     <>
                                         {'Approve'}
@@ -191,10 +190,10 @@ export const DecisionModal = ({ decisionType, setShowDecisionModal, submitDecisi
                                 className={`px-4 py-2 text-white rounded-lg bg-red-600 hover:bg-red-700`}
                             >
                                 {rejectAdmissionMutation.isPending ? (
-                                    <>
-                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                    <div className='flex items-center justify-center gap-2'>
+                                        <Loader2 className="w-5 h-5 animate-spin" />
                                         <span>Sending request...</span>
-                                    </>
+                                    </div>
                                 ) : (
                                     <>
                                         {'Reject'}

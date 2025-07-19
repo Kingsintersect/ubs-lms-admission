@@ -7,6 +7,5 @@ export async function GetAllProgram() {
 		url: `${remoteApiUrl}/odl/categories`,
 		method: "GET",
 	})) as GenericDataType;
-	console.log("response", response);
 	return response;
 }

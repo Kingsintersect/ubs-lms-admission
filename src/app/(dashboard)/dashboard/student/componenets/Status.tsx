@@ -5,6 +5,7 @@ import { CheckCircle, CircleAlert, XCircle } from "lucide-react";
 import { AdmissionStatusType, StatusType } from '@/config/Types';
 
 export function AdmissionStatus({ admissionStatus }: { admissionStatus: AdmissionStatusType }) {
+   console.log('admissionStatus', admissionStatus);
    const status = admissionStatusConfig[admissionStatus];
 
    if (!status || !status.icon) {

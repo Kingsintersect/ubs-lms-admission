@@ -30,8 +30,8 @@ export const SignupSchema = z
         email: z.string().email({ message: "Please enter a valid email." }),
         password: z.string().min(6, { message: "Should be at least 6 characters long" }),
         password_confirmation: z.string(),
-        department_id: z.string().min(1, { message: "Required" }),
-        faculty_id: z.string().min(1, { message: "Required" }),
+        // department_id: z.string().min(1, { message: "Required" }),
+        // faculty_id: z.string().min(1, { message: "Required" }),
         amount: z.number().min(1, { message: "Required" }),
     })
     .refine((data) => data.password === data.password_confirmation, {
@@ -54,18 +54,18 @@ const steps = [
         label: "Personal Info",
         fields: ["first_name", "last_name", "other_name", "phone_number", "gender", "nationality", "state", "hometown_address", "residential_address", "dob"],
     },
+    // {
+    //     id: 2,
+    //     label: "Account Credentials",
+    //     fields: ["faculty_id", "department_id"],
+    // },
     {
         id: 2,
-        label: "Account Credentials",
-        fields: ["faculty_id", "department_id"],
-    },
-    {
-        id: 3,
         label: "Application Data",
         fields: ["email", "username", "password", "password_confirmation"],
     },
     {
-        id: 4,
+        id: 3,
         label: "Confirmation",
         fields: ["amount"],
     },
@@ -142,11 +142,11 @@ export default function useSignInMultiStepViewModel() {
     const handleProgramChange = useCallback((programId: string) => {
         const numericId = Number(programId);
         setSelectedProgramId(numericId);
-        setValue("faculty_id", String(programId));
+        // setValue("faculty_id", String(programId));
 
         const selectedProgram = parentPrograms.find((p) => p.id === numericId);
         setSelectedProgramName(selectedProgram?.label || null);
-    }, [setValue, parentPrograms]);
+    }, [parentPrograms]);
 
 
     const signinMutation = useMutation({

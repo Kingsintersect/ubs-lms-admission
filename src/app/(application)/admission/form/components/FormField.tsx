@@ -38,7 +38,7 @@ export const FormField: React.FC<FormFieldProps> = ({
                         onValueChange={field.onChange as (value: string) => void}
                         value={field.value as string | undefined ?? ""}
                     >
-                        <SelectTrigger className="mt-1">
+                        <SelectTrigger className="w-full mt-1">
                             <SelectValue placeholder={placeholder} />
                         </SelectTrigger>
                         <SelectContent>

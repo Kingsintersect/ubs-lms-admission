@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { ObjectType } from "@/types/generic.types";
 import { CreditLoad, Grade, Subject } from "./Types";
+import { ProgramNode } from "@/components/ProgramAccordion";
 
 export interface SidebarNavItem {
 	title: string;
@@ -123,7 +124,7 @@ export const AdminNavMain: SidebarNavConfig = {
 					url: "/dashboard/admin/course-management/course-assignment",
 				},
 			],
-			display: true,
+			display: false,
 		},
 		{
 			title: "REGION MANAGEMENT",
@@ -143,7 +144,7 @@ export const AdminNavMain: SidebarNavConfig = {
 					url: "/dashboard/admin/region/local-gov",
 				},
 			],
-			display: true,
+			display: false,
 		},
 	]
 }
@@ -532,18 +533,35 @@ export const stateValues = [
 	"Federal Capital Territory",
 ];
 
-export const ExternalPrograms = [
+export const ExternalPrograms: ProgramNode[] = [
 	{
-		name: 'Business School',
+		id: 1,
+		name: "University of Lagos",
 		children: [
 			{
-				name: 'MBA',
+				id: 11,
+				name: "Business School",
 				children: [
 					{
-						name: 'Full-time',
+						id: 111,
+						name: "MBA Program",
 						children: [
-							{ name: 'Finance Track' },
-							{ name: 'Marketing Track' },
+							{
+								id: 1111,
+								name: "Full-Time",
+								children: [
+									{ id: 11111, name: "Finance Track" },
+									{ id: 11112, name: "Marketing Track" },
+								],
+							},
+							{
+								id: 1112,
+								name: "Part-Time",
+								children: [
+									{ id: 11121, name: "Leadership Track" },
+									{ id: 11122, name: "HR Track" },
+								],
+							},
 						],
 					},
 				],
@@ -551,16 +569,103 @@ export const ExternalPrograms = [
 		],
 	},
 	{
-		name: 'UNN Business School',
+		id: 2,
+		name: "University of Nigeria Nsukka",
 		children: [
 			{
-				name: 'Executive MBA',
+				id: 21,
+				name: "Faculty of Management",
 				children: [
 					{
-						name: 'Weekend',
+						id: 211,
+						name: "Executive MBA",
 						children: [
-							{ name: 'Leadership' },
-							{ name: 'Innovation' },
+							{
+								id: 2111,
+								name: "Weekend Program",
+								children: [
+									{ id: 21111, name: "Innovation & Strategy" },
+									{ id: 21112, name: "Digital Transformation" },
+								],
+							},
+						],
+					},
+				],
+			},
+		],
+	},
+	{
+		id: 3,
+		name: "Ahmadu Bello University",
+		children: [
+			{
+				id: 31,
+				name: "School of Business Administration",
+				children: [
+					{
+						id: 311,
+						name: "Postgraduate Programs",
+						children: [
+							{
+								id: 3111,
+								name: "Masters in Entrepreneurship",
+								children: [
+									{ id: 31111, name: "Startup Growth Track" },
+									{ id: 31112, name: "Venture Capital Track" },
+								],
+							},
+						],
+					},
+				],
+			},
+		],
+	},
+	{
+		id: 4,
+		name: "Covenant University",
+		children: [
+			{
+				id: 41,
+				name: "College of Leadership",
+				children: [
+					{
+						id: 411,
+						name: "Leadership MBA",
+						children: [
+							{
+								id: 4111,
+								name: "Online Mode",
+								children: [
+									{ id: 41111, name: "Public Sector Leadership" },
+									{ id: 41112, name: "NGO Management" },
+								],
+							},
+						],
+					},
+				],
+			},
+		],
+	},
+	{
+		id: 5,
+		name: "Pan-Atlantic University",
+		children: [
+			{
+				id: 51,
+				name: "Lagos Business School",
+				children: [
+					{
+						id: 511,
+						name: "Professional Education",
+						children: [
+							{
+								id: 5111,
+								name: "Short Courses",
+								children: [
+									{ id: 51111, name: "Negotiation Skills" },
+									{ id: 51112, name: "Effective Communication" },
+								],
+							},
 						],
 					},
 				],

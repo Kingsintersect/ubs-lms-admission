@@ -7,7 +7,7 @@ import { AdmissionFormData } from "@/schemas/admission-schema";
 
 export const submitAdmissionForm = async (data: AdmissionFormData, access_token: string) => {
     const formData = new FormData();
-
+    console.log('data', data)
     // Append scalar fields
     formData.append("sponsor_name", data.sponsor_name);
     formData.append("sponsor_relationship", data.sponsor_relationship);
@@ -19,6 +19,7 @@ export const submitAdmissionForm = async (data: AdmissionFormData, access_token:
     formData.append("gpa", data.gpa);
     formData.append("graduationYear", data.graduationYear);
     formData.append("program", data.program);
+    formData.append("program_id", data.program_id);
     formData.append("startTerm", data.startTerm);
     formData.append("studyMode", data.studyMode);
     formData.append("personalStatement", data.personalStatement);

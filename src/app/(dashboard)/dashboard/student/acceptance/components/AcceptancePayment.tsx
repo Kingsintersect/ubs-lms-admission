@@ -15,7 +15,7 @@ const AcceptancePayment = () => {
 
    return (
       <>
-         {student?.admission_status === "not admitted" ?
+         {student?.admission_status === "NOT_ADMITTED" ?
             <AdmissionDeniedBanner statement={student.reason_for_denial as string} />
             :
             <>

@@ -24,6 +24,14 @@ export type StudentTableColumnsType = {
     // actions: string
 }
 export const ApplicantsDataTable = () => {
+    const admissionStatusStyles: Record<
+        "ADMITTED" | "PENDING" | "NOT_ADMITTED",
+        string
+    > = {
+        ADMITTED: "bg-green-100 text-green-700 border-green-400",
+        PENDING: "bg-yellow-100 text-yellow-800 border-yellow-400",
+        NOT_ADMITTED: "bg-red-100 text-red-700 border-red-400",
+    };
     const {
         data = [],
         isLoading,
@@ -73,12 +81,14 @@ export const ApplicantsDataTable = () => {
             accessorKey: "is_applied",
             header: "Application Status",
             cell: ({ row }) => {
-                const value = row.getValue("is_applied");
-                const isApplied = value === true || value === 1 || value === "1"; // normalize truthy values
-
+                const key = row.getValue("is_applied");
+                const isApplied = key === true || key === 1 || key === "1";
+                const statusText = isApplied ? "APPLIED" : "NOT APPLIED"
+                const statusClassList = key
+                    ? "text-green-700	bg-green-100	border-green-400" : "text-red-700	bg-red-100	border-red-400";
                 return (
-                    <Badge className="rounded-lg text-white" variant={isApplied ? "destructive" : "secondary"}>
-                        {isApplied ? "APPLIED" : "NOT APPLIED"}
+                    <Badge className={`rounded-lg ${statusClassList}`} variant={isApplied ? "destructive" : "secondary"}>
+                        {statusText}
                     </Badge>
                 );
             },
@@ -87,26 +97,16 @@ export const ApplicantsDataTable = () => {
             accessorKey: "admission_status",
             header: "Admission Status",
             cell: ({ row }) => {
-                const status = row.getValue("admission_status") as string;
+                const statusKey = row.getValue("admission_status") as string;
+                const statusText = statusKey === "ADMITTED"
+                    ? "ADMITTED" : statusKey === "PENDING"
+                        ? "PENDING" : "NOT ADMITTED";
                 return (
                     <Badge
-                        variant={
-                            status === "NOT_ADMITTED"
-                                ? "destructive"
-                                : status === "ADMITTED" || status === "PENDING"
-                                    ? "outline"
-                                    : "outline"
-                        }
-                        className={`font-semibold rounded-lg ${status === "ADMITTED"
-                            ? "text-white"
-                            : status === "PENDING"
-                                ? "text-white bg-cyan-600"
-                                : status === "NOT_ADMITTED"
-                                    ? "text-red-500"
-                                    : "text-WHITE-400"
-                            }`}
+                        variant={"default"}
+                        className={`font-semibold rounded-lg ${admissionStatusStyles[statusKey]}`}
                     >
-                        {status || "Unknown"}
+                        {statusText}
                     </Badge>
                 );
             }

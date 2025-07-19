@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { useDataTable } from '@/hooks/useDataTable'
 import { getAdmittedApplicants } from "@/app/actions/applications";
 import { ActionMenu } from "@/components/ui/datatable/ActionMenu";
-import { NotebookTabs } from "lucide-react";
+import { EditIcon, NotebookTabs } from "lucide-react";
 import { baseUrl } from "@/config";
 import { StudentType } from "@/config/Types";
 
@@ -24,6 +24,12 @@ export type StudentTableColumnsType = {
     // actions: string
 }
 export const AdmittedStudentDataTable = () => {
+    type StatusKey = "FULLY_PAID" | "PART_PAID" | "NOT_PAID";
+    const statusStyles = {
+        FULLY_PAID: "bg-green-100 text-green-700 border-green-400",
+        PART_PAID: "bg-yellow-100 text-yellow-800 border-yellow-400",
+        NOT_PAID: "bg-red-100 text-red-700 border-red-400",
+    };
     const {
         data = [],
         isLoading,
@@ -70,41 +76,34 @@ export const AdmittedStudentDataTable = () => {
             cell: ({ row }) => `${row.getValue("email")}`,
         },
         {
-            accessorKey: "is_applied",
-            header: "Application Status",
-            cell: ({ row }) => (
-                <Badge className="rounded-lg" variant={row.getValue("is_applied") === "1" ? "default" : "destructive"}>
-                    {Boolean(row.getValue("is_applied")) ? "APPLIED" : "NOT APPLIED"}
-                </Badge>
-            ),
+            accessorKey: "acceptance_fee_payment_status",
+            header: "Acceptance Fee Status",
+            cell: ({ row }) => {
+                const statusKey = row.getValue("acceptance_fee_payment_status");
+                const statusText = statusKey === "FULLY_PAID"
+                    ? "FULLY PAID" : statusKey === "PART_PAID"
+                        ? "PART PAID" : "NOT PAID";
+                return (
+                    <Badge className={`rounded-lg ${statusStyles[statusKey as StatusKey]}`} variant={row.getValue("acceptance_fee_payment_status") === "PAID" ? "default" : "destructive"}>
+                        {statusText}
+                    </Badge>
+                )
+            },
         },
         {
-            accessorKey: "admission_status",
-            header: "Admission Status",
+            accessorKey: "tuition_payment_status",
+            header: "Tuition Fee Status",
             cell: ({ row }) => {
-                const status = row.getValue("admission_status") as string;
+                const statusKey = row.getValue("tuition_payment_status");
+                const statusText = statusKey === "FULLY_PAID"
+                    ? "FULLY PAID" : statusKey === "PART_PAID"
+                        ? "PART PAID" : "NOT PAID";;
                 return (
-                    <Badge
-                        variant={
-                            status === "not_admitted"
-                                ? "destructive"
-                                : status === "admitted" || status === "pending"
-                                    ? "default"
-                                    : "outline"
-                        }
-                        className={`font-semibold rounded-lg ${status === "admitted"
-                            ? "text-white"
-                            : status === "pending"
-                                ? "text-cyan-500"
-                                : status === "not_admitted"
-                                    ? "text-red-500"
-                                    : "text-WHITE-400"
-                            }`}
-                    >
-                        {status || "Unknown"}
+                    <Badge className={`rounded-lg ${statusStyles[statusKey as StatusKey]}`} variant={statusKey === "PAID" ? "default" : "destructive"}>
+                        {statusText}
                     </Badge>
-                );
-            }
+                )
+            },
         },
         {
             id: "actions",
@@ -120,7 +119,7 @@ export const AdmittedStudentDataTable = () => {
                         onCopy={(id) => navigator.clipboard.writeText(id ?? "")}
                         menu={[
                             { title: "Application Details", url: `${basePath}/${student.id}`, icon: NotebookTabs },
-                            // { title: "Update Record", url: `${basePath}/${student.id}/update`, icon: EditIcon },
+                            { title: "Update Record", url: `${basePath}/${student.id}/update`, icon: EditIcon },
                         ]}
                     />
                 );

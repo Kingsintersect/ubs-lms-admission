@@ -9,7 +9,8 @@ import {
 import { AdmissionFormData } from "@/schemas/admission-schema";
 import { FieldErrors, UseFormGetValues, UseFormSetValue, UseFormWatch } from "react-hook-form";
 
-type ProgramNode = {
+export type ProgramNode = {
+    id: number;
     name: string;
     children?: ProgramNode[];
 };
@@ -19,8 +20,6 @@ interface ProgramAccordionProps {
     level?: number;
     setValue: UseFormSetValue<AdmissionFormData>;
     watch: UseFormWatch<AdmissionFormData>;
-    // onSelect: (value: string) => void;
-    // selected: string | null;
 }
 
 export default function ProgramAccordion({
@@ -28,39 +27,39 @@ export default function ProgramAccordion({
     level = 0,
     setValue,
     watch,
-    // onSelect,
-    // selected,
 }: ProgramAccordionProps) {
     const selected = watch("program");
+    const handleProgramSelect = (node: ProgramNode) => {
+        setValue("program", node.name)
+        setValue("program_id", String(node.id))
+    }
 
     return (
         <Accordion type="multiple" className={`pl-${level * 4}`}>
             {nodes.map((node, index) => {
                 const id = `${level}-${index}-${node.name}`;
-                const hasChildren = node.children && node.children.length > 0;
-                const isSelected = selected === node.name && !hasChildren;
+                // const hasChildren = node.children && node.children.length > 0;
+                // const isSelected = selected === node.name //&& !hasChildren;
 
                 return (
                     <AccordionItem key={id} value={id}>
                         <AccordionTrigger className="text-left">{node.name}</AccordionTrigger>
                         <AccordionContent>
-                            {hasChildren ? (
+                            <div
+                                className={`pl-4 py-1 cursor-pointer rounded ${selected === node.name ? "bg-primary text-white" : "hover:bg-muted"
+                                    }`}
+                                onClick={() => handleProgramSelect(node)}
+                            >
+                                🎓 {node.name}
+                            </div>
+
+                            {Array.isArray(node.children) && node.children.length > 0 && (
                                 <ProgramAccordion
-                                    nodes={node.children!}
+                                    nodes={node.children}
                                     level={level + 1}
                                     setValue={setValue}
                                     watch={watch}
-                                // onSelect={onSelect}
-                                // selected={selected}
                                 />
-                            ) : (
-                                <div
-                                    className={`pl-4 py-1 cursor-pointer rounded ${isSelected ? "bg-primary text-white" : "hover:bg-muted"}`}
-                                    // onClick={() => onSelect(node.name)}
-                                    onClick={() => setValue("program", node.name)}
-                                >
-                                    🎓 {node.name}
-                                </div>
                             )}
                         </AccordionContent>
                     </AccordionItem>
@@ -78,23 +77,26 @@ interface ProgramAccordionDisplayProps {
     errors: FieldErrors<AdmissionFormData>;
 }
 export const ProgramAccordionDisplay = ({ programs, setValue, getValues, watch, errors }: ProgramAccordionDisplayProps) => {
-    // const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
 
     return (
         <div className="max-w-3xl mx-auto p-4">
-            <h1 className="text-2xl font-bold mb-4 text-site-a-dark">Select a Program</h1>
+            <h1 className="text-2xl font-bold mb-0 text-site-b-dark">Select a Program</h1>
+            <p className="italic text-site-a-dark mb-4">any program can be selected from the parent to the child program...</p>
 
             <ProgramAccordion
                 nodes={programs}
                 setValue={setValue}
                 watch={watch}
-            // onSelect={setSelectedProgram}
-            // selected={selectedProgram}
             />
 
             {errors.program && (
-                <p className="text-red-500 text-sm">
+                <p className="text-red-500 text-sm mb-2">
                     {errors.program.message}
+                </p>
+            )}
+            {errors.program_id && (
+                <p className="text-red-500 text-sm">
+                    {errors.program_id.message}
                 </p>
             )}
 
@@ -106,3 +108,31 @@ export const ProgramAccordionDisplay = ({ programs, setValue, getValues, watch, 
         </div>
     );
 }
+
+{/* <AccordionItem key={id} value={id}>
+    <AccordionTrigger
+        className={`text-left cursor-pointer rounded ${selected === node.name ? "bg-gray-200 " : "hover:bg-muted"
+            }`}
+        onClick={() => handleProgramSelect(node)}
+    >
+        {node.name}
+    </AccordionTrigger>
+    <AccordionContent>
+        <div
+            className={`pl-4 py-1 cursor-pointer rounded ${selected === node.name ? "bg-gray-100" : "hover:bg-muted"
+                }`}
+            onClick={() => handleProgramSelect(node)}
+        >
+            🎓 {node.name}
+        </div>
+
+        {Array.isArray(node.children) && node.children.length > 0 && (
+            <ProgramAccordion
+                nodes={node.children}
+                level={level + 1}
+                setValue={setValue}
+                watch={watch}
+            />
+        )}
+    </AccordionContent>
+</AccordionItem> */}
