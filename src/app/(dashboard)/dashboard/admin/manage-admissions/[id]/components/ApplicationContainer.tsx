@@ -17,7 +17,6 @@ export const ApplicationContainer = ({ id }) => {
     };
 
     const submitDecision = () => {
-        console.log("inside submit decision");
         setShowDecisionModal(false);
     };
 
@@ -29,8 +28,6 @@ export const ApplicationContainer = ({ id }) => {
         },
         enabled: !!id,
     });
-
-    console.log('application', application)
 
     return (
 

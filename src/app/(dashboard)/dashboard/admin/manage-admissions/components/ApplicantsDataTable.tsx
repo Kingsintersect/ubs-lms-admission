@@ -72,11 +72,16 @@ export const ApplicantsDataTable = () => {
         {
             accessorKey: "is_applied",
             header: "Application Status",
-            cell: ({ row }) => (
-                <Badge className="rounded-lg" variant={row.getValue("is_applied") === "1" ? "default" : "destructive"}>
-                    {Boolean(row.getValue("is_applied")) ? "APPLIED" : "NOT APPLIED"}
-                </Badge>
-            ),
+            cell: ({ row }) => {
+                const value = row.getValue("is_applied");
+                const isApplied = value === true || value === 1 || value === "1"; // normalize truthy values
+
+                return (
+                    <Badge className="rounded-lg text-white" variant={isApplied ? "destructive" : "secondary"}>
+                        {isApplied ? "APPLIED" : "NOT APPLIED"}
+                    </Badge>
+                );
+            },
         },
         {
             accessorKey: "admission_status",
@@ -86,17 +91,17 @@ export const ApplicantsDataTable = () => {
                 return (
                     <Badge
                         variant={
-                            status === "not_admitted"
+                            status === "NOT_ADMITTED"
                                 ? "destructive"
-                                : status === "admitted" || status === "pending"
-                                    ? "default"
+                                : status === "ADMITTED" || status === "PENDING"
+                                    ? "outline"
                                     : "outline"
                         }
-                        className={`font-semibold rounded-lg ${status === "admitted"
+                        className={`font-semibold rounded-lg ${status === "ADMITTED"
                             ? "text-white"
-                            : status === "pending"
-                                ? "text-cyan-500"
-                                : status === "not_admitted"
+                            : status === "PENDING"
+                                ? "text-white bg-cyan-600"
+                                : status === "NOT_ADMITTED"
                                     ? "text-red-500"
                                     : "text-WHITE-400"
                             }`}
@@ -163,9 +168,9 @@ export const ApplicantsDataTable = () => {
                     key: 'admission_status',
                     label: 'Admission Status',
                     options: [
-                        { value: 'pending', label: 'PENDING' },
-                        { value: 'admitted', label: 'ADMITTED' },
-                        { value: 'not_admitted', label: 'NOT ADMITTED' }
+                        { value: 'PENDING', label: 'PENDING' },
+                        { value: 'ADMITTED', label: 'ADMITTED' },
+                        { value: 'NOT_ADMITTED', label: 'NOT ADMITTED' }
                     ]
                 },
             ]}

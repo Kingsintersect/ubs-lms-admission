@@ -515,3 +515,40 @@ export const stateValues = [
 	"Zamfara",
 	"Federal Capital Territory",
 ];
+
+export const ExternalPrograms = [
+	{
+		name: 'Business School',
+		children: [
+			{
+				name: 'MBA',
+				children: [
+					{
+						name: 'Full-time',
+						children: [
+							{ name: 'Finance Track' },
+							{ name: 'Marketing Track' },
+						],
+					},
+				],
+			},
+		],
+	},
+	{
+		name: 'UNN Business School',
+		children: [
+			{
+				name: 'Executive MBA',
+				children: [
+					{
+						name: 'Weekend',
+						children: [
+							{ name: 'Leadership' },
+							{ name: 'Innovation' },
+						],
+					},
+				],
+			},
+		],
+	},
+];

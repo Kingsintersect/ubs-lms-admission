@@ -1,7 +1,7 @@
 import MultiImageUploader from '@/app/(application)/admission/form/components/MultiImageUploader';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { AlertCircleIcon, Award, Check, Clock, Eye, FileText, GraduationCap, Mail, X } from 'lucide-react'
+import { AlertCircle, AlertCircleIcon, Award, Check, Clock, Eye, FileText, GraduationCap, Mail, X } from 'lucide-react'
 import Image from 'next/image';
 import React from 'react'
 
@@ -112,36 +112,6 @@ export const ApplicationDetails = ({ isLoading, error, application, handleDecisi
                             </div>
                         </div>
 
-                        {/* Sponsors Information */}
-                        <div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                                <Mail className="w-5 h-5 mr-2" />
-                                Sponsors Information
-                            </h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">Sponsor's Name</label>
-                                    <p className="mt-1 text-sm text-gray-900">{application.application.sponsor_name}</p>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">Email</label>
-                                    <p className="mt-1 text-sm text-gray-900">{application.application.sponsor_email}</p>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">Phone</label>
-                                    <p className="mt-1 text-sm text-gray-900">{application.application.sponsor_phone_number}</p>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">Relationship with Sponsor</label>
-                                    <p className="mt-1 text-sm text-gray-900">{application.application.sponsor_relationship}</p>
-                                </div>
-                                <div className="md:col-span-2">
-                                    <label className="block text-sm font-medium text-gray-700">Address</label>
-                                    <p className="mt-1 text-sm text-gray-900">{application.application.sponsor_contact_address}</p>
-                                </div>
-                            </div>
-                        </div>
-
                         {/* Academic Information */}
                         <div>
                             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
@@ -209,18 +179,46 @@ export const ApplicationDetails = ({ isLoading, error, application, handleDecisi
                             />
                         </div>
 
-                        {/* References */}
+                        {/* Sponsors Information */}
                         <div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4">References</h3>
-                            <div className="space-y-2">
-                                {/* {application.references.map((ref, index) => (
-                                    <p key={index} className="text-sm text-gray-900 bg-gray-50 p-3 rounded-lg">{ref}</p>
-                                ))} */}
-                                NO REFERESS
+                            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                                <Mail className="w-5 h-5 mr-2" />
+                                Sponsors Information
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Sponsor's Name</label>
+                                    <p className="mt-1 text-sm text-gray-900">{application.application.sponsor_name}</p>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Email</label>
+                                    <p className="mt-1 text-sm text-gray-900">{application.application.sponsor_email}</p>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Phone</label>
+                                    <p className="mt-1 text-sm text-gray-900">{application.application.sponsor_phone_number}</p>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Relationship with Sponsor</label>
+                                    <p className="mt-1 text-sm text-gray-900">{application.application.sponsor_relationship}</p>
+                                </div>
+                                <div className="md:col-span-2">
+                                    <label className="block text-sm font-medium text-gray-700">Address</label>
+                                    <p className="mt-1 text-sm text-gray-900">{application.application.sponsor_contact_address}</p>
+                                </div>
                             </div>
                         </div>
 
                         {/* Application Notes */}
+                        {application.reason_for_denial && <div>
+                            <div>
+                                <h3 className="text-lg font-semibold text-red-600 mb-4 flex items-center">
+                                    <AlertCircle className="w-5 h-5 mr-2" />
+                                    Review Notes
+                                </h3>
+                                <p className="text-sm text-red-700 bg-blue-50 p-4 rounded-lg border-l-4 border-red-500">{application.reason_for_denial}</p>
+                            </div>
+                        </div>}
                     </div>
                 </div>
             ) : (

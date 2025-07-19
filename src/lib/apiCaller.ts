@@ -44,7 +44,6 @@ export const apiCall = async <TRequest = unknown, TResponse = unknown>({
 					: JSON.stringify(data)
 				: undefined,
 		});
-		// console.log('response inner', response)
 
 		const contentType = response.headers.get("content-type");
 		if (contentType && contentType.includes("application/json")) {

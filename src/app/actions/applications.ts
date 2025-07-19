@@ -111,41 +111,39 @@ export async function getStudentApplicantion(id: string): Promise<{ data: Applic
             data: response.data,
         };
     } else {
-        console.error("Failed to fetch categories");
+        console.error("Failed to fetch student application");
         return { data: null };
     }
 }
 
 export async function ApproveStudentApplicantion(data: object): Promise<boolean> {
     const loginSession = (await getSession(loginSessionKey)) as SessionData;
-    console.log('data', data)
     const response = await apiCall<object, ApiResponseSingle>({
         url: `/admin/approve-application`,
         method: "POST",
         data: data,
         accessToken: loginSession.access_token
     });
-    if (!response?.status || !response?.data) {
+    if (response?.status !== 200) {
         console.error("Invalid API response", response);
-        throw new Error("Failed to update product");
+        throw new Error("Failed to approve student applocation");
     }
-    console.log('response', response)
+
     return true;
 }
-
-export async function RejectStudentApplicantion(data: FormData): Promise<boolean> {
+interface payLoad { reason: string, application_id: number | string }
+export async function RejectStudentApplicantion(data: payLoad): Promise<boolean> {
     const loginSession = (await getSession(loginSessionKey)) as SessionData;
 
-    console.log('data', data)
-    const response = await apiCall<FormData, ApiResponseSingle>({
+    const response = await apiCall<payLoad, ApiResponseSingle>({
         url: `/admin/reject-application`,
         method: "DELETE",
         data: data,
         accessToken: loginSession.access_token
     });
-    if (!response?.status || !response?.data) {
+    if (response?.status !== 200) {
         console.error("Invalid API response", response);
-        throw new Error("Failed to update product");
+        throw new Error("Failed to  reject student applocation");
     }
 
     return true;
@@ -170,7 +168,6 @@ export async function getApplications(
             Authorization: `Bearer ${access_token}`,
         },
     });
-    console.log('res', res)
 
     if (!res.ok) {
         throw new Error("Failed to fetch applications");

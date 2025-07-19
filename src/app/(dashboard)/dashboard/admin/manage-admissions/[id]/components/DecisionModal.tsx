@@ -5,12 +5,12 @@ import { GetSingleDepartment, GetSingleFaculty } from '@/app/actions/server.admi
 import { Textarea } from '@/components/ui/textarea';
 import { Department, Faculty } from '@/config/Types';
 import { useAuth } from '@/contexts/AuthContext';
-import { objectToFormData } from '@/lib/formUtils';
 import { toastApiError, toastSuccess } from '@/lib/toastApiError';
 import { ApplicationDetailsType } from '@/schemas/admission-schema';
 import { applicationReview, ApplicationReviewFormValues } from '@/schemas/applicationReview-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Loader2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 
@@ -76,10 +76,8 @@ export const DecisionModal = ({ decisionType, setShowDecisionModal, submitDecisi
         }
     };
     const handleRejection = (values: ApplicationReviewFormValues) => {
-        console.log("called")
         if (!application?.id) return;
-        const formData = objectToFormData({ ...values, application_id: application.id });
-        rejectAdmissionMutation.mutate(formData);
+        rejectAdmissionMutation.mutate({ ...values, application_id: application.id });
     };
 
     useEffect(() => {
@@ -171,29 +169,37 @@ export const DecisionModal = ({ decisionType, setShowDecisionModal, submitDecisi
                         >
                             Cancel
                         </button>
-                        {/* <button
-                                // onClick={handleReview}
-                                onClick={submitDecision}
-                                className={`px-4 py-2 text-white rounded-lg ${decisionType === 'admitted'
-                                    ? 'bg-green-600 hover:bg-green-700'
-                                    : 'bg-red-600 hover:bg-red-700'
-                                    }`}
-                            >
-                                {decisionType === 'admitted' ? 'Approve' : 'Reject'}
-                            </button> */}
                         {decisionType === 'admitted'
                             ? <button
                                 onClick={handleApproval}
                                 className={`px-4 py-2 text-white rounded-lg bg-green-600 hover:bg-green-700`}
                             >
-                                {'Approve'}
+                                {approveAdmissionMutation.isPending ? (
+                                    <>
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                        <span>Sending request...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        {'Approve'}
+                                    </>
+                                )}
                             </button>
                             : <button
                                 type='submit'
                                 // onClick={submitDecision}
                                 className={`px-4 py-2 text-white rounded-lg bg-red-600 hover:bg-red-700`}
                             >
-                                {'Reject'}
+                                {rejectAdmissionMutation.isPending ? (
+                                    <>
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                        <span>Sending request...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        {'Reject'}
+                                    </>
+                                )}
                             </button>
                         }
                     </div>
