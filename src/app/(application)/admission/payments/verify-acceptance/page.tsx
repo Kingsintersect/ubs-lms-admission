@@ -98,3 +98,4 @@ const VerifyAcceptance = () => {
    )
 }
 export default VerifyAcceptance;
+// http://localhost:3302/admission/payments/verify-tuition?transAmount=75000.00&reference=1429z865hD1752948845&transRef=m0FQ00V9vn14fqjz29sa&errorMessage=Approved+by+Financial+Institution&redirectOnError=0&currency=NGN&gateway=&channelId=0&status=0
