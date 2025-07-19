@@ -1,15 +1,19 @@
-import { Control, FieldErrors, UseFormReturn } from "react-hook-form";
-import { PROGRAMS, STUDY_MODES } from "../../constants";
+import { Control, FieldErrors, UseFormReturn, UseFormWatch } from "react-hook-form";
+import { STUDY_MODES } from "../../constants";
 import { FormField } from "../FormField";
 import { AdmissionFormData } from "@/schemas/admission-schema";
 import { PhotoUpload } from "./PhotoUpload";
+import { ProgramAccordionDisplay } from "@/components/ProgramAccordion";
+import { ExternalPrograms } from "@/config";
 
 interface ProgramAndEssaysStepProps {
     control: Control<AdmissionFormData>;
     errors: FieldErrors<AdmissionFormData>;
     setValue: UseFormReturn<AdmissionFormData>['setValue'];
+    getValues: UseFormReturn<AdmissionFormData>['getValues'];
+    watch: UseFormWatch<AdmissionFormData>;
 }
-export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ control, errors, setValue }) => (
+export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ control, errors, setValue, getValues, watch }) => (
     <div className="space-y-6">
         <div className="w-fill flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-around">
             {/* Document Upload */}
@@ -20,7 +24,7 @@ export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ cont
                     setValue={setValue}
                 />
             </div>
-            <div className=" flex flex-col gap-4">
+            {/* <div className=" flex flex-col gap-4">
                 <div className="">( Current session - <span className="text-site-a-dark font-bold"> 2024 / 2025</span> )</div>
                 <FormField
                     name="program"
@@ -32,7 +36,7 @@ export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ cont
                     placeholder="Select program"
                     options={PROGRAMS}
                 />
-            </div>
+            </div> */}
             {/* <div className="">
                 <FormField
                     name="startTerm"
@@ -46,6 +50,13 @@ export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ cont
                 />
             </div> */}
         </div>
+        <ProgramAccordionDisplay
+            programs={ExternalPrograms}
+            setValue={setValue}
+            getValues={getValues}
+            errors={errors}
+            watch={watch}
+        />
 
         <FormField
             name="studyMode"

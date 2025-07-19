@@ -6,6 +6,8 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
+import { AdmissionFormData } from "@/schemas/admission-schema";
+import { FieldErrors, UseFormGetValues, UseFormSetValue, UseFormWatch } from "react-hook-form";
 
 type ProgramNode = {
     name: string;
@@ -15,16 +17,22 @@ type ProgramNode = {
 interface ProgramAccordionProps {
     nodes: ProgramNode[];
     level?: number;
-    onSelect: (value: string) => void;
-    selected: string | null;
+    setValue: UseFormSetValue<AdmissionFormData>;
+    watch: UseFormWatch<AdmissionFormData>;
+    // onSelect: (value: string) => void;
+    // selected: string | null;
 }
 
 export default function ProgramAccordion({
     nodes,
     level = 0,
-    onSelect,
-    selected,
+    setValue,
+    watch,
+    // onSelect,
+    // selected,
 }: ProgramAccordionProps) {
+    const selected = watch("program");
+
     return (
         <Accordion type="multiple" className={`pl-${level * 4}`}>
             {nodes.map((node, index) => {
@@ -40,14 +48,16 @@ export default function ProgramAccordion({
                                 <ProgramAccordion
                                     nodes={node.children!}
                                     level={level + 1}
-                                    onSelect={onSelect}
-                                    selected={selected}
+                                    setValue={setValue}
+                                    watch={watch}
+                                // onSelect={onSelect}
+                                // selected={selected}
                                 />
                             ) : (
                                 <div
-                                    className={`pl-4 py-1 cursor-pointer rounded ${isSelected ? "bg-primary text-white" : "hover:bg-muted"
-                                        }`}
-                                    onClick={() => onSelect(node.name)}
+                                    className={`pl-4 py-1 cursor-pointer rounded ${isSelected ? "bg-primary text-white" : "hover:bg-muted"}`}
+                                    // onClick={() => onSelect(node.name)}
+                                    onClick={() => setValue("program", node.name)}
                                 >
                                     🎓 {node.name}
                                 </div>
@@ -57,5 +67,42 @@ export default function ProgramAccordion({
                 );
             })}
         </Accordion>
+    );
+}
+
+interface ProgramAccordionDisplayProps {
+    programs: ProgramNode[],
+    setValue: UseFormSetValue<AdmissionFormData>,
+    watch: UseFormWatch<AdmissionFormData>,
+    getValues: UseFormGetValues<AdmissionFormData>,
+    errors: FieldErrors<AdmissionFormData>;
+}
+export const ProgramAccordionDisplay = ({ programs, setValue, getValues, watch, errors }: ProgramAccordionDisplayProps) => {
+    // const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
+
+    return (
+        <div className="max-w-3xl mx-auto p-4">
+            <h1 className="text-2xl font-bold mb-4 text-site-a-dark">Select a Program</h1>
+
+            <ProgramAccordion
+                nodes={programs}
+                setValue={setValue}
+                watch={watch}
+            // onSelect={setSelectedProgram}
+            // selected={selectedProgram}
+            />
+
+            {errors.program && (
+                <p className="text-red-500 text-sm">
+                    {errors.program.message}
+                </p>
+            )}
+
+            {getValues("program") && (
+                <div className="mt-6 text-green-700 font-semibold border-t pt-4">
+                    ✅ You selected: <span className="text-primary">{getValues("program")}</span>
+                </div>
+            )}
+        </div>
     );
 }

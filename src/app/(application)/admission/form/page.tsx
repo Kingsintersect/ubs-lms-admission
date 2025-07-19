@@ -34,6 +34,8 @@ const AdmissionForm: React.FC = () => {
         trigger,
         reset,
         setValue,
+        getValues,
+        watch,
     } = useForm<AdmissionFormData>({
         resolver: zodResolver(admissionSchema),
         mode: 'onChange',
@@ -44,6 +46,7 @@ const AdmissionForm: React.FC = () => {
             startTerm: "2024/2025",
             studyMode: 'online',
             awaiting_result: true,
+            program: "",
         }
     });
 
@@ -101,7 +104,7 @@ const AdmissionForm: React.FC = () => {
             case 3:
                 return <ProfessionalExperienceStep control={control} errors={errors} />;
             case 4:
-                return <ProgramAndEssaysStep control={control} errors={errors} setValue={setValue} />;
+                return <ProgramAndEssaysStep control={control} errors={errors} setValue={setValue} getValues={getValues} watch={watch} />;
             default:
                 return null;
         }
