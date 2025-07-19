@@ -33,6 +33,7 @@ export const SignupSchema = z
         // department_id: z.string().min(1, { message: "Required" }),
         // faculty_id: z.string().min(1, { message: "Required" }),
         amount: z.number().min(1, { message: "Required" }),
+        // accademicSession: z.string().min(1, 'accademic session is missing'),
     })
     .refine((data) => data.password === data.password_confirmation, {
         message: "Passwords do not match",
@@ -91,6 +92,7 @@ export default function useSignInMultiStepViewModel() {
     } = useForm<SignupFormData>({
         resolver: zodResolver(SignupSchema),
         mode: "onChange",
+
     });
 
     // React Query - Get all programs

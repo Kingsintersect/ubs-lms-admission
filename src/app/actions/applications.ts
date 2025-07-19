@@ -32,7 +32,8 @@ export async function getAdmissionApplicants(options?: UseDataTableOptions): Pro
     });
 
     const response = await apiCall<undefined, ApiResponseArray<StudentType>>({
-        url: `/admin/all-applications?academicSession=2024/2025&${query.toString()}`,
+        // url: `/admin/all-applications?academicSession=2024/2025&${query.toString()}`,
+        url: `/admin/all-applications?${query.toString()}`,
         method: "GET",
         accessToken: loginSession.access_token
     });
@@ -69,7 +70,7 @@ export async function getAdmittedApplicants(options?: UseDataTableOptions): Prom
     });
 
     const response = await apiCall<undefined, ApiResponseArray<StudentType>>({
-        url: `/admin/all-applications?academicSession=2024/2025&${query.toString()}`,
+        url: `/admin/approved-applicants?academicSession=2024/2025&${query.toString()}`,
         method: "GET",
         accessToken: loginSession.access_token
     });

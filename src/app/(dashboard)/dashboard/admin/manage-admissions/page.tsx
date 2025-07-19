@@ -27,7 +27,6 @@ const StudentApplicationsPage = () => {
                         <div className="flex items-center space-x-4">
                             <div className="text-sm text-gray-500">
                                 <Badge className="font-medium rounded-xl" variant={"destructive"}>{16}</Badge> Pending Review
-                                {/* <span className="font-medium">{applications.filter(app => app.status === 'pending').length}</span> Pending Review */}
                             </div>
                             <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
                                 <span className="text-white font-medium">AO</span>

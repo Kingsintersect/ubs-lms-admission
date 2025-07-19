@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { CheckCircle, XCircle } from 'lucide-react';
+import { useEffect } from 'react';
 
 interface PaymentVerificationCardProps {
     paymentRef: string;
@@ -14,6 +15,7 @@ interface PaymentVerificationCardProps {
     } | null;
     onVerify: () => void;
     onProceed: () => void;
+    autoVerify?: boolean;
 }
 
 export const PaymentVerificationCard: React.FC<PaymentVerificationCardProps> = ({
@@ -22,7 +24,15 @@ export const PaymentVerificationCard: React.FC<PaymentVerificationCardProps> = (
     verificationResult,
     onVerify,
     onProceed,
+    autoVerify = false
 }) => {
+
+    useEffect(() => {
+        if (paymentRef && autoVerify) {
+            onVerify();
+        }
+    }, [paymentRef, autoVerify, onVerify])
+
     return (
         <Card className="w-full max-w-md mx-auto">
             <CardHeader className="text-center">
@@ -39,7 +49,7 @@ export const PaymentVerificationCard: React.FC<PaymentVerificationCardProps> = (
                     </p>
                 </div>
 
-                {!verificationResult && (
+                {(!verificationResult && !autoVerify) && (
                     <div className="text-center">
                         <Button
                             onClick={onVerify}

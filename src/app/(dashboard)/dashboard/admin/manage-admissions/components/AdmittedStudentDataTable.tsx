@@ -162,14 +162,14 @@ export const AdmittedStudentDataTable = () => {
                     key: 'admission_status',
                     label: 'Admission Status',
                     options: [
-                        { value: 'pending', label: 'PENDING' },
-                        { value: 'admitted', label: 'ADMITTED' },
-                        { value: 'not_admitted', label: 'NOT ADMITTED' }
+                        { value: 'PENDING', label: 'PENDING' },
+                        { value: 'ADMITTED', label: 'ADMITTED' },
+                        { value: 'NOT_ADMITTED', label: 'NOT ADMITTED' }
                     ]
                 },
             ]}
             getRowClickUrl={(product) => `${basePath}/${product.id}`}
-            enableRowClick={true}
+            enableRowClick={false}
         />
     )
 }

@@ -16,6 +16,34 @@ export class PaymentService {
 
         return response.json();
     }
+    static async verifyAcceptancePayment(data: PaymentVerificationRequest): Promise<PaymentVerificationResponse> {
+        const response = await fetch(`${remoteApiUrl}/application/verify-acceptance?transReff=${data.transRef}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Payment verification failed');
+        }
+
+        return response.json();
+    }
+    static async verifyTuitionPayment(data: PaymentVerificationRequest): Promise<PaymentVerificationResponse> {
+        const response = await fetch(`${remoteApiUrl}/application/verify-tuition?transRef=${data.transRef}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Payment verification failed');
+        }
+
+        return response.json();
+    }
 }
 
 
