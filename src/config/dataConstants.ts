@@ -176,6 +176,22 @@ export const StudentNavMain: SidebarNavConfig = {
 					url: "/dashboard/student/tuition",
 				},
 			],
+			display: false,
+		},
+		{
+			title: "HISTORY",
+			url: "#",
+			icon: DollarSign,
+			items: [
+				{
+					title: "Payment History",
+					url: "/dashboard/student/history/student-payments",
+				},
+				{
+					title: "Result History",
+					url: "/dashboard/student/history/student-results",
+				},
+			],
 			display: true,
 		},
 		{
