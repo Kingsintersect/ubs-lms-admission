@@ -63,8 +63,6 @@ export function StatusCheckCard({
          </Card>
       );
    }
-   console.log('dataStatus', dataStatus)
-   console.log('admission', admission)
 
    const Icon = status.icon;
    const isLinkActive = admission === AdmissionStatusType.admitted && statusKey !== StatusType.FULLY_PAID;

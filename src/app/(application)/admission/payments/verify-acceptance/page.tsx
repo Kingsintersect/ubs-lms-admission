@@ -21,6 +21,8 @@ const VerifyAcceptance = () => {
    const [isLoading, setIsLoading] = useState(false);
    const { showToast } = useToast();
    const { access_token } = useAuth();
+   console.log("am here")
+   return "false"
 
    useEffect(() => {
       async function verifyPayment(access: string, ref: string) {
