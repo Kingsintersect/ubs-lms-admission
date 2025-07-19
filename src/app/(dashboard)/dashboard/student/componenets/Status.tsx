@@ -132,3 +132,4 @@ const admissionStatusConfig = {
       icon: XCircle
    }
 };
+// http://localhost:3302/admission/paymnets/verify-acceptance
