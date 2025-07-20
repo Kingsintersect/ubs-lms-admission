@@ -6,10 +6,12 @@ import { baseUrl } from '@/config'
 import { PaymentVerificationCard } from '../components/PaymentVerificationCard';
 import { toast } from 'sonner';
 import { useTuitionVerification } from '@/hooks/usePaymentVerification';
+import { useAuth } from '@/contexts/AuthContext';
 
 const VerifyTuition = () => {
    const searchParams = useSearchParams();
    const transRef = searchParams.get('transRef');
+   const { access_token } = useAuth();
    const [verificationResult, setVerificationResult] = useState<{
       status: string;
       message: string;
@@ -18,7 +20,7 @@ const VerifyTuition = () => {
    } | null>(null);
 
    const router = useRouter();
-   const { mutate: verifyAcceptancePayment, isPending } = useTuitionVerification();
+   const { mutate: verifyTuitionPayment, isPending } = useTuitionVerification();
 
    useEffect(() => {
       if (!transRef) {
@@ -30,9 +32,12 @@ const VerifyTuition = () => {
 
    const handleVerify = () => {
       if (!transRef) return;
-
-      verifyAcceptancePayment(
-         { transRef },
+      if (!access_token) return;
+      verifyTuitionPayment(
+         {
+            transRef, // both transRef and access_token are now guaranteed to be strings
+            access_token,
+         },
          {
             onSuccess: (data) => {
                setVerificationResult(data);
@@ -40,8 +45,10 @@ const VerifyTuition = () => {
          }
       );
    };
+
+
    const handleRedirect = () => {
-      router.push(`${baseUrl}/auth/signin?transRef=${transRef}`);
+      router.push(`${baseUrl}/dashboard/student/profile`);
       router.refresh();
    }
 
@@ -64,14 +71,14 @@ const VerifyTuition = () => {
             verificationResult={verificationResult}
             onVerify={handleVerify}
             onProceed={handleRedirect}
-            autoVerify={true}
+            autoVerify={false}
          />
       </div>
    )
 }
 
 export default VerifyTuition
-
+// http://localhost:3302/admission/payments/verify-acceptance?transAmount=30000.00&reference=1429Lj2YJy1752965828&transRef=Orvb00PCtk14lGo229Oq&errorMessage=Approved+by+Financial+Institution&redirectOnError=0&currency=NGN&gateway=&channelId=0&status=0
 
 
 

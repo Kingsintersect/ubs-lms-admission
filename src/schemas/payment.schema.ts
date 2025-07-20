@@ -15,6 +15,7 @@ export type SignInForm = z.infer<typeof signInSchema>;
 // TYPE DEFINITIONS
 export interface PaymentVerificationRequest {
     transRef: string;
+    access_token?: string;
 }
 
 export interface PaymentVerificationResponse {

@@ -1,8 +1,10 @@
+"use client";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { CheckCircle, XCircle } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface PaymentVerificationCardProps {
     paymentRef: string;
@@ -27,11 +29,15 @@ export const PaymentVerificationCard: React.FC<PaymentVerificationCardProps> = (
     autoVerify = false
 }) => {
 
+    const hasVerifiedRef = useRef(false);
+
     useEffect(() => {
-        if (paymentRef && autoVerify) {
+        if (paymentRef && autoVerify && !hasVerifiedRef.current) {
+            if (autoVerify !== true) return;
             onVerify();
+            hasVerifiedRef.current = true;
         }
-    }, [paymentRef, autoVerify, onVerify])
+    }, [paymentRef, autoVerify, onVerify]);
 
     return (
         <Card className="w-full max-w-md mx-auto">
@@ -48,6 +54,15 @@ export const PaymentVerificationCard: React.FC<PaymentVerificationCardProps> = (
                         {paymentRef}
                     </p>
                 </div>
+
+                {(!verificationResult && autoVerify) && <div className="w-full flex items-center justify-center">
+                    {isVerifying && (
+                        <>
+                            <LoadingSpinner size="sm" className="mr-2" />
+                            Verifying Payment...
+                        </>
+                    )}
+                </div>}
 
                 {(!verificationResult && !autoVerify) && (
                     <div className="text-center">
@@ -97,7 +112,7 @@ export const PaymentVerificationCard: React.FC<PaymentVerificationCardProps> = (
 
                         {verificationResult.status && (
                             <Button onClick={onProceed} className="w-full">
-                                Proceed to Sign In
+                                continue
                             </Button>
                         )}
                     </div>

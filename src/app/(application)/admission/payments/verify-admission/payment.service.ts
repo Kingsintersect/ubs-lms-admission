@@ -17,10 +17,11 @@ export class PaymentService {
         return response.json();
     }
     static async verifyAcceptancePayment(data: PaymentVerificationRequest): Promise<PaymentVerificationResponse> {
-        const response = await fetch(`${remoteApiUrl}/application/verify-acceptance?transReff=${data.transRef}`, {
+        const response = await fetch(`${remoteApiUrl}/application/verify-acceptance?transRef=${data.transRef}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${data.access_token}`,
             },
         });
 
@@ -30,11 +31,13 @@ export class PaymentService {
 
         return response.json();
     }
+
     static async verifyTuitionPayment(data: PaymentVerificationRequest): Promise<PaymentVerificationResponse> {
         const response = await fetch(`${remoteApiUrl}/application/verify-tuition?transRef=${data.transRef}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${data.access_token}`,
             },
         });
 

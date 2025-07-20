@@ -6,10 +6,12 @@ import { baseUrl } from '@/config'
 import { PaymentVerificationCard } from '../components/PaymentVerificationCard';
 import { toast } from 'sonner';
 import { useAcceptanceVerification } from '@/hooks/usePaymentVerification';
+import { useAuth } from '@/contexts/AuthContext';
 
 const VerifyAcceptance = () => {
    const searchParams = useSearchParams();
    const transRef = searchParams.get('transRef');
+   const { access_token } = useAuth();
    const [verificationResult, setVerificationResult] = useState<{
       status: string;
       message: string;
@@ -30,9 +32,10 @@ const VerifyAcceptance = () => {
 
    const handleVerify = () => {
       if (!transRef) return;
+      if (!access_token) return;
 
       verifyAcceptancePayment(
-         { transRef },
+         { transRef, access_token: access_token },
          {
             onSuccess: (data) => {
                setVerificationResult(data);
@@ -40,8 +43,9 @@ const VerifyAcceptance = () => {
          }
       );
    };
+
    const handleRedirect = () => {
-      router.push(`${baseUrl}/auth/signin?transRef=${transRef}`);
+      router.push(`${baseUrl}/dashboard/student/tuition`);
       router.refresh();
    }
 
@@ -64,7 +68,7 @@ const VerifyAcceptance = () => {
             verificationResult={verificationResult}
             onVerify={handleVerify}
             onProceed={handleRedirect}
-            autoVerify={true}
+            autoVerify={false}
          />
       </div>
    )
