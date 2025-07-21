@@ -14,7 +14,7 @@ const ViewStudentAdmission = () => {
                     <div className="flex items-center justify-between">
                         <div>
                             <h1 className="text-2xl font-bold text-gray-900">Review Application</h1>
-                            <p className="text-gray-600">University Business School - Application Review</p>
+                            <p className="text-gray-600">Unizik Business School - Application Review</p>
                         </div>
                         <div className="flex items-center space-x-4">
                             <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">

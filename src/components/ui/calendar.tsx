@@ -7,59 +7,59 @@ import "react-date-picker/dist/DatePicker.css"
 import "react-calendar/dist/Calendar.css"
 
 interface CalendarProps {
-	className?: string
-	value?: Date | null
-	onChange?: (date: Date | null) => void
-	disabled?: boolean
-	minDate?: Date
-	maxDate?: Date
-	clearIcon?: React.ReactNode | null
-	calendarIcon?: React.ReactNode | null
-	showLeadingZeros?: boolean
-	format?: string
-	locale?: string
-	[key: string]: any
+  className?: string
+  value?: Date | null
+  onChange?: (date: Date | null) => void
+  disabled?: boolean
+  minDate?: Date
+  maxDate?: Date
+  clearIcon?: React.ReactNode | null
+  calendarIcon?: React.ReactNode | null
+  showLeadingZeros?: boolean
+  format?: string
+  locale?: string
+  [key: string]: any
 }
 
 function Calendar({
-	className,
-	value,
-	onChange,
-	disabled = false,
-	minDate,
-	maxDate,
-	clearIcon = null,
-	calendarIcon = <CalendarIcon className="w-4 h-4" />,
-	showLeadingZeros = true,
-	format = "y-MM-dd",
-	locale = "en-US",
-	...props
+  className,
+  value,
+  onChange,
+  disabled = false,
+  minDate,
+  maxDate,
+  clearIcon = null,
+  calendarIcon = <CalendarIcon className="w-4 h-4" />,
+  showLeadingZeros = true,
+  format = "y-MM-dd",
+  locale = "en-US",
+  ...props
 }: CalendarProps) {
-	return (
-		<div className={cn("calendar-wrapper", className)}>
-			<DatePicker
-				value={value}
-				onChange={(value: any) => {
-					if (!onChange) return;
-					if (Array.isArray(value)) {
-						// If a range is returned, pick the first date or null
-						onChange(value[0] ?? null);
-					} else {
-						onChange(value);
-					}
-				}}
-				disabled={disabled}
-				minDate={minDate}
-				maxDate={maxDate}
-				clearIcon={clearIcon}
-				calendarIcon={calendarIcon}
-				showLeadingZeros={showLeadingZeros}
-				format={format}
-				locale={locale}
-				className="react-date-picker react-calendar"
-				{...props}
-			/>
-			<style jsx global>{`
+  return (
+    <div className={cn("calendar-wrapper", className)}>
+      <DatePicker
+        value={value}
+        onChange={(value: any) => {
+          if (!onChange) return;
+          if (Array.isArray(value)) {
+            // If a range is returned, pick the first date or null
+            onChange(value[0] ?? null);
+          } else {
+            onChange(value);
+          }
+        }}
+        disabled={disabled}
+        minDate={minDate}
+        maxDate={maxDate}
+        clearIcon={clearIcon}
+        calendarIcon={calendarIcon}
+        showLeadingZeros={showLeadingZeros}
+        format={format}
+        locale={locale}
+        className="react-date-picker react-calendar"
+        {...props}
+      />
+      <style jsx global>{`
         /* DatePicker Input Styles */
         .react-date-picker {
           display: inline-flex;
@@ -331,8 +331,8 @@ function Calendar({
           border-color: hsl(var(--border));
         }
       `}</style>
-		</div>
-	)
+    </div>
+  )
 }
 
 export { Calendar }
