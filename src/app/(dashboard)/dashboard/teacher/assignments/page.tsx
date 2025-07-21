@@ -1,4 +1,3 @@
-import { Plus } from 'lucide-react';
 import React from 'react'
 
 export default function AssignmentsPage() {
@@ -6,10 +5,10 @@ export default function AssignmentsPage() {
         <div className="bg-white rounded-xl shadow-lg p-6">
             <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-gray-900">Assignments</h2>
-                <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center space-x-2">
+                {/* <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center space-x-2">
                     <Plus size={16} />
                     <span>Create Assignment</span>
-                </button>
+                </button> */}
             </div>
             <div className="space-y-4">
                 {['Math Quiz 1', 'Physics Lab Report', 'Chemistry Worksheet'].map((assignment, index) => (

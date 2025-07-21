@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { BookMarked, Plus } from 'lucide-react';
+import { BookMarked } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react'
 import { courses } from '../data';
@@ -10,10 +10,10 @@ const EnrolledCoursesPage = () => {
         <div className="bg-white rounded-xl shadow-lg p-6">
             <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-gray-900">My Courses</h2>
-                <button className="bg-site-b text-white px-4 py-2 rounded-lg hover:bg-site-b-dark flex items-center space-x-2">
+                {/* <button className="bg-site-b text-white px-4 py-2 rounded-lg hover:bg-site-b-dark flex items-center space-x-2">
                     <Plus size={16} />
                     <span>Add Course</span>
-                </button>
+                </button> */}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {courses.map(course => (
