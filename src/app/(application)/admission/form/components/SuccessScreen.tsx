@@ -16,7 +16,7 @@ export const SuccessScreen: React.FC<{ onReset: () => void }> = ({ onReset }) =>
                 </div>
                 <h2 className="text-2xl font-bold text-site-a-dark mb-2">Application Submitted!</h2>
                 <p className="text-gray-600 mb-6">
-                    Thank you for your application. We'll review it and get back to you within 2-3 business days.
+                    Thank you for your application. We'll review it and get back to you soonest.
                 </p>
                 <Button onClick={onReset} className="w-full" asChild>
                     <Link href="/dashboard/student">

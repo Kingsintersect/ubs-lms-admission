@@ -20,11 +20,43 @@ export const admissionSchema = z.object({
     contact_address: z.string().min(2, 'Contact address is required'),
 
     // Sponsors Information
-    sponsor_name: z.string().min(2, `Sponsor's name must be at least 2 characters`),
-    sponsor_relationship: z.string().min(2, `Relationship with sponsor must be at least 2 characters`),
-    sponsor_email: z.string().email('Invalid email address'),
-    sponsor_contact_address: z.string().min(10, `Sponsor's contact address must be at least 10 characters`),
-    sponsor_phone_number: z.string().min(10, `Sponsor's phone number must be at least 10 digits`),
+    has_sponsor: z.boolean().default(false),//to be changed to has_sponsor
+    sponsor_name: z.string().optional(),
+    sponsor_relationship: z.string().optional(),
+    sponsor_email: z.string().email('Invalid email address').optional(),
+    sponsor_contact_address: z.string().optional(),
+    sponsor_phone_number: z.string().optional(),
+
+    // next of kin
+    next_of_kin_name: z.string().min(1, "Full name is required"),
+    next_of_kin_relationship: z.string().min(1, "Relationship is required"),
+    next_of_kin_phone_number: z
+        .string()
+        .min(10, "Phone number must be at least 10 digits")
+        .max(15, "Phone number is too long"),
+    next_of_kin_address: z.string().min(1, "Address is required"),
+    next_of_kin_email: z.string().email("").optional(),
+    is_next_of_kin_primary_contact: z.boolean().default(false).optional(),
+    next_of_kin_alternate_phone_number: z
+        .string()
+        .min(10, "")
+        .max(15, "")
+        .optional(),
+    next_of_kin_occupation: z.string().optional(),
+    next_of_kin_workplace: z.string().optional(),
+
+    // Sponsors Information
+    primary_school_leaving: z.instanceof(File).optional(),//to be changed to has_sponsor
+    o_level: z.instanceof(File).optional(),
+    degree: z.instanceof(File).optional(),
+    hnd: z.instanceof(File).optional(),
+    ond: z.instanceof(File).optional(),
+    transcript: z.instanceof(File).optional(),
+    others: z
+        .array(z.instanceof(File))
+        .optional()
+        .refine((files) => files ? files.every(file => file.size <= MAX_FILE_SIZE) : true, "Each image must be ≤ 5MB")
+        .refine((files) => files ? files.every(file => ACCEPTED_IMAGE_TYPES.includes(file.type)) : true, "Unsupported image type"),
 
     // Academic Information
     undergraduateDegree: z.string().min(1, 'Undergraduate degree is required'),
@@ -47,8 +79,8 @@ export const admissionSchema = z.object({
     yearsOfExperience: z.string().optional(),
 
     // Program Selection
-    program: z.string().min(1, 'Program selection is required'),
-    program_id: z.string().min(1, 'Program selection is required'),
+    // program: z.string().min(1, 'Program selection is required'),
+    // program_id: z.string().min(1, 'Program selection is required'),
     startTerm: z.string().min(1, 'Start term is required'),
     studyMode: z.string().min(1, 'Study mode is required'),
 
@@ -82,7 +114,69 @@ export const admissionSchema = z.object({
 
     passport: z.string().optional(),
     awaiting_result: z.boolean().default(true),
+}).superRefine((data, ctx) => {
+    validateSponsorFields(data, ctx);
 });
+type SponsorCheck = {
+    key: keyof AdmissionFormData;
+    value: string | undefined;
+    message: string;
+    minLength?: number;
+    validate?: () => boolean;
+};
+
+function validateSponsorFields(data: AdmissionFormData, ctx: z.RefinementCtx) {
+    if (data.has_sponsor) {
+        const checks: SponsorCheck[] = [
+            {
+                key: "sponsor_name",
+                value: data.sponsor_name,
+                minLength: 2,
+                message: "Sponsor's name is required",
+            },
+            {
+                key: "sponsor_relationship",
+                value: data.sponsor_relationship,
+                minLength: 2,
+                message: "Sponsor's relationship is required",
+            },
+            {
+                key: "sponsor_email",
+                value: data.sponsor_email,
+                message: "Sponsor's email is required",
+                validate: () => !!data.sponsor_email && /\S+@\S+\.\S+/.test(data.sponsor_email),
+            },
+            {
+                key: "sponsor_contact_address",
+                value: data.sponsor_contact_address,
+                minLength: 10,
+                message: "Sponsor's contact address is required",
+            },
+            {
+                key: "sponsor_phone_number",
+                value: data.sponsor_phone_number,
+                minLength: 10,
+                message: "Sponsor's phone number is required",
+            },
+        ];
+
+        for (const { key, value, message, minLength = 1, validate } of checks) {
+            const isValid =
+                typeof validate === "function"
+                    ? validate()
+                    : value && value.trim().length >= minLength;
+
+            if (!isValid) {
+                ctx.addIssue({
+                    path: [key],
+                    code: z.ZodIssueCode.custom,
+                    message,
+                });
+            }
+        }
+    }
+}
+
 
 export type AdmissionFormData = z.infer<typeof admissionSchema>;
 export interface ApplicationDetailsType extends StudentType {

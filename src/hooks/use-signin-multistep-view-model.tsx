@@ -22,7 +22,7 @@ export const SignupSchema = z
         gender: z.string().refine((value) => value !== "", {
             message: "Your gender must be selected",
         }),
-        dob: z.string().min(1, { message: "Required" }),
+        // dob: z.string().min(1, { message: "Required" }),
         nationality: z.string().refine((value) => value !== "", { message: "Required" }),
         state: z.string().refine((value) => value !== "", { message: "Required" }),
         hometown_address: z.string().min(1, { message: "Required" }),
@@ -34,6 +34,16 @@ export const SignupSchema = z
         // faculty_id: z.string().min(1, { message: "Required" }),
         amount: z.number().min(1, { message: "Required" }),
         // accademicSession: z.string().min(1, 'accademic session is missing'),
+
+        // Program Selection
+        program: z.string().min(1, 'Program selection is required'),
+        program_id: z.string().min(1, 'Program selection is required'),
+
+        // Accademic session
+        academic_session: z.string().min(1, 'Ivalid value for academic session'),
+        start_year: z.string().min(1, 'Ivalid value for start year'),
+
+
     })
     .refine((data) => data.password === data.password_confirmation, {
         message: "Passwords do not match",
@@ -53,20 +63,20 @@ const steps = [
     {
         id: 1,
         label: "Personal Info",
-        fields: ["first_name", "last_name", "other_name", "phone_number", "gender", "nationality", "state", "hometown_address", "residential_address", "dob"],
+        fields: ["first_name", "last_name", "other_name", "phone_number", "gender", "nationality", "state", "hometown_address", "residential_address"],
     },
-    // {
-    //     id: 2,
-    //     label: "Account Credentials",
-    //     fields: ["faculty_id", "department_id"],
-    // },
     {
         id: 2,
+        label: "Program Listing",
+        fields: ["program_id", "program"],
+    },
+    {
+        id: 3,
         label: "Application Data",
         fields: ["email", "username", "password", "password_confirmation"],
     },
     {
-        id: 3,
+        id: 4,
         label: "Confirmation",
         fields: ["amount"],
     },
@@ -88,30 +98,17 @@ export default function useSignInMultiStepViewModel() {
         trigger,
         control,
         setValue,
+        getValues,
         formState: { errors },
     } = useForm<SignupFormData>({
         resolver: zodResolver(SignupSchema),
         mode: "onChange",
-
+        defaultValues: {
+            academic_session: "2024/2025",
+            start_year: "2024/2025",
+        }
     });
 
-    // React Query - Get all programs
-    // const { data: programData } = useQuery({
-    //     queryKey: ["programs"],
-    //     queryFn: async () => {
-    //         const res = await GetAllProgram();
-    //         const raw = res?.success?.data || {};
-    //         setProgramList(raw);
-    //         const lt = raw.filter(item => item.parent === 0)
-    //             .map(item => ({
-    //                 id: Number(item.id),
-    //                 label: String(item.name.trim()),
-    //                 value: String(item.id),
-    //             }));
-    //         return lt;
-    //     },
-    //     staleTime: 1000 * 60 * 30, // 30 minutes
-    // });
     const { data: programData, isLoading: isProgramsLoading } = useQuery({
         queryKey: ["programs"],
         queryFn: GetAllProgram,
@@ -144,7 +141,6 @@ export default function useSignInMultiStepViewModel() {
     const handleProgramChange = useCallback((programId: string) => {
         const numericId = Number(programId);
         setSelectedProgramId(numericId);
-        // setValue("faculty_id", String(programId));
 
         const selectedProgram = parentPrograms.find((p) => p.id === numericId);
         setSelectedProgramName(selectedProgram?.label || null);
@@ -176,16 +172,13 @@ export default function useSignInMultiStepViewModel() {
     const nextStep = useCallback(async () => {
         const fields = steps[currentStep - 1].fields;
         const isFieldsValid = await trigger(fields as FieldName<SignupFormData>[], { shouldFocus: true });
+        console.log('isFieldsValid', isFieldsValid)
 
         if (!isFieldsValid) return;
         if (currentStep < steps.length) {
             setPreviousStep(currentStep);
             setCurrentStep((prev) => prev + 1);
         }
-
-        // if (currentStep === steps.length) {
-        //     await handleSubmit(onSubmit)();
-        // }
     }, [currentStep, trigger]);
 
     const prevStep = useCallback(() => {
@@ -210,6 +203,7 @@ export default function useSignInMultiStepViewModel() {
         watch,
         reset,
         setValue,
+        getValues,
         errors,
         isSubmitting: signinMutation.isPending,
         control,
@@ -239,6 +233,7 @@ export default function useSignInMultiStepViewModel() {
         signinMutation.isPending,
         control,
         setValue,
+        getValues,
         delta,
         parentPrograms,
         childPrograms,

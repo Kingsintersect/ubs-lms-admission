@@ -3,8 +3,8 @@ import { Metadata } from 'next';
 import React, { ReactNode } from 'react'
 
 export const metadata: Metadata = {
-   title: `${SITE_NAME} - Login Form`,
-   description: "Login to your dashboard to continue your education",
+   title: `${SITE_NAME} - Purchase admission form`,
+   description: "pay for adminssion form to fill he form",
 };
 
 type LayoutProps = {

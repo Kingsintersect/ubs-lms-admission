@@ -1,16 +1,19 @@
 "use client";
 import Stepper from "@/components/Stepper";
 import { FormFieldSet, InputFormField, SelectFormField } from '@/components/ui/inputs/FormFields';
-import { CheckCircle2, Loader2, SaveAll } from "lucide-react";
+import { AlertCircleIcon, CheckCircle2, Loader2, SaveAll } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { z } from "zod";
-import useSignInMultiStepViewModel, { SignupSchema } from "@/hooks/use-signin-multistep-view-model";
+import useSignInMultiStepViewModel, { SignupFormData } from "@/hooks/use-signin-multistep-view-model";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatToCurrency } from "@/lib/utils";
+import { useExternalPrograms } from "@/hooks/useExternalPrograms";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ProgramAccordionDisplay } from "@/components/ProgramAccordion";
 
 
-type SignupFormData = z.infer<typeof SignupSchema>;
+// type SignupFormData = z.infer<typeof SignupSchema>;
 export default function SignupPage() {
     const {
         currentStep,
@@ -32,9 +35,13 @@ export default function SignupPage() {
         // isProgramsLoading,
         // handleProgramChange,
         delta,
+        watch,
+        setValue,
+        getValues,
         APPLICATION_FEE,
     } = useSignInMultiStepViewModel();
     const isLastStep = currentStep === steps.length;
+    const { data: programs, isLoading, isError } = useExternalPrograms();
 
     return (
         <div className="block w-full space-y-1 text-left">
@@ -96,15 +103,6 @@ export default function SignupPage() {
                                     error={errors.gender}
                                     options={NewGender}
                                 />
-                                <InputFormField<SignupFormData>
-                                    classList={"mt-5"}
-                                    type="date"
-                                    id={'dob'}
-                                    label={"Your date of birth"}
-                                    name="dob"
-                                    register={register}
-                                    error={errors.dob}
-                                />
                                 <SelectFormField<SignupFormData>
                                     name="nationality"
                                     label={"Country of origin"}
@@ -139,43 +137,40 @@ export default function SignupPage() {
                         </FormFieldSet>
                     </motion.div>
                 )}
-                {/* {currentStep == 2 && (
+                {currentStep == 2 && (
                     <motion.div
                         initial={{ x: delta >= 1 ? '80%' : '-80%', opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
                         transition={{ duration: 0.5, ease: "easeInOut" }}
                     >
-                        {isProgramsLoading ? (
-                            <div className="flex items-center justify-center">
-                                <Loader2 fontSize={20} size={20} className="animate-spin text-lg" />
+                        {(isLoading) && (
+                            <div className='w-full flex items-center justify-center'>
+                                <LoadingSpinner size="md" className="mr-2" />
+                                Loading Programs...
                             </div>
-                        ) : (
-                            <FormFieldSet classList={`bg-white border-0`} >
-                                <div className="mb-4">
-                                    <SelectFormField<SignupFormData>
-                                        name="faculty_id"
-                                        label={"Select Programme of Study"}
-                                        control={control}
-                                        error={errors.faculty_id}
-                                        options={parentPrograms.map(item => ({ value: String(item.value), label: String(item.label) }))}
-                                        onValueSelect={handleProgramChange}
-                                    />
-                                </div>
-                                {selectedProgramId && (<div className="mb-4">
-                                    <SelectFormField<SignupFormData>
-                                        name="department_id"
-                                        label={"Select Department of Study"}
-                                        control={control}
-                                        error={errors.department_id}
-                                        options={childPrograms.map(item => ({ value: String(item.value), label: String(item.label) }))}
-                                    />
-                                </div>
-                                )}
-                            </FormFieldSet>
                         )}
+                        {(isError || !programs) && (
+                            <Alert variant="destructive">
+                                <AlertCircleIcon />
+                                <AlertTitle>Failed to load programs.</AlertTitle>
+                                <AlertDescription>
+                                    <p>Please check your network connection and try again.</p>
+                                </AlertDescription>
+                            </Alert>
+                        )}
+                        <ProgramAccordionDisplay<SignupFormData>
+                            programs={programs}
+                            setValue={setValue}
+                            getValues={getValues}
+                            errors={errors}
+                            watch={watch}
+                            fieldKey="program"
+                            fieldIdKey="program_id"
+                            subHeading="any program can be selected from the parent to the child program..."
+                        />
                     </motion.div>
-                )} */}
-                {currentStep == 2 && (
+                )}
+                {currentStep == 3 && (
                     <motion.div
                         initial={{ x: delta >= 1 ? '80%' : '-80%', opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
@@ -222,7 +217,7 @@ export default function SignupPage() {
                         </FormFieldSet>
                     </motion.div>
                 )}
-                {currentStep == 3 && (
+                {currentStep == 4 && (
                     <motion.div
                         initial={{ x: delta >= 1 ? '80%' : '-80%', opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}

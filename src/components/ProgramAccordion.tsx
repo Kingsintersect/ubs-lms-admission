@@ -6,8 +6,7 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
-import { AdmissionFormData } from "@/schemas/admission-schema";
-import { FieldErrors, UseFormGetValues, UseFormSetValue, UseFormWatch } from "react-hook-form";
+import { FieldErrors, Path, PathValue, UseFormGetValues, UseFormSetValue, UseFormWatch } from "react-hook-form";
 
 export type ProgramNode = {
     id: number;
@@ -15,31 +14,34 @@ export type ProgramNode = {
     children?: ProgramNode[];
 };
 
-interface ProgramAccordionProps {
+interface ProgramAccordionProps<T extends Record<string, any>> {
     nodes: ProgramNode[];
     level?: number;
-    setValue: UseFormSetValue<AdmissionFormData>;
-    watch: UseFormWatch<AdmissionFormData>;
+    fieldKey: string;
+    fieldIdKey: string;
+    setValue: UseFormSetValue<T>;
+    watch: UseFormWatch<T>;
 }
 
-export default function ProgramAccordion({
+export default function ProgramAccordion<T extends Record<string, any>>({
     nodes,
     level = 0,
+    fieldKey,
+    fieldIdKey,
     setValue,
     watch,
-}: ProgramAccordionProps) {
-    const selected = watch("program");
+}: ProgramAccordionProps<T>) {
+    const selected = watch(fieldKey as Path<T>);
+
     const handleProgramSelect = (node: ProgramNode) => {
-        setValue("program", node.name)
-        setValue("program_id", String(node.id))
-    }
+        setValue(fieldKey as Path<T>, node.name as PathValue<T, Path<T>>);
+        setValue(fieldIdKey as Path<T>, String(node.id) as PathValue<T, Path<T>>);
+    };
 
     return (
         <Accordion type="multiple" className={`pl-${level * 4}`}>
-            {nodes.map((node, index) => {
+            {Array.isArray(nodes) && nodes.map((node, index) => {
                 const id = `${level}-${index}-${node.name}`;
-                // const hasChildren = node.children && node.children.length > 0;
-                // const isSelected = selected === node.name //&& !hasChildren;
 
                 return (
                     <AccordionItem key={id} value={id}>
@@ -54,10 +56,12 @@ export default function ProgramAccordion({
                             </div>
 
                             {Array.isArray(node.children) && node.children.length > 0 && (
-                                <ProgramAccordion
+                                <ProgramAccordion<T>
                                     nodes={node.children}
                                     level={level + 1}
                                     setValue={setValue}
+                                    fieldKey={fieldKey}
+                                    fieldIdKey={fieldIdKey}
                                     watch={watch}
                                 />
                             )}
@@ -69,70 +73,60 @@ export default function ProgramAccordion({
     );
 }
 
-interface ProgramAccordionDisplayProps {
+
+interface ProgramAccordionDisplayProps<T extends Record<string, any>> {
     programs: ProgramNode[],
-    setValue: UseFormSetValue<AdmissionFormData>,
-    watch: UseFormWatch<AdmissionFormData>,
-    getValues: UseFormGetValues<AdmissionFormData>,
-    errors: FieldErrors<AdmissionFormData>;
+    setValue: UseFormSetValue<T>,
+    watch: UseFormWatch<T>,
+    getValues: UseFormGetValues<T>,
+    errors: FieldErrors<T>;
+    fieldKey: string;
+    fieldIdKey: string;
+    heading?: string;
+    subHeading?: string;
 }
-export const ProgramAccordionDisplay = ({ programs, setValue, getValues, watch, errors }: ProgramAccordionDisplayProps) => {
+export const ProgramAccordionDisplay = <T extends Record<string, any>>({
+    programs,
+    setValue,
+    getValues,
+    watch,
+    errors,
+    fieldKey,
+    fieldIdKey,
+    heading,
+    subHeading,
+}: ProgramAccordionDisplayProps<T>) => {
+    const programValue = getValues(fieldKey as Path<T>)
 
     return (
         <div className="max-w-3xl mx-auto p-4">
-            <h1 className="text-2xl font-bold mb-0 text-site-b-dark">Select a Program</h1>
-            <p className="italic text-site-a-dark mb-4">any program can be selected from the parent to the child program...</p>
+            {heading && <h1 className="text-2xl font-bold mb-0 text-site-b-dark">{heading}</h1>}
+            {subHeading && <p className="italic text-site-a-dark mb-4">{subHeading}</p>}
 
             <ProgramAccordion
                 nodes={programs}
                 setValue={setValue}
                 watch={watch}
+                fieldKey={fieldKey}
+                fieldIdKey={fieldIdKey}
             />
 
             {errors.program && (
                 <p className="text-red-500 text-sm mb-2">
-                    {errors.program.message}
+                    {String(errors.program.message)}
                 </p>
             )}
             {errors.program_id && (
                 <p className="text-red-500 text-sm">
-                    {errors.program_id.message}
+                    {String(errors.program_id.message)}
                 </p>
             )}
 
-            {getValues("program") && (
+            {programValue && (
                 <div className="mt-6 text-green-700 font-semibold border-t pt-4">
-                    ✅ You selected: <span className="text-primary">{getValues("program")}</span>
+                    ✅ You selected: <span className="text-primary">{programValue}</span>
                 </div>
             )}
         </div>
     );
 }
-
-{/* <AccordionItem key={id} value={id}>
-    <AccordionTrigger
-        className={`text-left cursor-pointer rounded ${selected === node.name ? "bg-gray-200 " : "hover:bg-muted"
-            }`}
-        onClick={() => handleProgramSelect(node)}
-    >
-        {node.name}
-    </AccordionTrigger>
-    <AccordionContent>
-        <div
-            className={`pl-4 py-1 cursor-pointer rounded ${selected === node.name ? "bg-gray-100" : "hover:bg-muted"
-                }`}
-            onClick={() => handleProgramSelect(node)}
-        >
-            🎓 {node.name}
-        </div>
-
-        {Array.isArray(node.children) && node.children.length > 0 && (
-            <ProgramAccordion
-                nodes={node.children}
-                level={level + 1}
-                setValue={setValue}
-                watch={watch}
-            />
-        )}
-    </AccordionContent>
-</AccordionItem> */}

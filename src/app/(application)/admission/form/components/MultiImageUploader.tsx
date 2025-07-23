@@ -17,8 +17,10 @@ interface AcademicImageUploaderProps {
     register?: UseFormReturn<AdmissionFormData>['register'] | null;
     setValue?: UseFormReturn<AdmissionFormData>['setValue'] | null;
     canupload?: boolean;
+    formKey?: keyof AdmissionFormData;
+    title?: string;
 }
-const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register, canupload = true }: AcademicImageUploaderProps) => {
+const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register, canupload = true, formKey = "images", title = "Upload Multiple Documents" }: AcademicImageUploaderProps) => {
     const [images, setImages] = useState<AcademicImage[]>([]);
     const [selectedImage, setSelectedImage] = useState<AcademicImage | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -26,8 +28,8 @@ const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register, can
     useEffect(() => {
         const converted = convertImageUrlsToPictures(imagesUrlArray ?? []);
         setImages(converted);
-        if (setValue) setValue("images", []);
-    }, [imagesUrlArray, setValue]);
+        if (setValue) setValue(formKey, []);
+    }, [formKey, imagesUrlArray, setValue]);
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files ?? []);
@@ -61,7 +63,7 @@ const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register, can
 
     const updateFormImagesField = (images: AcademicImage[]) => {
         const fileImages = images.filter((img) => img.file).map((img) => img.file!);
-        if (setValue) setValue("images", fileImages);
+        if (setValue) setValue(formKey, fileImages);
     };
 
     const deleteImageMutation = useMutation({
@@ -103,7 +105,8 @@ const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register, can
     return (
         <div className="max-w-7xl mx-auto">
             <div className="bg-white rounded-lg shadow-sm border p-6">
-                <h2 className="text-lg font-semibold text-site-b-dark mb-4">Academic Qualification Images</h2>
+                <h2 className="text-lg font-semibold mb-0">{title}</h2>
+                <div className="italic mb-4 text-site-a-dark">you can uplload as many as available</div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                     {images.map((image) => (
@@ -181,7 +184,7 @@ const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register, can
                 </div>
             </div>
 
-            {register && <input type="hidden" {...register("images")} />}
+            {register && <input type="hidden" {...register(formKey)} />}
 
             {selectedImage && (
                 <div

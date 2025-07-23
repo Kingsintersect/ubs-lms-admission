@@ -19,8 +19,9 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { SponsorInformationStep } from "./components/form-inputs/SponsorInformationStep";
+import { NextOfKinInformationStep } from "./components/form-inputs/NextOfKinInformationStep";
 import { getFriendlyError } from '@/lib/errorsHandler';
+import { AcademicCredentialsStep } from "./components/form-inputs/AcademicCredentialsStep";
 
 const AdmissionForm: React.FC = () => {
     const { logout, access_token, updateUser, refreshUser } = useAuth();
@@ -46,7 +47,8 @@ const AdmissionForm: React.FC = () => {
             startTerm: "2024/2025",
             studyMode: 'online',
             awaiting_result: true,
-            program: "",
+            has_sponsor: false,
+            is_next_of_kin_primary_contact: false,
         }
     });
 
@@ -65,13 +67,20 @@ const AdmissionForm: React.FC = () => {
     });
 
     const nextStep = async () => {
-        const fieldsToValidate = STEPS[currentStep].fields;
+        const stepConfig = STEPS[currentStep];
+        const values = getValues();
+
+        const fieldsToValidate = typeof stepConfig.getFields === 'function'
+            ? stepConfig.getFields(values)
+            : stepConfig.fields;
+
         const isStepValid = await trigger(fieldsToValidate);
 
         if (isStepValid && currentStep < STEPS.length - 1) {
             setCurrentStep(currentStep + 1);
         }
     };
+
 
     const prevStep = () => {
         if (currentStep > 0) {
@@ -98,13 +107,15 @@ const AdmissionForm: React.FC = () => {
             case 0:
                 return <PersonalInformationStep control={control} errors={errors} />;
             case 1:
-                return <SponsorInformationStep control={control} errors={errors} />;
+                return <NextOfKinInformationStep control={control} errors={errors} watch={watch} />;
             case 2:
                 return <AcademicBackgroundStep control={control} errors={errors} setValue={setValue} />;
             case 3:
-                return <ProfessionalExperienceStep control={control} errors={errors} />;
+                return <AcademicCredentialsStep control={control} errors={errors} setValue={setValue} />;
             case 4:
-                return <ProgramAndEssaysStep control={control} errors={errors} setValue={setValue} getValues={getValues} watch={watch} />;
+                return <ProfessionalExperienceStep control={control} errors={errors} />;
+            case 5:
+                return <ProgramAndEssaysStep control={control} errors={errors} setValue={setValue} />;
             default:
                 return null;
         }
@@ -113,8 +124,6 @@ const AdmissionForm: React.FC = () => {
     if (isSubmitted) {
         return <SuccessScreen onReset={handleReset} />;
     }
-
-
 
     return (
         <div className="relative min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
@@ -125,7 +134,7 @@ const AdmissionForm: React.FC = () => {
                 Sign Out
                 <LogOut className="h-5 w-5" />
             </button>
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-6xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-8">
                     <h1 className="text-4xl font-bold text-(--color-site-b-dark) mb-2">
@@ -138,25 +147,27 @@ const AdmissionForm: React.FC = () => {
 
                 {/* Progress Indicator */}
                 <div className="mb-8">
-                    <div className="flex justify-between items-center mb-4">
-                        {STEPS.map((step, index) => (
-                            <div key={index} className="flex flex-col items-center">
-                                <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-2 transition-all duration-300 ${index <= currentStep
-                                    ? 'bg-blue-600 text-white shadow-lg'
-                                    : 'bg-gray-200 text-gray-400'
-                                    }`}>
-                                    {/* You can add an icon here if STEPS has an icon property */}
-                                    <span className="font-bold">{index + 1}</span>
+                    <div className="overflow-x-auto">
+                        <div className="flex justify-between items-start md:items-center gap-4 mb-4 min-w-[600px] md:min-w-0">
+                            {STEPS.map((step, index) => (
+                                <div key={index} className="flex flex-col items-center flex-shrink-0 w-20">
+                                    <div
+                                        className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center mb-1 md:mb-2 transition-all duration-300 ${index <= currentStep ? 'bg-blue-600 text-white shadow-lg' : 'bg-gray-200 text-gray-400'}`}
+                                    >
+                                        <span className="font-bold text-sm md:text-base">{index + 1}</span>
+                                    </div>
+                                    <span
+                                        className={`text-[10px] text-center md:text-sm font-medium ${index <= currentStep ? 'text-blue-600' : 'text-gray-400'}`}
+                                    >
+                                        {step.title}
+                                    </span>
                                 </div>
-                                <span className={`text-sm font-medium ${index <= currentStep ? 'text-blue-600' : 'text-gray-400'
-                                    }`}>
-                                    {step.title}
-                                </span>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
                     <Progress value={((currentStep + 1) / STEPS.length) * 100} className="h-2" />
                 </div>
+
 
                 {/* Form */}
                 <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">

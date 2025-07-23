@@ -6,7 +6,7 @@ import AppLogo from "./application/AppLogo";
 const Header = () => {
 
 	return (
-		<header className="absolute top-0 left-0 right-0 w-full z-50 bg-transparent flex flex-wrap justify-between items-center px-4 py-2">
+		<header className="absolute top-0 left-0 right-0 w-full z-50 bg-transparent flex flex-wrap justify-between items-center px-1 py-2">
 			<div className="flex w-full flex-wrap justify-between items-center">
 				<div
 					className="text-3xl font-bold text-site-a hover:opacity-50 cursor-pointer mx-auto sm:mx-0"
@@ -14,7 +14,7 @@ const Header = () => {
 					<AppLogo
 						image_url={'/logo/logo.jpg'}
 						classList=''
-						Img_container_style='w-42 h-40'
+						// Img_container_style='w-42 h-40'
 						logo_text={""}
 					/>
 				</div>

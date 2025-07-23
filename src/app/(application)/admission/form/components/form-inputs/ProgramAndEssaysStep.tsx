@@ -1,27 +1,24 @@
-import { Control, FieldErrors, UseFormReturn, UseFormWatch } from "react-hook-form";
+import { Control, FieldErrors, UseFormReturn } from "react-hook-form";
 import { STUDY_MODES } from "../../constants";
 import { FormField } from "../FormField";
 import { AdmissionFormData } from "@/schemas/admission-schema";
-import { PhotoUpload } from "./PhotoUpload";
-import { ProgramAccordionDisplay } from "@/components/ProgramAccordion";
 import { useExternalPrograms } from "@/hooks/useExternalPrograms";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircleIcon } from "lucide-react";
+import { PhotoUploader } from "./PhotoUploader";
 
 interface ProgramAndEssaysStepProps {
     control: Control<AdmissionFormData>;
     errors: FieldErrors<AdmissionFormData>;
     setValue: UseFormReturn<AdmissionFormData>['setValue'];
-    getValues: UseFormReturn<AdmissionFormData>['getValues'];
-    watch: UseFormWatch<AdmissionFormData>;
 }
-export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ control, errors, setValue, getValues, watch }) => {
+export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ control, errors, setValue }) => {
     const { data: programs, isLoading, isError } = useExternalPrograms();
 
     if (isLoading) return (
         <div className='w-full flex items-center justify-center'>
-            <LoadingSpinner size="lg" className="mr-2" />
+            <LoadingSpinner size="md" className="mr-2" />
             Loading Programs...
         </div>
     );
@@ -40,7 +37,7 @@ export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ cont
             <div className="w-fill flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-around">
                 {/* Document Upload */}
                 <div className="space-y-6">
-                    <PhotoUpload
+                    <PhotoUploader
                         onFileChange={(file) => setValue('passportPhoto', file ?? undefined)}
                         error={errors.passportPhoto?.message}
                         setValue={setValue}
@@ -50,13 +47,6 @@ export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ cont
                     <div className="">( Current session - <span className="text-site-a-dark font-bold"> 2024 / 2025</span> )</div>
                 </div>
             </div>
-            <ProgramAccordionDisplay
-                programs={programs}
-                setValue={setValue}
-                getValues={getValues}
-                errors={errors}
-                watch={watch}
-            />
 
             <FormField
                 name="studyMode"

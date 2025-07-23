@@ -2,58 +2,86 @@
 
 import { remoteApiUrl } from "@/config";
 import { apiCall } from "@/lib/apiCaller";
+import { appendFormData, seeFormData } from "@/lib/formUtils";
 import { AdmissionFormData } from "@/schemas/admission-schema";
 
 
 export const submitAdmissionForm = async (data: AdmissionFormData, access_token: string) => {
     const formData = new FormData();
-    console.log('data', data)
-    // Append scalar fields
-    formData.append("sponsor_name", data.sponsor_name);
-    formData.append("sponsor_relationship", data.sponsor_relationship);
-    formData.append("sponsor_email", data.sponsor_email);
-    formData.append("sponsor_contact_address", data.sponsor_contact_address);
-    formData.append("sponsor_phone_number", data.sponsor_phone_number);
-    formData.append("undergraduateDegree", data.undergraduateDegree);
-    formData.append("university", data.university);
-    formData.append("gpa", data.gpa);
-    formData.append("graduationYear", data.graduationYear);
-    formData.append("program", data.program);
-    formData.append("program_id", data.program_id);
-    formData.append("startTerm", data.startTerm);
-    formData.append("studyMode", data.studyMode);
-    formData.append("personalStatement", data.personalStatement);
-    formData.append("careerGoals", data.careerGoals);
-    formData.append("disability", String(data.disability));
-    formData.append("requiresVisa", String(data.requiresVisa));
-    formData.append("agreeToTerms", String(data.agreeToTerms));
+    //console.log('data', data)
+    appendFormData(formData, data);
+    seeFormData(formData)
 
-    formData.append("dob", data.dob);
-    formData.append("gender", data.gender);
-    formData.append("lga", data.lga);
-    formData.append("hometown", data.hometown);
-    formData.append("hometown_address", data.hometown_address);
-    formData.append("contact_address", data.contact_address);
-    formData.append("religion", data.religion);
-    formData.append("awaiting_result", data.awaiting_result ? "1" : "0");
+    // formData.append("undergraduateDegree", data.undergraduateDegree);
+    // formData.append("university", data.university);
+    // formData.append("gpa", data.gpa);
+    // formData.append("graduationYear", data.graduationYear);
+    // formData.append("program", data.program);
+    // formData.append("program_id", data.program_id);
+    // formData.append("startTerm", data.startTerm);
+    // formData.append("studyMode", data.studyMode);
+    // formData.append("personalStatement", data.personalStatement);
+    // formData.append("careerGoals", data.careerGoals);
+    // formData.append("disability", String(data.disability));
+    // formData.append("requiresVisa", String(data.requiresVisa));
+    // formData.append("agreeToTerms", String(data.agreeToTerms));
 
-    // Append images
-    (data.images ?? []).forEach((file) => {
-        formData.append("images[]", file);
-    });
+    // formData.append("dob", data.dob);
+    // formData.append("gender", data.gender);
+    // formData.append("lga", data.lga);
+    // formData.append("hometown", data.hometown);
+    // formData.append("hometown_address", data.hometown_address);
+    // formData.append("contact_address", data.contact_address);
+    // formData.append("religion", data.religion);
+    // formData.append("awaiting_result", data.awaiting_result ? "1" : "0");
 
-    // Passport photo
-    if (data.passportPhoto) {
-        formData.append("passportPhoto", data.passportPhoto);
-    }
-    if (data.passport) {
-        formData.append("passport", data.passport);
-    }
+    // formData.append("next_of_kin_name", data.next_of_kin_name);
+    // formData.append("next_of_kin_relationship", data.next_of_kin_relationship);
+    // formData.append("next_of_kin_phone_number", data.next_of_kin_phone_number);
+    // formData.append("next_of_kin_email", data.next_of_kin_email);
+    // formData.append("next_of_kin_address", data.next_of_kin_address);
+    // formData.append("is_next_of_kin_primary_contact", data.is_next_of_kin_primary_contact);
+    // formData.append("next_of_kin_alternate_phone_number", data.next_of_kin_alternate_phone_number);
+    // formData.append("next_of_kin_occupation", data.next_of_kin_occupation);
+    // formData.append("next_of_kin_workplace", data.next_of_kin_workplace);
+
+    // formData.append("has_sponsor", data.has_sponsor ? "1" : "0");
+    // if (data.sponsor_name !== null) {
+    //     formData.append("sponsor_name", data.sponsor_name);
+    // }
+
+    // if (data.sponsor_relationship !== null) {
+    //     formData.append("sponsor_relationship", data.sponsor_relationship);
+    // }
+
+    // if (data.sponsor_email !== null) {
+    //     formData.append("sponsor_email", data.sponsor_email);
+    // }
+
+    // if (data.sponsor_contact_address !== null) {
+    //     formData.append("sponsor_contact_address", data.sponsor_contact_address);
+    // }
+
+    // if (data.sponsor_phone_number !== null) {
+    //     formData.append("sponsor_phone_number", data.sponsor_phone_number);
+    // }
+
+    // // Append images
+    // (data.images ?? []).forEach((file) => {
+    //     formData.append("images[]", file);
+    // });
+
+    // // Passport photo
+    // if (data.passportPhoto) {
+    //     formData.append("passportPhoto", data.passportPhoto);
+    // }
+    // if (data.passport) {
+    //     formData.append("passport", data.passport);
+    // }
     const res = await fetch(`${remoteApiUrl}/application/application-form`, {
         method: "POST",
         headers: {
-            Authorization: `Bearer ${access_token}`, // ✅ if your API requires it
-            // Do not set Content-Type manually for FormData
+            Authorization: `Bearer ${access_token}`,
         },
         body: formData,
     });

@@ -8,12 +8,16 @@ const publicRoutes = [
 	"/auth/signin",
 	"/auth/signup",
 	"/admission/payments/verify-admission",
+	"/admission/terms-and-conditions",
+	"/admission/terms-and-conditions/document-file",
 ];
 const protectedRoutes = [
 	"/dashboard",
 	"/admission",
 	"/admission/payments/verify-acceptance",
 	"/admission/payments/verify-tuition",
+	"/admission/terms-and-conditions",
+	"/admission/terms-and-conditions/document-file",
 ];
 const staticPaths = ["/_next", "/favicon.ico", "/images", /\.(png|jpg|jpeg|gif|svg)$/];
 

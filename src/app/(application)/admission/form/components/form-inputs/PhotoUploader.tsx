@@ -7,14 +7,16 @@ import { AlertCircle, Camera, Upload } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
-export const PhotoUpload = ({
+export const PhotoUploader = ({
     onFileChange,
     error,
     setValue,
+    title,
 }: {
     onFileChange: (file: File | null) => void;
     error?: string;
     setValue
+    title?: string;
 }) => {
     const [preview, setPreview] = useState<string | null>(null);
     const [dragActive, setDragActive] = useState(false);
@@ -74,7 +76,7 @@ export const PhotoUpload = ({
         <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700 flex items-center gap-1">
                 <Camera className="w-4 h-4" />
-                Passport Photograph
+                {title ?? `Passport Photograph`}
                 <span className="text-red-500">*</span>
             </label>
 

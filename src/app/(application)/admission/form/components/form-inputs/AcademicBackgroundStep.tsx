@@ -1,9 +1,8 @@
 import { Control, FieldErrors, UseFormReturn } from "react-hook-form";
 import { FormField } from "../FormField";
 import { AdmissionFormData } from "@/schemas/admission-schema";
-import MultiImageUploader from "../MultiImageUploader";
 
-export const AcademicBackgroundStep: React.FC<{ control: Control<AdmissionFormData>; errors: FieldErrors<AdmissionFormData>; setValue: UseFormReturn<AdmissionFormData>['setValue'] }> = ({ control, errors, setValue }) => (
+export const AcademicBackgroundStep: React.FC<{ control: Control<AdmissionFormData>; errors: FieldErrors<AdmissionFormData>; setValue: UseFormReturn<AdmissionFormData>['setValue'] }> = ({ control, errors }) => (
     <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
@@ -66,13 +65,13 @@ export const AcademicBackgroundStep: React.FC<{ control: Control<AdmissionFormDa
                 placeholder="110"
             />
         </div>
-        <div className="col-span-full">
+        {/* <div className="col-span-full">
             <MultiImageUploader
                 imagesUrlArray={undefined}
                 productId={0}
                 register={control.register}
                 setValue={setValue}
             />
-        </div>
+        </div> */}
     </div>
 );

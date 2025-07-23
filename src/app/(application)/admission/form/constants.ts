@@ -1,11 +1,13 @@
 import { AdmissionFormData } from "@/schemas/admission-schema";
-import { Briefcase, FileText, GraduationCap, Users, User } from "lucide-react";
-import { Control, FieldErrors } from "react-hook-form";
+import { Briefcase, FileText, GraduationCap, FileStack, Users, User } from "lucide-react";
+import { Control, FieldErrors, Path } from "react-hook-form";
 
 export interface Step {
     title: string;
     icon: React.ElementType;
-    fields: (keyof AdmissionFormData)[];
+    // fields: (keyof AdmissionFormData)[];
+    fields?: Path<AdmissionFormData>[];
+    getFields?: (values: AdmissionFormData) => Path<AdmissionFormData>[];
 }
 
 export interface FormFieldProps {
@@ -26,14 +28,42 @@ export const STEPS: Step[] = [
         fields: ['lga', 'religion', 'dob', 'gender', 'hometown', 'hometown_address', 'contact_address']
     },
     {
-        title: `Sponsor's Information`,
+        title: 'Next of Kin',
         icon: Users,
-        fields: ['sponsor_name', 'sponsor_relationship', 'sponsor_email', 'sponsor_contact_address', 'sponsor_phone_number']
+        getFields: (values) => {
+            const baseFields: Path<AdmissionFormData>[] = [
+                'has_sponsor',
+                'next_of_kin_name',
+                'next_of_kin_relationship',
+                'next_of_kin_phone_number',
+                'next_of_kin_address',
+                'is_next_of_kin_primary_contact',
+                'next_of_kin_occupation',
+                'next_of_kin_workplace',
+                // 'next_of_kin_email',
+                // 'next_of_kin_alternate_phone_number',
+            ];
+
+            const sponsorFields: Path<AdmissionFormData>[] = [
+                'sponsor_name',
+                'sponsor_relationship',
+                'sponsor_email',
+                'sponsor_contact_address',
+                'sponsor_phone_number',
+            ];
+
+            return values.has_sponsor ? [...baseFields, ...sponsorFields] : baseFields;
+        }
     },
     {
         title: 'Academic Background',
         icon: GraduationCap,
         fields: ['undergraduateDegree', 'university', 'gpa', 'graduationYear', 'images']
+    },
+    {
+        title: 'Academic Credentials',
+        icon: FileStack,
+        fields: ['primary_school_leaving', 'o_level', 'degree', 'hnd', 'ond', "others"]
     },
     {
         title: 'Professional Experience (Optional)',
@@ -43,7 +73,7 @@ export const STEPS: Step[] = [
     {
         title: 'Program & Essays',
         icon: FileText,
-        fields: ['program', 'startTerm', 'studyMode', 'personalStatement', 'careerGoals', 'agreeToTerms']
+        fields: ['startTerm', 'studyMode', 'personalStatement', 'careerGoals', 'agreeToTerms']
     },
 ];
 
@@ -52,46 +82,12 @@ export const GENDER = [
     { value: 'FEMALE', label: 'FEMALE' },
 ];
 
-export const LocalGovArea = [
-    { value: 'awka', label: 'Awka' },
-    { value: 'enugu', label: 'Enugu' },
-    { value: 'onitsha', label: 'Onitsha' },
-    { value: 'nnewi', label: 'Nnewi' },
-    { value: 'okigwe', label: 'Okigwe' },
-    { value: 'umudike', label: 'Umudike' },
-    { value: 'awka_ibu', label: 'Awka Ibu' },
-    { value: 'awka_south', label: 'Awka South' },
-    { value: 'awka_north', label: 'Awka North' },
-    { value: 'awka_east', label: 'Awka East' },
-    { value: 'awka_west', label: 'Awka West' },
-];
-
 export const RELIGION = [
     { value: 'christianity', label: 'Christianity' },
     { value: 'islam', label: 'Islam' },
     { value: 'traditional', label: 'Traditional' },
     { value: 'other', label: 'Other' },
 ]
-export const NATIONALITIES = [
-    { value: 'us', label: 'United States' },
-    { value: 'ca', label: 'Canada' },
-    { value: 'uk', label: 'United Kingdom' },
-    { value: 'au', label: 'Australia' },
-    { value: 'de', label: 'Germany' },
-    { value: 'fr', label: 'France' },
-    { value: 'jp', label: 'Japan' },
-    { value: 'cn', label: 'China' },
-    { value: 'in', label: 'India' },
-    { value: 'other', label: 'Other' },
-];
-
-export const PROGRAMS = [
-    { value: 'mba', label: 'MBA' },
-    { value: 'executive-mba', label: 'Executive MBA' },
-    { value: 'msc-finance', label: 'MSc Finance' },
-    { value: 'msc-marketing', label: 'MSc Marketing' },
-    { value: 'msc-management', label: 'MSc Management' },
-];
 
 export const START_TERMS = [
     { value: '2024/2025', label: '2024 / 2025' },
@@ -108,7 +104,6 @@ export const YEARS_OF_EXPERIENCE = [
 ];
 
 export const STUDY_MODES = [
-    { value: 'full-time', label: 'Full-time', disabled: true },
-    { value: 'part-time', label: 'Part-time', disabled: true },
-    { value: 'online', label: 'Online' },
+    { value: 'part-time', label: 'Part Time (Hybrid)' },
+    { value: 'online', label: 'Online (Premium)' },
 ];
