@@ -12,7 +12,7 @@ import { FieldName, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { useQuery, useMutation } from "@tanstack/react-query";
 
-export const SignupSchema = z
+export const baseSignupSchema = z
     .object({
         first_name: z.string().min(1, { message: "Required" }),
         last_name: z.string().min(1, { message: "Required" }),
@@ -42,13 +42,11 @@ export const SignupSchema = z
         // Accademic session
         academic_session: z.string().min(1, 'Ivalid value for academic session'),
         start_year: z.string().min(1, 'Ivalid value for start year'),
-
-
     })
-    .refine((data) => data.password === data.password_confirmation, {
-        message: "Passwords do not match",
-        path: ["password_confirmation"],
-    });
+export const SignupSchema = baseSignupSchema.refine((data) => data.password === data.password_confirmation, {
+    message: "Passwords do not match",
+    path: ["password_confirmation"],
+});
 
 export type SignupFormData = z.infer<typeof SignupSchema>;
 export type ProgramItem = { id: number; name: string; parent: number };

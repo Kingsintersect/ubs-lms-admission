@@ -16,11 +16,11 @@ interface AcademicImageUploaderProps {
     imagesUrlArray: string[] | undefined;
     register?: UseFormReturn<AdmissionFormData>['register'] | null;
     setValue?: UseFormReturn<AdmissionFormData>['setValue'] | null;
-    canupload?: boolean;
+    previewOnly?: boolean;
     formKey?: keyof AdmissionFormData;
     title?: string;
 }
-const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register, canupload = true, formKey = "images", title = "Upload Multiple Documents" }: AcademicImageUploaderProps) => {
+const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register, previewOnly = true, formKey = "images", title = "" }: AcademicImageUploaderProps) => {
     const [images, setImages] = useState<AcademicImage[]>([]);
     const [selectedImage, setSelectedImage] = useState<AcademicImage | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -106,9 +106,9 @@ const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register, can
         <div className="max-w-7xl mx-auto">
             <div className="bg-white rounded-lg shadow-sm border p-6">
                 <h2 className="text-lg font-semibold mb-0">{title}</h2>
-                <div className="italic mb-4 text-site-a-dark">you can uplload as many as available</div>
+                {/* <div className="italic mb-4 text-site-a-dark">you can uplload as many as available</div> */}
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-4 ">
                     {images.map((image) => (
                         <div key={image.id} className="relative group">
                             <div className="relative w-full aspect-[4/4]">
@@ -137,13 +137,13 @@ const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register, can
                                 )}
                             </div>
 
-                            {(canupload && image.primary) && (
+                            {(previewOnly && image.primary) && (
                                 <div className="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded">
                                     Primary
                                 </div>
                             )}
 
-                            {canupload && <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                            {previewOnly && <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
                                 {!image.primary && (
                                     <button
                                         onClick={() => setPrimaryImage(image.id)}
@@ -164,7 +164,7 @@ const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register, can
                         </div>
                     ))}
 
-                    {canupload && <div
+                    {previewOnly && <div
                         className="w-full aspect-[4/4] border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center hover:border-gray-400 cursor-pointer"
                         onClick={() => fileInputRef.current?.click()}
                     >

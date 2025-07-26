@@ -6,7 +6,7 @@ import { UseDataTableOptions } from "@/hooks/useDataTable";
 import { apiCall } from "@/lib/apiCaller";
 import { loginSessionKey } from "@/lib/definitions";
 import { getSession } from "@/lib/session";
-import { ApplicationDetailsType } from "@/schemas/admission-schema";
+import { ApplicationChunk, ApplicationDetailsType } from "@/schemas/admission-schema";
 import { ApiResponseArray, ApiResponseSingle } from "@/types/api.types";
 import { Application, ApplicationStatus } from "@/types/application";
 import { SessionData } from "@/types/auth";
@@ -203,3 +203,22 @@ export async function updateApplicationStatus({
 
     return res.json();
 }
+
+
+// review editing
+export const updateStudentApplicationData = async (applicationId: string, data: ApplicationChunk): Promise<void> => {
+    console.log('data', data)
+    const response = await fetch(`${remoteApiUrl}/application/update-application-form`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+    console.log('response', response)
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to update personal information');
+    }
+};

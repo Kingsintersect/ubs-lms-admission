@@ -23,7 +23,6 @@ export const submitAdmissionForm = async (data: AdmissionFormData, access_token:
     // formData.append("personalStatement", data.personalStatement);
     // formData.append("careerGoals", data.careerGoals);
     // formData.append("disability", String(data.disability));
-    // formData.append("requiresVisa", String(data.requiresVisa));
     // formData.append("agreeToTerms", String(data.agreeToTerms));
 
     // formData.append("dob", data.dob);

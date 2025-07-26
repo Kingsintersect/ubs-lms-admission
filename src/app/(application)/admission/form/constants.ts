@@ -107,3 +107,8 @@ export const STUDY_MODES = [
     { value: 'part-time', label: 'Part Time (Hybrid)' },
     { value: 'online', label: 'Online (Premium)' },
 ];
+
+export const COUNTRIES = [
+    { value: 'Nigeria', label: 'Nigeria' },
+    { value: 'Others', label: 'Others' },
+]

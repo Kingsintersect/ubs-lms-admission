@@ -89,13 +89,6 @@ export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ cont
                     type="checkbox"
                 />
                 <FormField
-                    name="requiresVisa"
-                    control={control}
-                    errors={errors}
-                    label="I require a student visa to study"
-                    type="checkbox"
-                />
-                <FormField
                     name="agreeToTerms"
                     control={control}
                     errors={errors}

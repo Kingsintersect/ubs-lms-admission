@@ -42,7 +42,6 @@ const AdmissionForm: React.FC = () => {
         mode: 'onChange',
         defaultValues: {
             disability: false,
-            requiresVisa: false,
             agreeToTerms: false,
             startTerm: "2024/2025",
             studyMode: 'online',

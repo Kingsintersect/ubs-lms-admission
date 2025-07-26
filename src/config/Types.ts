@@ -50,6 +50,8 @@ export interface StudentType extends Record<string, unknown> {
 	username: string | null;
 	faculty_id: string | null;
 	department_id: string | null;
+	program: string | null;
+	program_id: string | null;
 	nationality: string | null;
 	state: string | null;
 	phone_number: string | null;
@@ -177,7 +179,7 @@ export type LocalGov = {
 	id: string;
 	lga: string;
 	name?: string;
-	lgas?: Array<String>;
+	lgas?: Array<string>;
 	state_id: string;
 };
 export type CLassSubject = {

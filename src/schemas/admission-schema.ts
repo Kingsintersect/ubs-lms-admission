@@ -1,4 +1,5 @@
 import { StudentType } from "@/config/Types";
+import { baseSignupSchema } from "@/hooks/use-signin-multistep-view-model";
 import z from "zod";
 
 
@@ -7,7 +8,8 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
 // Zod validation schema
-export const admissionSchema = z.object({
+// export const admissionSchema = z.object({
+export const baseAdmissionSchema = z.object({
     id: z.string().optional(),
 
     // Personal Information
@@ -79,8 +81,6 @@ export const admissionSchema = z.object({
     yearsOfExperience: z.string().optional(),
 
     // Program Selection
-    // program: z.string().min(1, 'Program selection is required'),
-    // program_id: z.string().min(1, 'Program selection is required'),
     startTerm: z.string().min(1, 'Start term is required'),
     studyMode: z.string().min(1, 'Study mode is required'),
 
@@ -98,7 +98,6 @@ export const admissionSchema = z.object({
 
     // Additional Information
     disability: z.boolean().default(false),
-    requiresVisa: z.boolean().default(false),
     agreeToTerms: z.boolean().refine((val) => val === true, 'You must agree to terms and conditions'),
 
     // Academic Images
@@ -114,9 +113,13 @@ export const admissionSchema = z.object({
 
     passport: z.string().optional(),
     awaiting_result: z.boolean().default(true),
-}).superRefine((data, ctx) => {
+})
+
+
+export const admissionSchema = baseAdmissionSchema.superRefine((data, ctx) => {
     validateSponsorFields(data, ctx);
 });
+
 type SponsorCheck = {
     key: keyof AdmissionFormData;
     value: string | undefined;
@@ -178,7 +181,152 @@ function validateSponsorFields(data: AdmissionFormData, ctx: z.RefinementCtx) {
 }
 
 
+// EDITING THE FIELDS
+//  Schema for personal info chunk
+export const personalInfoSchema = baseSignupSchema.pick({
+    email: true,
+    phone_number: true,
+    nationality: true,
+});
+export const personalInfoSchema2 = baseAdmissionSchema.pick({
+    id: true,
+    lga: true,
+    dob: true,
+    gender: true,
+    hometown: true,
+    hometown_address: true,
+    contact_address: true,
+    religion: true,
+});
+export const completePersonalInfoSchema = personalInfoSchema.merge(personalInfoSchema2);
+
+// Schema for academic info chunk
+export const academicInfoSchema = baseAdmissionSchema.pick({
+    id: true,
+    undergraduateDegree: true,
+    university: true,
+    gpa: true,
+    graduationYear: true,
+    gmatScore: true,
+    greScore: true,
+    toeflScore: true
+});
+// Schema for NextOfkin info chunk
+export const nextOfkinInfoSchema = baseAdmissionSchema.pick({
+    id: true,
+    next_of_kin_name: true,
+    next_of_kin_email: true,
+    next_of_kin_phone_number: true,
+    next_of_kin_relationship: true,
+    next_of_kin_address: true,
+    next_of_kin_occupation: true,
+    next_of_kin_workplace: true
+});
+// Schema for Sponsor info chunk
+export const sponsorInfoSchema = baseAdmissionSchema.pick({
+    id: true,
+    sponsor_name: true,
+    sponsor_email: true,
+    sponsor_phone_number: true,
+    sponsor_relationship: true,
+    sponsor_contact_address: true,
+    has_sponsor: true,
+});
+
+export const workExoerienceInfoSchema = baseAdmissionSchema.pick({
+    id: true,
+    workExperience: true,
+    currentPosition: true,
+    company: true,
+    yearsOfExperience: true,
+});
+
+
+export const programInfoSchema = baseSignupSchema.pick({
+    program: true,
+    program_id: true,
+});
+export const programInfoSchema2 = baseAdmissionSchema.pick({
+    id: true,
+    studyMode: true,
+    startTerm: true,
+});
+export const completeProgramInfoSchema = programInfoSchema.merge(programInfoSchema2);
+
+export const otherInfoSchema = baseAdmissionSchema.pick({
+    id: true,
+    disability: true,
+});
+
+export const personalStatementInfoSchema = baseAdmissionSchema.pick({
+    id: true,
+    personalStatement: true,
+});
+
+export const careerGoalsInfoSchema = baseAdmissionSchema.pick({
+    id: true,
+    careerGoals: true,
+});
+
+export const qualificationDocumentsSchema = baseAdmissionSchema.pick({
+    id: true,
+    primary_school_leaving: true,
+    o_level: true,
+    degree: true,
+    hnd: true,
+    ond: true,
+    transcript: true,
+    others: true,
+    images: true,
+});
+
+
 export type AdmissionFormData = z.infer<typeof admissionSchema>;
 export interface ApplicationDetailsType extends StudentType {
     application: AdmissionFormData;
 }
+
+export interface PersonalInfoData {
+    id?: string | number | null;
+    email: string | null;
+    phone_number: string | null;
+    nationality: string | null;
+    religion: string | null;
+    gender: string | null;
+    dob: string | null;
+    hometown: string | null;
+    lga: string | null;
+    hometown_address: string | null;
+    contact_address: string | null;
+}
+// export type PersonalInfoData = z.infer<typeof completePersonalInfoSchema>;
+export type AcademicInfoData = z.infer<typeof academicInfoSchema>;
+export type NextOfkinInfoData = z.infer<typeof nextOfkinInfoSchema>;
+export type SponsorInfoData = z.infer<typeof sponsorInfoSchema>;
+export type WorkExoerienceInfoData = z.infer<typeof workExoerienceInfoSchema>;
+export interface ProgramInfoData {
+    id?: string | number | null;
+    program: string | null;
+    program_id: string | null;
+    studyMode: string | null;
+    startTerm: string | null;
+}
+// export type ProgramInfoData = z.infer<typeof completeProgramInfoSchema>;
+export type OtherInfoData = z.infer<typeof otherInfoSchema>;
+export type PersonalStatementInfoData = z.infer<typeof personalStatementInfoSchema>;
+export type CareerGoalsInfoData = z.infer<typeof careerGoalsInfoSchema>;
+export type QualificationDocumentsData = z.infer<typeof qualificationDocumentsSchema>;
+
+
+// Union type for all chunks
+export type ApplicationChunk =
+    | PersonalInfoData
+    | AcademicInfoData
+    | NextOfkinInfoData
+    | SponsorInfoData
+    | WorkExoerienceInfoData
+    | ProgramInfoData
+    | OtherInfoData
+    | PersonalStatementInfoData
+    | CareerGoalsInfoData
+    | QualificationDocumentsData
