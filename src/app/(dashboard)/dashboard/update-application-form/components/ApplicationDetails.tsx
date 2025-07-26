@@ -1,10 +1,10 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { ApplicationDetailsType } from '@/schemas/admission-schema';
-import { AlertCircle, AlertCircleIcon, Check, Clock, Eye, X } from 'lucide-react'
+import { AlertCircle, AlertCircleIcon, Check, Clock, TriangleAlert, X } from 'lucide-react'
 import Image from 'next/image';
 import React from 'react'
-import EditablePersonalInfo from './editables/PersonalInfo';
+import EditablePersonalInfo from './editables/EditablePersonalInfo';
 import AcademicInformation from './editables/AcademicInformation';
 import NextOfkinInfo from './editables/NextOfkinInfo';
 import SponsorsInfo from './editables/SponsorsInfo';
@@ -137,9 +137,9 @@ export const ApplicationDetails = ({
                 </div>
             ) : (
                 <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-                    <Eye className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">Select an Application</h3>
-                    <p className="text-gray-600">Choose an application from the list to view details and make admission decisions.</p>
+                    <TriangleAlert className="w-16 h-16 text-rose-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-rose-900 mb-2">Application cannot be identified</h3>
+                    <p className="text-rose-600">Choose an application from the list to view details and make admission decisions.</p>
                 </div>
             )}
             {error &&

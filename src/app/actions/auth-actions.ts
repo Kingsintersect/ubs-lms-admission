@@ -161,9 +161,12 @@ export async function refetchUserData() {
 				...newUser
 			}
 		});
+		const updatedLoginSessionData = (await getSession(
+			loginSessionKey
+		)) as SessionData | null;
 
 
-		return { success: loginSessionData, error: null };
+		return { success: updatedLoginSessionData, error: null };
 	} catch {
 		return { error: { message: "Failed to update session" }, success: null };
 	}

@@ -1,43 +1,34 @@
 "use client";
 
 import { updateStudentApplicationData } from '@/app/actions/applications';
-import { ProgramInfoData } from '@/schemas/admission-schema';
-import { AlertCircle, Award, CheckCircle, Edit3, Save, X } from 'lucide-react';
+import { CareerGoalsInfoData } from '@/schemas/admission-schema';
+import { AlertCircle, CheckCircle, Edit3, NotebookPen, Save, X } from 'lucide-react';
 import React, { useState } from 'react'
-import { EditableProgramOptions, EditableRadioGroup, EditableSelect } from './EditableFormFields';
-import { START_TERMS, STUDY_MODES } from '@/app/(application)/admission/form/constants';
-import { useExternalPrograms } from '@/hooks/useExternalPrograms'; // Your programs hook
+import { EditableTextArea } from './EditableFormFields';
 import { useAuth } from '@/contexts/AuthContext';
 import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
 
-export interface ProgramInfoProps {
-    application: ProgramInfoData;
+export interface CareerGoalsInfoProps {
+    application: CareerGoalsInfoData;
 }
-
-export default function ProgramInfo({
+export default function CareerGoalsInfo({
     application,
-}: ProgramInfoProps) {
+}: CareerGoalsInfoProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState('');
 
-    // Load programs data
-    const { data: programs, isLoading, isError } = useExternalPrograms();
-    const { refreshUser } = useAuth();
-
     // Form state
-    const [formData, setFormData] = useState<ProgramInfoData>({
-        program: application.program || '',
-        program_id: (application.program_id as string) || '',
-        studyMode: application.studyMode || '',
-        startTerm: application.startTerm || '',
+    const [formData, setFormData] = useState<CareerGoalsInfoData>({
+        careerGoals: application.careerGoals || '',
     });
 
     // Original data for cancel functionality
-    const [originalData, setOriginalData] = useState<ProgramInfoData>(formData);
+    const [originalData, setOriginalData] = useState<CareerGoalsInfoData>(formData);
     const [isSavingPersonalInfo, setIsSavingPersonalInfo] = useState(false);
     const { refetchApplication } = useApplicationReview();
+    const { refreshUser } = useAuth();
 
     const handleEdit = () => {
         setOriginalData(formData); // Store current data as original
@@ -52,8 +43,7 @@ export default function ProgramInfo({
         setSaveStatus('idle');
         setErrorMessage('');
     };
-
-    const savePersonalInfo = async (data: ProgramInfoData) => {
+    const savePersonalInfo = async (data: CareerGoalsInfoData) => {
         setIsSavingPersonalInfo(true);
         try {
             await updateStudentApplicationData(String(application.id), data);
@@ -69,9 +59,10 @@ export default function ProgramInfo({
     };
 
     const handleSave = async () => {
+
         // Basic validation
-        if (!formData.program || !formData.startTerm) {
-            setErrorMessage('Program and start term are required');
+        if (!formData.careerGoals) {
+            setErrorMessage('Personal statement is required');
             setSaveStatus('error');
             return;
         }
@@ -98,7 +89,7 @@ export default function ProgramInfo({
         }
     };
 
-    const updateField = (field: keyof ProgramInfoData, value: string) => {
+    const updateField = (field: keyof CareerGoalsInfoData, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }));
         // Clear error when user starts typing
         if (saveStatus === 'error') {
@@ -114,8 +105,8 @@ export default function ProgramInfo({
             {/* Header with Edit/Save buttons */}
             <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                    <Award className="w-10 h-10 mr-2 text-orange-600" />
-                    Program of choice
+                    <NotebookPen className="w-10 h-10 mr-2 text-teal-600" />
+                    Career Goal
                 </h3>
 
                 <div className="flex items-center space-x-2">
@@ -187,36 +178,18 @@ export default function ProgramInfo({
             )}
 
             {/* Editable Fields */}
-            <div className="grid grid-cols-1 gap-4">
-                <EditableProgramOptions
-                    label="Selected Program"
-                    value={formData.program}
-                    onChange={(value) => updateField('program', value)}
-                    onIdChange={(id) => updateField('program_id', id)}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <EditableTextArea
+                    label=""
+                    value={String(formData.careerGoals)}
+                    onChange={(value) => updateField('careerGoals', value)}
+                    placeholder=""
                     isEditing={isEditing}
-                    programs={programs}
-                    isLoading={isLoading}
-                    isError={isError}
+                    className='col-span-2'
+                    rows={5}
                 />
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <EditableRadioGroup
-                        label="Study Mode"
-                        value={formData.studyMode}
-                        onChange={(value) => updateField('studyMode', value)}
-                        options={STUDY_MODES}
-                        isEditing={isEditing}
-                    />
-
-                    <EditableSelect
-                        label="Start Term"
-                        value={formData.startTerm}
-                        onChange={(value) => updateField('startTerm', value)}
-                        options={START_TERMS}
-                        isEditing={isEditing}
-                    />
-                </div>
             </div>
+
 
             {/* Unsaved changes warning */}
             {isEditing && hasChanges && (
@@ -228,4 +201,4 @@ export default function ProgramInfo({
             )}
         </div>
     );
-} 
+}

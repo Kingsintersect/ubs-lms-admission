@@ -2,9 +2,11 @@
 
 import { updateStudentApplicationData } from '@/app/actions/applications';
 import { PersonalStatementInfoData } from '@/schemas/admission-schema';
-import { AlertCircle, CheckCircle, Edit3, FileText, Save, X } from 'lucide-react';
+import { AlertCircle, CheckCircle, Edit3, SquarePen, Save, X } from 'lucide-react';
 import React, { useState } from 'react'
 import { EditableTextArea } from './EditableFormFields';
+import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 export interface PersonalStatementInfoProps {
     application: PersonalStatementInfoData;
@@ -25,6 +27,8 @@ export default function PersonalStatementInfo({
     // Original data for cancel functionality
     const [originalData, setOriginalData] = useState<PersonalStatementInfoData>(formData);
     const [isSavingPersonalInfo, setIsSavingPersonalInfo] = useState(false);
+    const { refetchApplication } = useApplicationReview();
+    const { refreshUser } = useAuth();
 
     const handleEdit = () => {
         setOriginalData(formData); // Store current data as original
@@ -44,7 +48,8 @@ export default function PersonalStatementInfo({
         try {
             await updateStudentApplicationData(String(application.id), data);
             // Optionally refresh the application data
-            // await refetchApplication();
+            await refetchApplication();
+            await refreshUser();
         } catch (error) {
             console.error('Failed to save personal info:', error);
             throw error; // Re-throw to let component handle the error display
@@ -100,7 +105,7 @@ export default function PersonalStatementInfo({
             {/* Header with Edit/Save buttons */}
             <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                    <FileText className="w-5 h-5 mr-2 text-blue-600" />
+                    <SquarePen className="w-10 h-10 mr-2 text-purple-600" />
                     Personal Statement
                 </h3>
 

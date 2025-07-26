@@ -1,41 +1,34 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Mail, Edit3, Save, X, AlertCircle, CheckCircle } from 'lucide-react';
 import { updateStudentApplicationData } from '@/app/actions/applications';
-import { EditableField, EditableSelect, EditableTextArea } from './EditableFormFields';
-import { PersonalInfoData } from '@/schemas/admission-schema';
-import { GENDER, RELIGION } from '@/app/(application)/admission/form/constants';
+import { SponsorInfoData } from '@/schemas/admission-schema';
+import { AlertCircle, CheckCircle, Edit3, UsersRound, Save, X } from 'lucide-react';
+import React, { useState } from 'react'
+import { EditableField } from './EditableFormFields';
 
-export interface EditablePersonalInfoProps {
-    application: PersonalInfoData;
+export interface SponsorInfoProps {
+    application: SponsorInfoData;
 }
-
-// Main Component
-export default function EditablePersonalInfo({
+export default function SponsorsInfo({
     application,
-}: EditablePersonalInfoProps) {
+}: SponsorInfoProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState('');
 
     // Form state
-    const [formData, setFormData] = useState<PersonalInfoData>({
-        email: application.email || '',
-        phone_number: application.phone_number || '',
-        dob: application.dob || '',
-        nationality: application.nationality || '',
-        contact_address: application.contact_address || '',
-        hometown_address: application.hometown_address || '',
-        gender: application.gender || '',
-        lga: application.lga || '',
-        religion: application.religion || '',
-        hometown: application.hometown || '',
+    const [formData, setFormData] = useState<SponsorInfoData>({
+        sponsor_name: application.sponsor_name || '',
+        sponsor_email: application.sponsor_email || '',
+        sponsor_phone_number: application?.sponsor_phone_number || '',
+        sponsor_relationship: application.sponsor_relationship || '',
+        sponsor_contact_address: (application.sponsor_contact_address as string) || '',
+        has_sponsor: (application.has_sponsor as boolean) || false,
     });
 
     // Original data for cancel functionality
-    const [originalData, setOriginalData] = useState<PersonalInfoData>(formData);
+    const [originalData, setOriginalData] = useState<SponsorInfoData>(formData);
     const [isSavingPersonalInfo, setIsSavingPersonalInfo] = useState(false);
 
     const handleEdit = () => {
@@ -51,7 +44,7 @@ export default function EditablePersonalInfo({
         setSaveStatus('idle');
         setErrorMessage('');
     };
-    const savePersonalInfo = async (data: PersonalInfoData) => {
+    const savePersonalInfo = async (data: SponsorInfoData) => {
         setIsSavingPersonalInfo(true);
         try {
             await updateStudentApplicationData(String(application.id), data);
@@ -68,16 +61,8 @@ export default function EditablePersonalInfo({
     const handleSave = async () => {
 
         // Basic validation
-        if (!formData.email || !formData.phone_number) {
-            setErrorMessage('Email and phone number are required');
-            setSaveStatus('error');
-            return;
-        }
-
-        // Email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(formData.email)) {
-            setErrorMessage('Please enter a valid email address');
+        if (!formData.sponsor_name || !formData.sponsor_phone_number) {
+            setErrorMessage('sponsor`s name and sponsor phone number are required');
             setSaveStatus('error');
             return;
         }
@@ -104,7 +89,7 @@ export default function EditablePersonalInfo({
         }
     };
 
-    const updateField = (field: keyof PersonalInfoData, value: string) => {
+    const updateField = (field: keyof SponsorInfoData, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }));
         // Clear error when user starts typing
         if (saveStatus === 'error') {
@@ -120,8 +105,8 @@ export default function EditablePersonalInfo({
             {/* Header with Edit/Save buttons */}
             <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                    <Mail className="w-5 h-5 mr-2 text-blue-600" />
-                    Personal Information
+                    <UsersRound className="w-10 h-10 mr-2 text-rose-600" />
+                    Sponsor's Details
                 </h3>
 
                 <div className="flex items-center space-x-2">
@@ -192,84 +177,62 @@ export default function EditablePersonalInfo({
                 </div>
             )}
 
-            {/* Form fields */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <EditableField
-                    label="Email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(value) => updateField('email', value)}
-                    placeholder="Enter email address"
-                    isEditing={isEditing}
-                />
+            {/* Editable Fields */}
+            {(!formData.has_sponsor && !isEditing)
+                ? (<div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="flex items-center">
+                        <AlertCircle className="w-4 h-4 text-green-600 mr-2" />
+                        <p className="text-sm text-green-800">Self Sponsored</p>
+                    </div>
+                </div>)
+                : (<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <EditableField
+                        label="Full Name"
+                        type="text"
+                        value={String(formData.sponsor_name)}
+                        onChange={(value) => updateField('sponsor_name', value)}
+                        placeholder="name of your sponsor"
+                        isEditing={isEditing}
+                    />
 
-                <EditableField
-                    label="Phone"
-                    type="tel"
-                    value={formData.phone_number}
-                    onChange={(value) => updateField('phone_number', value)}
-                    placeholder="Enter phone number"
-                    isEditing={isEditing}
-                />
+                    <EditableField
+                        label="Email"
+                        type="text"
+                        value={String(formData.sponsor_email)}
+                        onChange={(value) => updateField('sponsor_email', value)}
+                        placeholder="Email address of sponsor"
+                        isEditing={isEditing}
+                    />
 
-                <EditableField
-                    label="Date of Birth"
-                    type="date"
-                    value={formData.dob}
-                    onChange={(value) => updateField('dob', value)}
-                    isEditing={isEditing}
-                />
-                <EditableSelect
-                    label="Gender"
-                    value={formData.gender}
-                    onChange={(value) => updateField('gender', value)}
-                    options={GENDER}
-                    placeholder="Select your gender"
-                    isEditing={isEditing}
-                />
-                <EditableSelect
-                    label="Religion"
-                    value={formData.religion}
-                    onChange={(value) => updateField('religion', value)}
-                    options={RELIGION}
-                    placeholder="identify your religion"
-                    isEditing={isEditing}
-                />
+                    <EditableField
+                        label="Phone Number"
+                        type="text"
+                        value={String(formData.sponsor_phone_number)}
+                        onChange={(value) => updateField('sponsor_phone_number', value)}
+                        placeholder='Phone number of sponsor'
+                        isEditing={isEditing}
+                    />
 
-                <EditableField
-                    label="Nationality"
-                    value={formData.nationality}
-                    onChange={(value) => updateField('nationality', value)}
-                    placeholder="Enter nationality"
-                    isEditing={isEditing}
-                />
-                <EditableField
-                    label="Home Town"
-                    value={formData.nationality}
-                    onChange={(value) => updateField('hometown', value)}
-                    placeholder="specify your hometown"
-                    isEditing={isEditing}
-                />
+                    <EditableField
+                        label="Relationship"
+                        type='text'
+                        value={String(formData.sponsor_relationship)}
+                        onChange={(value) => updateField('sponsor_relationship', value)}
+                        placeholder="e.g Father, Mother, Brother, Sister..."
+                        isEditing={isEditing}
+                    />
 
-                <EditableField
-                    label="Home Address"
-                    type="tel"
-                    value={formData.hometown_address || ''}
-                    onChange={(value) => updateField('hometown_address', value)}
-                    placeholder="Enter home address"
-                    isEditing={isEditing}
-                    className="md:col-span-2"
-                />
+                    <EditableField
+                        label="Address"
+                        type='text'
+                        value={formData.sponsor_contact_address ?? ""}
+                        onChange={(value) => updateField('sponsor_contact_address', value)}
+                        placeholder="Address of sponsor"
+                        isEditing={isEditing}
+                    />
+                </div>)
+            }
 
-                <EditableTextArea
-                    label="Address"
-                    value={formData.contact_address}
-                    onChange={(value) => updateField('contact_address', value)}
-                    placeholder="Enter contact address"
-                    isEditing={isEditing}
-                    className="md:col-span-2"
-                />
-            </div>
 
             {/* Unsaved changes warning */}
             {isEditing && hasChanges && (
@@ -282,4 +245,3 @@ export default function EditablePersonalInfo({
         </div>
     );
 }
-

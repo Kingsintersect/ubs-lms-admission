@@ -7,13 +7,16 @@ import { loginSessionKey } from "@/lib/definitions";
 const publicRoutes = [
 	"/auth/signin",
 	"/auth/signup",
+	"/admission/program-requierments",
 	"/admission/payments/verify-admission",
 	"/admission/terms-and-conditions",
 	"/admission/terms-and-conditions/document-file",
 ];
 const protectedRoutes = [
 	"/dashboard",
+	"/dashboard/update-application-form",
 	"/admission",
+	"/admission/program-requierments",
 	"/admission/payments/verify-acceptance",
 	"/admission/payments/verify-tuition",
 	"/admission/terms-and-conditions",
@@ -73,6 +76,14 @@ export default async function middleware(req: NextRequest) {
 			const subPath = path.split('/')[2]?.toLowerCase();
 			const rolePath = role.toLowerCase();
 
+			// Special case for update-application-form route
+			if (path.startsWith('/dashboard/update-application-form')) {
+				if (role !== Roles.STUDENT && role !== Roles.ADMIN) {
+					return NextResponse.redirect(new URL(`/dashboard/${rolePath}`, req.url));
+				}
+				return NextResponse.next();
+			}
+
 			if (role === Roles.STUDENT && !hasApplied) {
 				return NextResponse.redirect(new URL('/admission/form', req.url));
 			}
@@ -80,7 +91,9 @@ export default async function middleware(req: NextRequest) {
 			const currentUrl = new URL(req.url);
 			const expectedPath = `/dashboard/${rolePath}`;
 
-			if (subPath !== rolePath && currentUrl.pathname !== expectedPath) {
+			// Allow access to role-specific dashboard or update-application-form
+			if (subPath !== rolePath && currentUrl.pathname !== expectedPath &&
+				!path.startsWith('/dashboard/update-application-form')) {
 				return NextResponse.redirect(new URL(expectedPath, req.url));
 			}
 

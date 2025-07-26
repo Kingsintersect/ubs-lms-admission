@@ -448,37 +448,6 @@ export function DocumentUpload<T extends FieldValues>({
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // // ACCEPTS MULTIPLE DOCUMENT
 
 // "use client";

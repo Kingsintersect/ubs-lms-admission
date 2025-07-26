@@ -1,4 +1,3 @@
-// app/view-student-admission/page.tsx
 "use client";
 
 import { useParams } from 'next/navigation';

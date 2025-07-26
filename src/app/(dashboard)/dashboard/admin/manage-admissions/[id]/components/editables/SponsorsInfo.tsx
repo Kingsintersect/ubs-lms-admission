@@ -2,9 +2,11 @@
 
 import { updateStudentApplicationData } from '@/app/actions/applications';
 import { SponsorInfoData } from '@/schemas/admission-schema';
-import { AlertCircle, CheckCircle, Edit3, Mail, Save, X } from 'lucide-react';
+import { AlertCircle, CheckCircle, Edit3, UsersRound, Save, X } from 'lucide-react';
 import React, { useState } from 'react'
 import { EditableField } from './EditableFormFields';
+import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 export interface SponsorInfoProps {
     application: SponsorInfoData;
@@ -30,10 +32,10 @@ export default function SponsorsInfo({
     // Original data for cancel functionality
     const [originalData, setOriginalData] = useState<SponsorInfoData>(formData);
     const [isSavingPersonalInfo, setIsSavingPersonalInfo] = useState(false);
-    let hasSponsor = formData.has_sponsor;
+    const { refetchApplication } = useApplicationReview();
+    const { refreshUser } = useAuth();
 
     const handleEdit = () => {
-        hasSponsor = false;
         setOriginalData(formData); // Store current data as original
         setIsEditing(true);
         setSaveStatus('idle');
@@ -41,7 +43,6 @@ export default function SponsorsInfo({
     };
 
     const handleCancel = () => {
-        hasSponsor = true;
         setFormData(originalData); // Restore original data
         setIsEditing(false);
         setSaveStatus('idle');
@@ -52,7 +53,8 @@ export default function SponsorsInfo({
         try {
             await updateStudentApplicationData(String(application.id), data);
             // Optionally refresh the application data
-            // await refetchApplication();
+            await refetchApplication();
+            await refreshUser();
         } catch (error) {
             console.error('Failed to save personal info:', error);
             throw error; // Re-throw to let component handle the error display
@@ -108,7 +110,7 @@ export default function SponsorsInfo({
             {/* Header with Edit/Save buttons */}
             <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                    <Mail className="w-5 h-5 mr-2 text-blue-600" />
+                    <UsersRound className="w-10 h-10 mr-2 text-rose-600" />
                     Sponsor's Details
                 </h3>
 
@@ -181,11 +183,11 @@ export default function SponsorsInfo({
             )}
 
             {/* Editable Fields */}
-            {hasSponsor && formData.has_sponsor
-                ? (<div className="mb-4 p-3 bg-cyan-50 border border-cyan-200 rounded-lg">
+            {(!formData.has_sponsor && !isEditing)
+                ? (<div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
                     <div className="flex items-center">
-                        <AlertCircle className="w-4 h-4 text-cyan-600 mr-2" />
-                        <p className="text-sm text-cyan-800">Self Sponsored</p>
+                        <AlertCircle className="w-4 h-4 text-green-600 mr-2" />
+                        <p className="text-sm text-green-800">Self Sponsored</p>
                     </div>
                 </div>)
                 : (<div className="grid grid-cols-1 md:grid-cols-2 gap-4">

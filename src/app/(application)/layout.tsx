@@ -14,7 +14,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
       <AdmissionProvider>
          <main className='account'>
             <div className="account-container">
-               <div className="wrapper bg-[#efb5a2]">
+               <div className="wrapper">
                   <Header />
                   {children}
                </div>

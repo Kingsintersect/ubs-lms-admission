@@ -1,43 +1,39 @@
 "use client";
 
 import { updateStudentApplicationData } from '@/app/actions/applications';
-import { ProgramInfoData } from '@/schemas/admission-schema';
-import { AlertCircle, Award, CheckCircle, Edit3, Save, X } from 'lucide-react';
+import { AcademicInfoData } from '@/schemas/admission-schema';
+import { AlertCircle, CheckCircle, Edit3, GraduationCap, Save, X } from 'lucide-react';
 import React, { useState } from 'react'
-import { EditableProgramOptions, EditableRadioGroup, EditableSelect } from './EditableFormFields';
-import { START_TERMS, STUDY_MODES } from '@/app/(application)/admission/form/constants';
-import { useExternalPrograms } from '@/hooks/useExternalPrograms'; // Your programs hook
+import { EditableField } from './EditableFormFields';
 import { useAuth } from '@/contexts/AuthContext';
 import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
 
-export interface ProgramInfoProps {
-    application: ProgramInfoData;
+export interface AcademicInformationProps {
+    application: AcademicInfoData;
 }
-
-export default function ProgramInfo({
+export default function AcademicInformation({
     application,
-}: ProgramInfoProps) {
+}: AcademicInformationProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState('');
 
-    // Load programs data
-    const { data: programs, isLoading, isError } = useExternalPrograms();
-    const { refreshUser } = useAuth();
-
     // Form state
-    const [formData, setFormData] = useState<ProgramInfoData>({
-        program: application.program || '',
-        program_id: (application.program_id as string) || '',
-        studyMode: application.studyMode || '',
-        startTerm: application.startTerm || '',
+    const [formData, setFormData] = useState<AcademicInfoData>({
+        undergraduateDegree: application.undergraduateDegree || '',
+        university: application.university || '',
+        graduationYear: application?.graduationYear || '',
+        gpa: application.gpa || '',
+        gmatScore: (application.gmatScore as string) || '',
+        greScore: application.greScore || '',
     });
 
     // Original data for cancel functionality
-    const [originalData, setOriginalData] = useState<ProgramInfoData>(formData);
+    const [originalData, setOriginalData] = useState<AcademicInfoData>(formData);
     const [isSavingPersonalInfo, setIsSavingPersonalInfo] = useState(false);
     const { refetchApplication } = useApplicationReview();
+    const { refreshUser } = useAuth();
 
     const handleEdit = () => {
         setOriginalData(formData); // Store current data as original
@@ -52,8 +48,7 @@ export default function ProgramInfo({
         setSaveStatus('idle');
         setErrorMessage('');
     };
-
-    const savePersonalInfo = async (data: ProgramInfoData) => {
+    const savePersonalInfo = async (data: AcademicInfoData) => {
         setIsSavingPersonalInfo(true);
         try {
             await updateStudentApplicationData(String(application.id), data);
@@ -69,9 +64,10 @@ export default function ProgramInfo({
     };
 
     const handleSave = async () => {
+
         // Basic validation
-        if (!formData.program || !formData.startTerm) {
-            setErrorMessage('Program and start term are required');
+        if (!formData.undergraduateDegree || !formData.university) {
+            setErrorMessage('under graduate degree and university are required');
             setSaveStatus('error');
             return;
         }
@@ -98,7 +94,7 @@ export default function ProgramInfo({
         }
     };
 
-    const updateField = (field: keyof ProgramInfoData, value: string) => {
+    const updateField = (field: keyof AcademicInfoData, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }));
         // Clear error when user starts typing
         if (saveStatus === 'error') {
@@ -114,8 +110,8 @@ export default function ProgramInfo({
             {/* Header with Edit/Save buttons */}
             <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                    <Award className="w-10 h-10 mr-2 text-orange-600" />
-                    Program of choice
+                    <GraduationCap className="w-10 h-10 mr-2 text-blue-600" />
+                    Academic Background
                 </h3>
 
                 <div className="flex items-center space-x-2">
@@ -186,36 +182,61 @@ export default function ProgramInfo({
                 </div>
             )}
 
-            {/* Editable Fields */}
-            <div className="grid grid-cols-1 gap-4">
-                <EditableProgramOptions
-                    label="Selected Program"
-                    value={formData.program}
-                    onChange={(value) => updateField('program', value)}
-                    onIdChange={(id) => updateField('program_id', id)}
+            {/* Form fields */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <EditableField
+                    label="Undergraduate degree"
+                    type="text"
+                    value={formData.undergraduateDegree}
+                    onChange={(value) => updateField('undergraduateDegree', value)}
+                    placeholder="Fill in your Undergraduate degree"
                     isEditing={isEditing}
-                    programs={programs}
-                    isLoading={isLoading}
-                    isError={isError}
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <EditableRadioGroup
-                        label="Study Mode"
-                        value={formData.studyMode}
-                        onChange={(value) => updateField('studyMode', value)}
-                        options={STUDY_MODES}
-                        isEditing={isEditing}
-                    />
+                <EditableField
+                    label="Phone"
+                    type="text"
+                    value={formData.university}
+                    onChange={(value) => updateField('university', value)}
+                    placeholder="Enter university"
+                    isEditing={isEditing}
+                />
 
-                    <EditableSelect
-                        label="Start Term"
-                        value={formData.startTerm}
-                        onChange={(value) => updateField('startTerm', value)}
-                        options={START_TERMS}
-                        isEditing={isEditing}
-                    />
-                </div>
+                <EditableField
+                    label="Graduation Year"
+                    type="text"
+                    value={formData.graduationYear}
+                    onChange={(value) => updateField('graduationYear', value)}
+                    placeholder='Enter new graduation year'
+                    isEditing={isEditing}
+                />
+
+                <EditableField
+                    label="GPA"
+                    type='text'
+                    value={formData.gpa}
+                    onChange={(value) => updateField('gpa', value)}
+                    placeholder="Enter GPA eg 3.8"
+                    isEditing={isEditing}
+                />
+
+                <EditableField
+                    label="GMAT Score"
+                    type='text'
+                    value={formData.gmatScore ?? ""}
+                    onChange={(value) => updateField('gmatScore', value)}
+                    placeholder="Enter GMAT Score"
+                    isEditing={isEditing}
+                />
+
+                <EditableField
+                    label="GRE Score"
+                    type="text"
+                    value={formData.greScore || ''}
+                    onChange={(value) => updateField('greScore', value)}
+                    placeholder="Enter GRE Score"
+                    isEditing={isEditing}
+                />
             </div>
 
             {/* Unsaved changes warning */}
@@ -228,4 +249,4 @@ export default function ProgramInfo({
             )}
         </div>
     );
-} 
+}

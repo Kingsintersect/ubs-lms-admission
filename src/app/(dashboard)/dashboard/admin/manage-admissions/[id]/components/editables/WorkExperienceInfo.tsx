@@ -2,10 +2,12 @@
 
 import { updateStudentApplicationData } from '@/app/actions/applications';
 import { WorkExoerienceInfoData } from '@/schemas/admission-schema';
-import { AlertCircle, Award, CheckCircle, Edit3, Save, X } from 'lucide-react';
+import { AlertCircle, BriefcaseBusiness, CheckCircle, Edit3, Save, X } from 'lucide-react';
 import React, { useState } from 'react'
 import { EditableField, EditableSelect } from './EditableFormFields';
 import { YEARS_OF_EXPERIENCE } from '@/app/(application)/admission/form/constants';
+import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 export interface WorkExperienceInfoProps {
     application: WorkExoerienceInfoData;
@@ -29,6 +31,8 @@ export default function WorkExperienceInfo({
     // Original data for cancel functionality
     const [originalData, setOriginalData] = useState<WorkExoerienceInfoData>(formData);
     const [isSavingPersonalInfo, setIsSavingPersonalInfo] = useState(false);
+    const { refetchApplication } = useApplicationReview();
+    const { refreshUser } = useAuth();
 
     const handleEdit = () => {
         setOriginalData(formData); // Store current data as original
@@ -48,7 +52,8 @@ export default function WorkExperienceInfo({
         try {
             await updateStudentApplicationData(String(application.id), data);
             // Optionally refresh the application data
-            // await refetchApplication();
+            await refetchApplication();
+            await refreshUser();
         } catch (error) {
             console.error('Failed to save personal info:', error);
             throw error; // Re-throw to let component handle the error display
@@ -104,7 +109,7 @@ export default function WorkExperienceInfo({
             {/* Header with Edit/Save buttons */}
             <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                    <Award className="w-5 h-5 mr-2" />
+                    <BriefcaseBusiness className="w-10 h-10 mr-2 text-yellow-500" />
                     Work Experience
                 </h3>
 

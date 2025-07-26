@@ -207,15 +207,15 @@ export async function updateApplicationStatus({
 
 // review editing
 export const updateStudentApplicationData = async (applicationId: string, data: ApplicationChunk): Promise<void> => {
-    console.log('data', data)
+    const loginSession = (await getSession(loginSessionKey)) as SessionData;
     const response = await fetch(`${remoteApiUrl}/application/update-application-form`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${loginSession.access_token}`,
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ application_id: applicationId, data }),
     });
-    console.log('response', response)
 
     if (!response.ok) {
         const error = await response.json();

@@ -4,16 +4,12 @@ import { updateStudentApplicationData } from '@/app/actions/applications';
 import { ProgramInfoData } from '@/schemas/admission-schema';
 import { AlertCircle, Award, CheckCircle, Edit3, Save, X } from 'lucide-react';
 import React, { useState } from 'react'
-import { EditableProgramOptions, EditableRadioGroup, EditableSelect } from './EditableFormFields';
+import { EditableField, EditableRadioGroup, EditableSelect } from './EditableFormFields';
 import { START_TERMS, STUDY_MODES } from '@/app/(application)/admission/form/constants';
-import { useExternalPrograms } from '@/hooks/useExternalPrograms'; // Your programs hook
-import { useAuth } from '@/contexts/AuthContext';
-import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
 
 export interface ProgramInfoProps {
     application: ProgramInfoData;
 }
-
 export default function ProgramInfo({
     application,
 }: ProgramInfoProps) {
@@ -21,10 +17,6 @@ export default function ProgramInfo({
     const [isSaving, setIsSaving] = useState(false);
     const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState('');
-
-    // Load programs data
-    const { data: programs, isLoading, isError } = useExternalPrograms();
-    const { refreshUser } = useAuth();
 
     // Form state
     const [formData, setFormData] = useState<ProgramInfoData>({
@@ -37,7 +29,6 @@ export default function ProgramInfo({
     // Original data for cancel functionality
     const [originalData, setOriginalData] = useState<ProgramInfoData>(formData);
     const [isSavingPersonalInfo, setIsSavingPersonalInfo] = useState(false);
-    const { refetchApplication } = useApplicationReview();
 
     const handleEdit = () => {
         setOriginalData(formData); // Store current data as original
@@ -52,14 +43,12 @@ export default function ProgramInfo({
         setSaveStatus('idle');
         setErrorMessage('');
     };
-
     const savePersonalInfo = async (data: ProgramInfoData) => {
         setIsSavingPersonalInfo(true);
         try {
             await updateStudentApplicationData(String(application.id), data);
             // Optionally refresh the application data
-            await refetchApplication();
-            await refreshUser();
+            // await refetchApplication();
         } catch (error) {
             console.error('Failed to save personal info:', error);
             throw error; // Re-throw to let component handle the error display
@@ -69,9 +58,10 @@ export default function ProgramInfo({
     };
 
     const handleSave = async () => {
+
         // Basic validation
         if (!formData.program || !formData.startTerm) {
-            setErrorMessage('Program and start term are required');
+            setErrorMessage('work experience and startTerm are required');
             setSaveStatus('error');
             return;
         }
@@ -187,36 +177,34 @@ export default function ProgramInfo({
             )}
 
             {/* Editable Fields */}
-            <div className="grid grid-cols-1 gap-4">
-                <EditableProgramOptions
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <EditableField
                     label="Selected Program"
-                    value={formData.program}
+                    type="text"
+                    value={String(formData.program)}
                     onChange={(value) => updateField('program', value)}
-                    onIdChange={(id) => updateField('program_id', id)}
+                    placeholder="chose another program"
                     isEditing={isEditing}
-                    programs={programs}
-                    isLoading={isLoading}
-                    isError={isError}
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <EditableRadioGroup
-                        label="Study Mode"
-                        value={formData.studyMode}
-                        onChange={(value) => updateField('studyMode', value)}
-                        options={STUDY_MODES}
-                        isEditing={isEditing}
-                    />
+                <EditableRadioGroup
+                    label="Study Mode"
+                    value={formData.studyMode}
+                    onChange={(value) => updateField('studyMode', value)}
+                    options={STUDY_MODES}
+                    isEditing={isEditing}
+                />
 
-                    <EditableSelect
-                        label="Start Term"
-                        value={formData.startTerm}
-                        onChange={(value) => updateField('startTerm', value)}
-                        options={START_TERMS}
-                        isEditing={isEditing}
-                    />
-                </div>
+                <EditableSelect
+                    label="Start From"
+                    value={formData.startTerm}
+                    onChange={(value) => updateField('startTerm', value)}
+                    options={START_TERMS}
+                    placeholder="Select your startTerm"
+                    isEditing={isEditing}
+                />
             </div>
+
 
             {/* Unsaved changes warning */}
             {isEditing && hasChanges && (
@@ -228,4 +216,4 @@ export default function ProgramInfo({
             )}
         </div>
     );
-} 
+}

@@ -21,7 +21,7 @@ interface AuthContextType extends AuthState {
     adminSignin: (data: GenericDataType) => Promise<any>;
     logout: () => Promise<void>;
     refreshUser: () => Promise<void>;
-    updateUser: (newUser: Partial<AuthState['user']>) => void;
+    updateUserInState: (newUser: Partial<AuthState['user']>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -222,7 +222,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    const updateUser = (newUser: Partial<AuthState['user']>) => {
+    const updateUserInState = (newUser: Partial<AuthState['user']>) => {
         setAuthState((prev) => {
             if (!prev.user) return prev;
 
@@ -274,7 +274,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 adminSignin: handleAdminLogin,
                 logout: handleLogout,
                 refreshUser,
-                updateUser
+                updateUserInState
             }}
         >
             {children}

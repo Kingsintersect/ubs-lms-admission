@@ -2,9 +2,11 @@
 
 import { updateStudentApplicationData } from '@/app/actions/applications';
 import { NextOfkinInfoData } from '@/schemas/admission-schema';
-import { AlertCircle, CheckCircle, Edit3, Mail, Save, X } from 'lucide-react';
+import { AlertCircle, CheckCircle, Edit3, ContactRound, Save, X } from 'lucide-react';
 import React, { useState } from 'react'
 import { EditableField } from './EditableFormFields';
+import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 export interface NextOfkinInfoProps {
     application: NextOfkinInfoData;
@@ -31,6 +33,8 @@ export default function NextOfkinInfo({
     // Original data for cancel functionality
     const [originalData, setOriginalData] = useState<NextOfkinInfoData>(formData);
     const [isSavingPersonalInfo, setIsSavingPersonalInfo] = useState(false);
+    const { refetchApplication } = useApplicationReview();
+    const { refreshUser } = useAuth();
 
     const handleEdit = () => {
         setOriginalData(formData); // Store current data as original
@@ -50,7 +54,8 @@ export default function NextOfkinInfo({
         try {
             await updateStudentApplicationData(String(application.id), data);
             // Optionally refresh the application data
-            // await refetchApplication();
+            await refetchApplication();
+            await refreshUser();
         } catch (error) {
             console.error('Failed to save personal info:', error);
             throw error; // Re-throw to let component handle the error display
@@ -106,7 +111,7 @@ export default function NextOfkinInfo({
             {/* Header with Edit/Save buttons */}
             <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                    <Mail className="w-5 h-5 mr-2 text-blue-600" />
+                    <ContactRound className="w-10 h-10 mr-2 text-emerald-600" />
                     Next Of Kin Details
                 </h3>
 

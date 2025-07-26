@@ -1,43 +1,42 @@
 "use client";
 
+import React, { useState } from 'react';
+import { Edit3, Save, X, AlertCircle, CheckCircle, User } from 'lucide-react';
 import { updateStudentApplicationData } from '@/app/actions/applications';
-import { ProgramInfoData } from '@/schemas/admission-schema';
-import { AlertCircle, Award, CheckCircle, Edit3, Save, X } from 'lucide-react';
-import React, { useState } from 'react'
-import { EditableProgramOptions, EditableRadioGroup, EditableSelect } from './EditableFormFields';
-import { START_TERMS, STUDY_MODES } from '@/app/(application)/admission/form/constants';
-import { useExternalPrograms } from '@/hooks/useExternalPrograms'; // Your programs hook
-import { useAuth } from '@/contexts/AuthContext';
-import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
+import { EditableField, EditableSelect, EditableTextArea } from './EditableFormFields';
+import { PersonalInfoData } from '@/schemas/admission-schema';
+import { GENDER, RELIGION } from '@/app/(application)/admission/form/constants';
 
-export interface ProgramInfoProps {
-    application: ProgramInfoData;
+export interface EditablePersonalInfoProps {
+    application: PersonalInfoData;
 }
 
-export default function ProgramInfo({
+// Main Component
+export default function EditablePersonalInfo({
     application,
-}: ProgramInfoProps) {
+}: EditablePersonalInfoProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState('');
 
-    // Load programs data
-    const { data: programs, isLoading, isError } = useExternalPrograms();
-    const { refreshUser } = useAuth();
-
     // Form state
-    const [formData, setFormData] = useState<ProgramInfoData>({
-        program: application.program || '',
-        program_id: (application.program_id as string) || '',
-        studyMode: application.studyMode || '',
-        startTerm: application.startTerm || '',
+    const [formData, setFormData] = useState<PersonalInfoData>({
+        email: application.email || '',
+        phone_number: application.phone_number || '',
+        dob: application.dob || '',
+        nationality: application.nationality || '',
+        contact_address: application.contact_address || '',
+        hometown_address: application.hometown_address || '',
+        gender: application.gender || '',
+        lga: application.lga || '',
+        religion: application.religion || '',
+        hometown: application.hometown || '',
     });
 
     // Original data for cancel functionality
-    const [originalData, setOriginalData] = useState<ProgramInfoData>(formData);
+    const [originalData, setOriginalData] = useState<PersonalInfoData>(formData);
     const [isSavingPersonalInfo, setIsSavingPersonalInfo] = useState(false);
-    const { refetchApplication } = useApplicationReview();
 
     const handleEdit = () => {
         setOriginalData(formData); // Store current data as original
@@ -52,14 +51,12 @@ export default function ProgramInfo({
         setSaveStatus('idle');
         setErrorMessage('');
     };
-
-    const savePersonalInfo = async (data: ProgramInfoData) => {
+    const savePersonalInfo = async (data: PersonalInfoData) => {
         setIsSavingPersonalInfo(true);
         try {
             await updateStudentApplicationData(String(application.id), data);
             // Optionally refresh the application data
-            await refetchApplication();
-            await refreshUser();
+            // await refetchApplication();
         } catch (error) {
             console.error('Failed to save personal info:', error);
             throw error; // Re-throw to let component handle the error display
@@ -69,9 +66,18 @@ export default function ProgramInfo({
     };
 
     const handleSave = async () => {
+
         // Basic validation
-        if (!formData.program || !formData.startTerm) {
-            setErrorMessage('Program and start term are required');
+        if (!formData.email || !formData.phone_number) {
+            setErrorMessage('Email and phone number are required');
+            setSaveStatus('error');
+            return;
+        }
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            setErrorMessage('Please enter a valid email address');
             setSaveStatus('error');
             return;
         }
@@ -98,7 +104,7 @@ export default function ProgramInfo({
         }
     };
 
-    const updateField = (field: keyof ProgramInfoData, value: string) => {
+    const updateField = (field: keyof PersonalInfoData, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }));
         // Clear error when user starts typing
         if (saveStatus === 'error') {
@@ -114,8 +120,8 @@ export default function ProgramInfo({
             {/* Header with Edit/Save buttons */}
             <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                    <Award className="w-10 h-10 mr-2 text-orange-600" />
-                    Program of choice
+                    <User className="w-10 h-10 mr-2 text-green-600" />
+                    Personal Information
                 </h3>
 
                 <div className="flex items-center space-x-2">
@@ -186,36 +192,83 @@ export default function ProgramInfo({
                 </div>
             )}
 
-            {/* Editable Fields */}
-            <div className="grid grid-cols-1 gap-4">
-                <EditableProgramOptions
-                    label="Selected Program"
-                    value={formData.program}
-                    onChange={(value) => updateField('program', value)}
-                    onIdChange={(id) => updateField('program_id', id)}
+            {/* Form fields */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <EditableField
+                    label="Email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(value) => updateField('email', value)}
+                    placeholder="Enter email address"
                     isEditing={isEditing}
-                    programs={programs}
-                    isLoading={isLoading}
-                    isError={isError}
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <EditableRadioGroup
-                        label="Study Mode"
-                        value={formData.studyMode}
-                        onChange={(value) => updateField('studyMode', value)}
-                        options={STUDY_MODES}
-                        isEditing={isEditing}
-                    />
+                <EditableField
+                    label="Phone"
+                    type="tel"
+                    value={formData.phone_number}
+                    onChange={(value) => updateField('phone_number', value)}
+                    placeholder="Enter phone number"
+                    isEditing={isEditing}
+                />
 
-                    <EditableSelect
-                        label="Start Term"
-                        value={formData.startTerm}
-                        onChange={(value) => updateField('startTerm', value)}
-                        options={START_TERMS}
-                        isEditing={isEditing}
-                    />
-                </div>
+                <EditableField
+                    label="Date of Birth"
+                    type="date"
+                    value={formData.dob}
+                    onChange={(value) => updateField('dob', value)}
+                    isEditing={isEditing}
+                />
+                <EditableSelect
+                    label="Gender"
+                    value={formData.gender}
+                    onChange={(value) => updateField('gender', value)}
+                    options={GENDER}
+                    placeholder="Select your gender"
+                    isEditing={isEditing}
+                />
+                <EditableSelect
+                    label="Religion"
+                    value={formData.religion}
+                    onChange={(value) => updateField('religion', value)}
+                    options={RELIGION}
+                    placeholder="identify your religion"
+                    isEditing={isEditing}
+                />
+
+                <EditableField
+                    label="Nationality"
+                    value={formData.nationality}
+                    onChange={(value) => updateField('nationality', value)}
+                    placeholder="Enter nationality"
+                    isEditing={isEditing}
+                />
+                <EditableField
+                    label="Home Town"
+                    value={formData.nationality}
+                    onChange={(value) => updateField('hometown', value)}
+                    placeholder="specify your hometown"
+                    isEditing={isEditing}
+                />
+
+                <EditableField
+                    label="Home Address"
+                    type="tel"
+                    value={formData.hometown_address || ''}
+                    onChange={(value) => updateField('hometown_address', value)}
+                    placeholder="Enter home address"
+                    isEditing={isEditing}
+                    className="md:col-span-2"
+                />
+
+                <EditableTextArea
+                    label="Address"
+                    value={formData.contact_address}
+                    onChange={(value) => updateField('contact_address', value)}
+                    placeholder="Enter contact address"
+                    isEditing={isEditing}
+                    className="md:col-span-2"
+                />
             </div>
 
             {/* Unsaved changes warning */}
@@ -228,4 +281,5 @@ export default function ProgramInfo({
             )}
         </div>
     );
-} 
+}
+
