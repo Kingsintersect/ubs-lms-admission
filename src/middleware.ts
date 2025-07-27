@@ -19,8 +19,6 @@ const protectedRoutes = [
 	"/admission/program-requierments",
 	"/admission/payments/verify-acceptance",
 	"/admission/payments/verify-tuition",
-	"/admission/terms-and-conditions",
-	"/admission/terms-and-conditions/document-file",
 ];
 const staticPaths = ["/_next", "/favicon.ico", "/images", /\.(png|jpg|jpeg|gif|svg)$/];
 
@@ -36,6 +34,11 @@ export default async function middleware(req: NextRequest) {
 	const user = loginSession?.user;
 	const hasApplied = Boolean(user?.is_applied);
 	const role = user?.role?.toUpperCase() || '';
+
+	// 1. Handle public routes - accessible to everyone
+	if (publicRoutes.some(publicPath => path.startsWith(publicPath))) {
+		return NextResponse.next();
+	}
 
 	// 1. Handle public routes
 	if (publicRoutes.includes(path)) {

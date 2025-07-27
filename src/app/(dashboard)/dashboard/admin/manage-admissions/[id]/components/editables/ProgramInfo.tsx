@@ -114,7 +114,7 @@ export default function ProgramInfo({
             {/* Header with Edit/Save buttons */}
             <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                    <Award className="w-10 h-10 mr-2 text-orange-600" />
+                    <Award className="w-10 h-10 mr-2 text-blue-600" />
                     Program of choice
                 </h3>
 
@@ -189,7 +189,7 @@ export default function ProgramInfo({
             {/* Editable Fields */}
             <div className="grid grid-cols-1 gap-4">
                 <EditableProgramOptions
-                    label="Selected Program"
+                    label=""
                     value={formData.program}
                     onChange={(value) => updateField('program', value)}
                     onIdChange={(id) => updateField('program_id', id)}

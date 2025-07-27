@@ -2,11 +2,8 @@ import { Control, FieldErrors, UseFormReturn } from "react-hook-form";
 import { STUDY_MODES } from "../../constants";
 import { FormField } from "../FormField";
 import { AdmissionFormData } from "@/schemas/admission-schema";
-import { useExternalPrograms } from "@/hooks/useExternalPrograms";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircleIcon } from "lucide-react";
 import { PhotoUploader } from "./PhotoUploader";
+import Link from "next/link";
 
 interface ProgramAndEssaysStepProps {
     control: Control<AdmissionFormData>;
@@ -14,23 +11,6 @@ interface ProgramAndEssaysStepProps {
     setValue: UseFormReturn<AdmissionFormData>['setValue'];
 }
 export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ control, errors, setValue }) => {
-    const { data: programs, isLoading, isError } = useExternalPrograms();
-
-    if (isLoading) return (
-        <div className='w-full flex items-center justify-center'>
-            <LoadingSpinner size="md" className="mr-2" />
-            Loading Programs...
-        </div>
-    );
-    if (isError || !programs) return (
-        <Alert variant="destructive">
-            <AlertCircleIcon />
-            <AlertTitle>Failed to load programs.</AlertTitle>
-            <AlertDescription>
-                <p>Please check your network connection and try again.</p>
-            </AlertDescription>
-        </Alert>
-    );
 
     return (
         <div className="space-y-6">
@@ -85,16 +65,19 @@ export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ cont
                     name="disability"
                     control={control}
                     errors={errors}
-                    label="I have disabilities that may require accommodations"
+                    label="I have disabilities"
                     type="checkbox"
                 />
-                <FormField
-                    name="agreeToTerms"
-                    control={control}
-                    errors={errors}
-                    label="I agree to the terms and conditions *"
-                    type="checkbox"
-                />
+                <div className="flex items-center gap-5">
+                    <FormField
+                        name="agreeToTerms"
+                        control={control}
+                        errors={errors}
+                        label="I agree to the terms and conditions *"
+                        type="checkbox"
+                    />
+                    <Link className="block text-sm text-blue-600 font-bold animate-bounce mt-2" href={"/admission/terms-and-conditions"}>Read the terms and conditions</Link>
+                </div>
             </div>
         </div>
     );

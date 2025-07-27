@@ -59,7 +59,7 @@ const TermsAndConditionsPage: React.FC = () => {
                             Terms and Conditions
                         </h1>
                         <p className="text-xl text-blue-100 mb-6 max-w-3xl mx-auto">
-                            University of Excellence Business School - Lagos, Nigeria
+                            Nnnamdi Azikiwe University Business School - Awka, Anambra, Nigeria
                         </p>
                         <div className="flex items-center justify-center space-x-2 text-blue-200">
                             <Calendar className="h-5 w-5" />
@@ -78,7 +78,7 @@ const TermsAndConditionsPage: React.FC = () => {
                         Agreement Overview
                     </h2>
                     <p className="text-gray-600 leading-relaxed text-lg">
-                        By enrolling in, attending, or utilizing any services provided by the University of Excellence Business School,
+                        By enrolling in, attending, or utilizing any services provided by the Nnamdi Azikiwe University Business School,
                         you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions.
                         These terms constitute a legally binding agreement governed by the laws of the Federal Republic of Nigeria.
                     </p>
@@ -247,9 +247,8 @@ const TermsAndConditionsPage: React.FC = () => {
                             <div className="space-y-3 text-gray-600">
                                 <div className="flex items-center">
                                     <MapPin className="h-4 w-4 text-blue-600 mr-3 flex-shrink-0" />
-                                    <span>University of Excellence Business School<br />
-                                        123 Academic Drive, Victoria Island<br />
-                                        Lagos, Nigeria</span>
+                                    <span>Nnamdi Azikiwe University, awka<br />
+                                        Anambra, Nigeria</span>
                                 </div>
                                 <div className="flex items-center">
                                     <Phone className="h-4 w-4 text-blue-600 mr-3" />
@@ -257,7 +256,7 @@ const TermsAndConditionsPage: React.FC = () => {
                                 </div>
                                 <div className="flex items-center">
                                     <Mail className="h-4 w-4 text-blue-600 mr-3" />
-                                    <span>academics@uebschool.edu.ng</span>
+                                    <span>academics@unizikb.edu.ng</span>
                                 </div>
                             </div>
                         </div>
@@ -273,11 +272,11 @@ const TermsAndConditionsPage: React.FC = () => {
                                 </div>
                                 <div className="flex items-center">
                                     <Mail className="h-4 w-4 text-blue-600 mr-3" />
-                                    <span>support@uebschool.edu.ng</span>
+                                    <span>support@unizikb.edu.ng</span>
                                 </div>
                                 <div className="flex items-center">
                                     <GraduationCap className="h-4 w-4 text-blue-600 mr-3" />
-                                    <span>www.uebschool.edu.ng</span>
+                                    <span>www.unizikb.edu.ng</span>
                                 </div>
                             </div>
                         </div>

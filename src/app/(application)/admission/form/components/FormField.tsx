@@ -73,7 +73,7 @@ export const FormField: React.FC<FormFieldProps> = ({
                 );
             case 'checkbox':
                 return (
-                    <div className="flex items-center space-x-2 mt-2">
+                    <div className="flex items-center space-x-2">
                         <Checkbox
                             id={name}
                             checked={field.value as boolean | "indeterminate" | undefined}

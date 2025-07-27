@@ -224,7 +224,7 @@ export const EditableProgramOptions: React.FC<EditableProgramOptionsProps> = ({
             </label>
             {/* <ProgramRequirementsLink className="text-xs" /> */}
             <ProgramRequirementsLink
-                className="text-xs"
+                className="text-xs text-orange-600  animate-bounce"
                 downloadUrl="/documents/PROGRAMME_AND_REQUIREMENTS.docx"
             />
 
