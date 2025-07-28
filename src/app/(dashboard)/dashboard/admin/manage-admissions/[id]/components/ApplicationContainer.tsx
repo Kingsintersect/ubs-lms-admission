@@ -7,10 +7,11 @@ import { useApplicationQuery, useApplicationReview } from '@/contexts/Applicatio
 
 export const ApplicationContainer = ({ id }: { id: string }) => {
     const {
+        isLoading: isSubmittingApplication,
         showDecisionModal,
         decisionType,
         closeDecisionModal,
-        submitDecision
+        submitDecision,
     } = useApplicationReview();
 
     const { data: application, isLoading, error } = useApplicationQuery(id);
@@ -29,6 +30,7 @@ export const ApplicationContainer = ({ id }: { id: string }) => {
                     onClose={closeDecisionModal}
                     onSubmit={submitDecision}
                     application={application}
+                    isLoading={isSubmittingApplication}
                 />
             )}
         </div>

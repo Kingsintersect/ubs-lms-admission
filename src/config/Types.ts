@@ -32,9 +32,10 @@ export type SittingCourse = {
 };
 
 export enum AdmissionStatusType {
-	admitted = "ADMITTED",
-	pending = "PENDING",
-	"not_admitted" = "NOT_ADMITTED"
+	ADMITTED = "ADMITTED",
+	INPROGRESS = "INPROGRESS",
+	PENDING = "PENDING",
+	"NOT_ADMITTED" = "NOT_ADMITTED"
 }
 export enum StatusType {
 	FULLY_PAID = "FULLY_PAID",

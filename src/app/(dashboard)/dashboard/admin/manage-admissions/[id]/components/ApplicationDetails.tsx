@@ -1,7 +1,7 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { ApplicationDetailsType } from '@/schemas/admission-schema';
-import { AlertCircle, AlertCircleIcon, Check, Clock, Eye, X } from 'lucide-react'
+import { AlertCircle, AlertCircleIcon, Check, Clock, Eye, X, Loader } from 'lucide-react'
 import Image from 'next/image';
 import React from 'react'
 import EditablePersonalInfo from './editables/PersonalInfo';
@@ -26,16 +26,18 @@ export const ApplicationDetails = ({
 
     const getStatusIcon = (status) => {
         switch (status) {
-            case 'admitted': return <Check className="w-4 h-4" />;
-            case 'not_admitted': return <X className="w-4 h-4" />;
+            case 'ADMITTED': return <Check className="w-4 h-4" />;
+            case 'INPROGRESS': return <Loader className="w-4 h-4" />;
+            case 'NOT_ADMITTED': return <X className="w-4 h-4" />;
             default: return <Clock className="w-4 h-4" />;
         }
     };
 
     const getStatusColor = (status) => {
         switch (status) {
-            case 'admitted': return 'text-green-600 bg-green-50';
-            case 'not_admitted': return 'text-red-600 bg-red-50';
+            case 'ADMITTED': return 'text-green-600 bg-green-50';
+            case 'INPROGRESS': return 'text-cyan-600 bg-cyan-50';
+            case 'NOT_ADMITTED': return 'text-red-600 bg-red-50';
             default: return 'text-yellow-600 bg-yellow-50';
         }
     };

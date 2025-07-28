@@ -1,7 +1,7 @@
 "use client";
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
-import { CheckCircle, CircleAlert, XCircle } from "lucide-react";
+import { CheckCircle, CircleAlert, Loader, XCircle } from "lucide-react";
 import { AdmissionStatusType, StatusType } from '@/config/Types';
 
 export function AdmissionStatus({ admissionStatus }: { admissionStatus: AdmissionStatusType }) {
@@ -64,7 +64,7 @@ export function StatusCheckCard({
    }
 
    const Icon = status.icon;
-   const isLinkActive = admission === AdmissionStatusType.admitted && statusKey !== StatusType.FULLY_PAID;
+   const isLinkActive = admission === AdmissionStatusType.ADMITTED && statusKey !== StatusType.FULLY_PAID;
 
    return (
       <Card className={status.backgroundColor}>
@@ -109,25 +109,32 @@ const statusConfig = {
 }
 
 const admissionStatusConfig = {
-   [AdmissionStatusType.admitted]: {
+   [AdmissionStatusType.ADMITTED]: {
       iconColor: "text-green-400 dark:text-green-200",
       textColor: "text-green-500",
       backgroundColor: "bg-[#e1fff4]",
       message: "GRANTED",
       icon: CheckCircle,
    },
-   [AdmissionStatusType.pending]: {
+   [AdmissionStatusType.PENDING]: {
       iconColor: "text-cyan-400 dark:text-cyan-200",
       textColor: "text-cyan-500",
       backgroundColor: "bg-[#e6f6f8]",
       message: "PENDING",
       icon: CircleAlert
    },
-   [AdmissionStatusType.not_admitted]: {
+   [AdmissionStatusType.NOT_ADMITTED]: {
       iconColor: "text-red-400 dark:text-red-200",
       textColor: "text-red-500",
       backgroundColor: "bg-[#fff4f4]",
       message: "DENAIED",
       icon: XCircle
+   },
+   [AdmissionStatusType.INPROGRESS]: {
+      iconColor: "text-blue-400 dark:text-blue-200",
+      textColor: "text-blue-500",
+      backgroundColor: "bg-blue-100",
+      message: "INPROGRESS",
+      icon: Loader
    }
 };

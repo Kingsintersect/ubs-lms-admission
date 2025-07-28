@@ -2,9 +2,10 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { ApplicationDetailsType } from '@/schemas/admission-schema';
-import { ApplicationReviewFormValues } from '@/schemas/applicationReview-schema';
+import { ApplicationApproveValues, ApplicationRejectValues } from '@/schemas/applicationReview-schema';
 import { QueryFunctionContext, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getStudentApplicantion } from '@/app/actions/applications';
+import { ApproveStudentApplicantion, getStudentApplicantion, RejectStudentApplicantion } from '@/app/actions/applications';
+import { toastApiError, toastSuccess } from '@/lib/toastApiError';
 
 type ApplicationReviewContextType = {
     // State
@@ -19,7 +20,7 @@ type ApplicationReviewContextType = {
     setCurrentApplication: (application: ApplicationDetailsType | null) => void;
     handleDecision: (type: 'admitted' | 'not_admitted') => void;
     closeDecisionModal: () => void;
-    submitDecision: (values?: ApplicationReviewFormValues) => Promise<void>;
+    submitDecision: (values?: ApplicationRejectValues | ApplicationApproveValues) => Promise<void>;
     refetchApplication: () => Promise<void>;
 };
 
@@ -62,16 +63,18 @@ export const ApplicationReviewProvider = ({ children }: { children: React.ReactN
         }
     };
 
-    const submitDecision = async (values?: ApplicationReviewFormValues) => {
+    const submitDecision = async (values?: ApplicationRejectValues | ApplicationApproveValues) => {
         try {
             setIsLoading(true);
 
             if (decisionType === 'admitted') {
                 if (!currentApplication) return;
-                // await approveApplication(currentApplication.id, { ... });
+                await ApproveStudentApplicantion(values as ApplicationApproveValues);
+                toastSuccess("Admission Approved Succesfully")
             } else if (decisionType === 'not_admitted' && values) {
                 if (!currentApplication?.id) return;
-                // await rejectApplication({ ...values, application_id: currentApplication.id });
+                await RejectStudentApplicantion(values as ApplicationRejectValues);
+                toastApiError("Something went wrong")
             }
 
             // Refresh data after decision

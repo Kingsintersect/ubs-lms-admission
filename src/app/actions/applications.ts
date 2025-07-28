@@ -7,6 +7,7 @@ import { apiCall } from "@/lib/apiCaller";
 import { loginSessionKey } from "@/lib/definitions";
 import { getSession } from "@/lib/session";
 import { ApplicationChunk, ApplicationDetailsType } from "@/schemas/admission-schema";
+import { ApplicationApproveValues, ApplicationRejectValues } from "@/schemas/applicationReview-schema";
 import { ApiResponseArray, ApiResponseSingle } from "@/types/api.types";
 import { Application, ApplicationStatus } from "@/types/application";
 import { SessionData } from "@/types/auth";
@@ -105,9 +106,9 @@ export async function getStudentApplicantion(id: string): Promise<{ data: Applic
     }
 }
 
-export async function ApproveStudentApplicantion(data: object): Promise<boolean> {
+export async function ApproveStudentApplicantion(data: ApplicationApproveValues): Promise<boolean> {
     const loginSession = (await getSession(loginSessionKey)) as SessionData;
-    const response = await apiCall<object, ApiResponseSingle<ApplicationDetailsType>>({
+    const response = await apiCall<ApplicationApproveValues, ApiResponseSingle<ApplicationDetailsType>>({
         url: `/admin/approve-application`,
         method: "POST",
         data: data,
@@ -120,11 +121,11 @@ export async function ApproveStudentApplicantion(data: object): Promise<boolean>
 
     return true;
 }
-interface payLoad { reason: string, application_id: number | string }
-export async function RejectStudentApplicantion(data: payLoad): Promise<boolean> {
+
+export async function RejectStudentApplicantion(data: ApplicationRejectValues): Promise<boolean> {
     const loginSession = (await getSession(loginSessionKey)) as SessionData;
 
-    const response = await apiCall<payLoad, ApiResponseSingle<ApplicationDetailsType>>({
+    const response = await apiCall<ApplicationRejectValues, ApiResponseSingle<ApplicationDetailsType>>({
         url: `/admin/reject-application`,
         method: "DELETE",
         data: data,

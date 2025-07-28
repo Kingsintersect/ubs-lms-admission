@@ -63,7 +63,7 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
          reg_number: null,
          is_applied: 0,
          reason_for_denial: null,
-         admission_status: AdmissionStatusType.pending,
+         admission_status: AdmissionStatusType.PENDING,
          acceptance_fee_payment_status: StatusType.UNPAID,
          tuition_payment_status: StatusType.UNPAID,
          application_payment_status: StatusType.UNPAID,
