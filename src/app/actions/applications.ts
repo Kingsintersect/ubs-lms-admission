@@ -89,9 +89,14 @@ export async function getAdmittedApplicants(options?: UseDataTableOptions): Prom
 
 export async function getStudentApplicantion(id: string): Promise<{ data: ApplicationDetailsType | null }> {
     const loginSession = (await getSession(loginSessionKey)) as SessionData;
+    const routeUrl = (loginSession.user.role === "STUDENT")
+        ? `/application/application-data`
+        : (loginSession.user.role === "ADMIN")
+            ? `/admin/single-application?id=${id}`
+            : "";
 
     const response = await apiCall<undefined, ApiResponseSingle<ApplicationDetailsType>>({
-        url: `/admin/single-application?id=${id}`,
+        url: `${routeUrl}`,
         method: "GET",
         accessToken: loginSession.access_token
     });
@@ -208,6 +213,8 @@ export async function updateApplicationStatus({
 
 // review editing
 export const updateStudentApplicationData = async (applicationId: string, data: ApplicationChunk): Promise<void> => {
+    console.log('applicationId', applicationId)
+    console.log('data', data)
     const loginSession = (await getSession(loginSessionKey)) as SessionData;
     const response = await fetch(`${remoteApiUrl}/application/update-application-form`, {
         method: 'PUT',
@@ -217,9 +224,13 @@ export const updateStudentApplicationData = async (applicationId: string, data: 
         },
         body: JSON.stringify({ application_id: applicationId, data }),
     });
+    console.log('response', response);
 
     if (!response.ok) {
         const error = await response.json();
+        console.error('error', error)
         throw new Error(error.message || 'Failed to update personal information');
     }
+    const result = await response.json();
+    console.log('result', result);
 };

@@ -23,7 +23,6 @@ export function useApplications() {
         queryFn: () => getApplications(filters, access_token!),
         enabled: (!!access_token && access_token.trim() !== "")
     });
-    console.log('access_token', access_token)
 
     return {
         applications,

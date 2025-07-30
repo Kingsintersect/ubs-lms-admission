@@ -78,20 +78,20 @@ export const STEPS: Step[] = [
 ];
 
 export const GENDER = [
-    { value: 'MALE', label: 'MALE' },
-    { value: 'FEMALE', label: 'FEMALE' },
+    { value: 'male', label: 'Male' },
+    { value: 'female', label: 'Female' }
 ];
 
 export const RELIGION = [
     { value: 'christianity', label: 'Christianity' },
-    { value: 'islam', label: 'Islam' },
+    { value: 'islamic', label: 'Islamic' },
     { value: 'traditional', label: 'Traditional' },
     { value: 'other', label: 'Other' },
 ]
 
 export const START_TERMS = [
     { value: '2024/2025', label: '2024 / 2025' },
-    { value: '20225/2025', label: '2025 / 2025' },
+    { value: '20225/2025', label: '2025 / 2026' },
     { value: '2026/2027', label: '2026 / 2027' },
 ];
 

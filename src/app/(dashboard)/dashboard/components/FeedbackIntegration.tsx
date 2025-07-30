@@ -81,7 +81,7 @@ const TeacherFeedbackIntegration = () => {
             )}
 
             {/* Floating Feedback Button */}
-            <div className="fixed bottom-6 right-6 pointer-events-auto">
+            <div className="fixed bottom-20 right-6 pointer-events-auto">
                 {!isOpen ? (
                     <button
                         onClick={() => setIsOpen(true)}

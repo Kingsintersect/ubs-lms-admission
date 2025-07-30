@@ -18,9 +18,7 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
     useEffect(() => {
         if (!loading && !user) {
             router.push('/auth/signin');
-            console.log('User not authenticated, redirecting to /auth/signin');
         } else if (!loading && user && !allowedRoles.includes(user.role)) {
-            console.log("entered")
             if ([Roles.ADMIN, Roles.MANAGER].includes(user.role as Roles)) {
                 if (pathname !== '/dashboard/admin') {
                     router.push('/dashboard/admin');

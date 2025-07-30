@@ -7,7 +7,6 @@ import { EditableField, EditableSelect, EditableTextArea } from './EditableFormF
 import { PersonalInfoData } from '@/schemas/admission-schema';
 import { GENDER, RELIGION } from '@/app/(application)/admission/form/constants';
 import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
-import { useAuth } from '@/contexts/AuthContext';
 
 export interface EditablePersonalInfoProps {
     application: PersonalInfoData;
@@ -24,6 +23,7 @@ export default function EditablePersonalInfo({
 
     // Form state
     const [formData, setFormData] = useState<PersonalInfoData>({
+        id: application.id,
         email: application.email || '',
         phone_number: application.phone_number || '',
         dob: application.dob || '',
@@ -40,7 +40,6 @@ export default function EditablePersonalInfo({
     const [originalData, setOriginalData] = useState<PersonalInfoData>(formData);
     const [isSavingPersonalInfo, setIsSavingPersonalInfo] = useState(false);
     const { refetchApplication } = useApplicationReview();
-    const { refreshUser } = useAuth();
 
     const handleEdit = () => {
         setOriginalData(formData); // Store current data as original
@@ -58,10 +57,9 @@ export default function EditablePersonalInfo({
     const savePersonalInfo = async (data: PersonalInfoData) => {
         setIsSavingPersonalInfo(true);
         try {
-            await updateStudentApplicationData(String(application.id), data);
+            await updateStudentApplicationData(String(formData.id), data);
             // Optionally refresh the application data
             await refetchApplication();
-            await refreshUser();
         } catch (error) {
             console.error('Failed to save personal info:', error);
             throw error; // Re-throw to let component handle the error display
@@ -250,7 +248,7 @@ export default function EditablePersonalInfo({
                 />
                 <EditableField
                     label="Home Town"
-                    value={formData.nationality}
+                    value={formData.hometown}
                     onChange={(value) => updateField('hometown', value)}
                     placeholder="specify your hometown"
                     isEditing={isEditing}

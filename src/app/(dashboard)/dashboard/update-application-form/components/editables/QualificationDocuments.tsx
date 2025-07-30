@@ -5,6 +5,7 @@ import { QualificationDocumentsData } from '@/schemas/admission-schema';
 import { AlertCircle, CheckCircle, Edit3, FileStack, Save, X } from 'lucide-react';
 import React, { useState } from 'react'
 import { EditableFileUpload } from './EditableFormFields';
+import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
 
 export interface QualificationDocumentsProps {
     application: QualificationDocumentsData;
@@ -34,6 +35,7 @@ export default function QualificationDocuments({
     const [isSavingPersonalInfo, setIsSavingPersonalInfo] = useState(false);
     const [newFiles, setNewFiles] = useState<File[]>([]);
     const [originalNewFiles, setOriginalNewFiles] = useState<File[]>([]);
+    const { refetchApplication } = useApplicationReview();
 
     const handleEdit = () => {
         setOriginalData(formData); // Store current data as original
@@ -56,7 +58,7 @@ export default function QualificationDocuments({
         try {
             await updateStudentApplicationData(String(application.id), data);
             // Optionally refresh the application data
-            // await refetchApplication();
+            await refetchApplication();
         } catch (error) {
             console.error('Failed to save personal info:', error);
             throw error; // Re-throw to let component handle the error display
@@ -135,7 +137,7 @@ export default function QualificationDocuments({
     };
 
     return (
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div id='official-documents' className="bg-white rounded-lg border border-gray-200 p-6">
             {/* Header with Edit/Save buttons */}
             <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 flex items-center">

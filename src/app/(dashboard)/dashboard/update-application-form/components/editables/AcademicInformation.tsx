@@ -5,7 +5,6 @@ import { AcademicInfoData } from '@/schemas/admission-schema';
 import { AlertCircle, CheckCircle, Edit3, GraduationCap, Save, X } from 'lucide-react';
 import React, { useState } from 'react'
 import { EditableField } from './EditableFormFields';
-import { useAuth } from '@/contexts/AuthContext';
 import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
 
 export interface AcademicInformationProps {
@@ -33,7 +32,6 @@ export default function AcademicInformation({
     const [originalData, setOriginalData] = useState<AcademicInfoData>(formData);
     const [isSavingPersonalInfo, setIsSavingPersonalInfo] = useState(false);
     const { refetchApplication } = useApplicationReview();
-    const { refreshUser } = useAuth();
 
     const handleEdit = () => {
         setOriginalData(formData); // Store current data as original
@@ -54,7 +52,6 @@ export default function AcademicInformation({
             await updateStudentApplicationData(String(application.id), data);
             // Optionally refresh the application data
             await refetchApplication();
-            await refreshUser();
         } catch (error) {
             console.error('Failed to save personal info:', error);
             throw error; // Re-throw to let component handle the error display
@@ -189,25 +186,16 @@ export default function AcademicInformation({
                     type="text"
                     value={formData.undergraduateDegree}
                     onChange={(value) => updateField('undergraduateDegree', value)}
-                    placeholder="Fill in your Undergraduate degree"
+                    placeholder="Degree eg. Bachalor of Science in ..."
                     isEditing={isEditing}
                 />
 
                 <EditableField
-                    label="Phone"
+                    label="University"
                     type="text"
                     value={formData.university}
                     onChange={(value) => updateField('university', value)}
-                    placeholder="Enter university"
-                    isEditing={isEditing}
-                />
-
-                <EditableField
-                    label="Graduation Year"
-                    type="text"
-                    value={formData.graduationYear}
-                    onChange={(value) => updateField('graduationYear', value)}
-                    placeholder='Enter new graduation year'
+                    placeholder="Enter university e.g university of..."
                     isEditing={isEditing}
                 />
 
@@ -217,6 +205,15 @@ export default function AcademicInformation({
                     value={formData.gpa}
                     onChange={(value) => updateField('gpa', value)}
                     placeholder="Enter GPA eg 3.8"
+                    isEditing={isEditing}
+                />
+
+                <EditableField
+                    label="Graduation Year"
+                    type="text"
+                    value={formData.graduationYear}
+                    onChange={(value) => updateField('graduationYear', value)}
+                    placeholder='Enter new graduation year'
                     isEditing={isEditing}
                 />
 

@@ -6,7 +6,6 @@ import { AlertCircle, CheckCircle, Edit3, ContactRound, Save, X } from 'lucide-r
 import React, { useState } from 'react'
 import { EditableField } from './EditableFormFields';
 import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
-import { useAuth } from '@/contexts/AuthContext';
 
 export interface NextOfkinInfoProps {
     application: NextOfkinInfoData;
@@ -34,7 +33,6 @@ export default function NextOfkinInfo({
     const [originalData, setOriginalData] = useState<NextOfkinInfoData>(formData);
     const [isSavingPersonalInfo, setIsSavingPersonalInfo] = useState(false);
     const { refetchApplication } = useApplicationReview();
-    const { refreshUser } = useAuth();
 
     const handleEdit = () => {
         setOriginalData(formData); // Store current data as original
@@ -55,7 +53,6 @@ export default function NextOfkinInfo({
             await updateStudentApplicationData(String(application.id), data);
             // Optionally refresh the application data
             await refetchApplication();
-            await refreshUser();
         } catch (error) {
             console.error('Failed to save personal info:', error);
             throw error; // Re-throw to let component handle the error display

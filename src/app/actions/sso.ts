@@ -9,16 +9,13 @@ export const singleSignOn = async (data: ObjectType) => {
 		method: "POST",
 		data: { ...data },
 		headers: {
-			// 'Content-Type': 'application/x-www-form-urlencoded',
 			"Content-Type": "application/json",
 		},
 	})) as { success: { data: { redirect_to: string } } | null };
 	if (response.success) {
-		// console.log(response.data.redirect_to)
 		const red = await axios.get(response.success.data.redirect_to);
 		console.log(red);
 		return false;
-		// return response.data
 	}
 	return { error: null, success: null };
 };

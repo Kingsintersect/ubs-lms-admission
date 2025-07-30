@@ -6,8 +6,6 @@ type LaravelErrorResponse = {
 };
 
 export function toastApiError(error: unknown, fallback = "Something went wrong") {
-    console.log("TOAST ERROR INPUT:", error);
-
     // 1. If the error is an instance of Error
     if (error instanceof Error) {
         try {

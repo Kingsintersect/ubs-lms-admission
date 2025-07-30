@@ -6,6 +6,7 @@ import { AlertCircle, BriefcaseBusiness, CheckCircle, Edit3, Save, X } from 'luc
 import React, { useState } from 'react'
 import { EditableField, EditableSelect } from './EditableFormFields';
 import { YEARS_OF_EXPERIENCE } from '@/app/(application)/admission/form/constants';
+import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
 
 export interface WorkExperienceInfoProps {
     application: WorkExoerienceInfoData;
@@ -29,6 +30,7 @@ export default function WorkExperienceInfo({
     // Original data for cancel functionality
     const [originalData, setOriginalData] = useState<WorkExoerienceInfoData>(formData);
     const [isSavingPersonalInfo, setIsSavingPersonalInfo] = useState(false);
+    const { refetchApplication } = useApplicationReview();
 
     const handleEdit = () => {
         setOriginalData(formData); // Store current data as original
@@ -48,7 +50,7 @@ export default function WorkExperienceInfo({
         try {
             await updateStudentApplicationData(String(application.id), data);
             // Optionally refresh the application data
-            // await refetchApplication();
+            await refetchApplication();
         } catch (error) {
             console.error('Failed to save personal info:', error);
             throw error; // Re-throw to let component handle the error display

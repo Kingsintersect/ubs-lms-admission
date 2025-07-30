@@ -7,7 +7,6 @@ import React, { useState } from 'react'
 import { EditableProgramOptions, EditableRadioGroup, EditableSelect } from './EditableFormFields';
 import { START_TERMS, STUDY_MODES } from '@/app/(application)/admission/form/constants';
 import { useExternalPrograms } from '@/hooks/useExternalPrograms'; // Your programs hook
-import { useAuth } from '@/contexts/AuthContext';
 import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
 
 export interface ProgramInfoProps {
@@ -24,7 +23,6 @@ export default function ProgramInfo({
 
     // Load programs data
     const { data: programs, isLoading, isError } = useExternalPrograms();
-    const { refreshUser } = useAuth();
 
     // Form state
     const [formData, setFormData] = useState<ProgramInfoData>({
@@ -59,7 +57,6 @@ export default function ProgramInfo({
             await updateStudentApplicationData(String(application.id), data);
             // Optionally refresh the application data
             await refetchApplication();
-            await refreshUser();
         } catch (error) {
             console.error('Failed to save personal info:', error);
             throw error; // Re-throw to let component handle the error display

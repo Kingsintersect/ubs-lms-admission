@@ -28,13 +28,13 @@ export const usePaymentStatus = () => {
 	};
 
 	const isTuitionAmountValid =
-		(tuitionPaymentStatus === "1" && tuitionAmount.length > 0) ||
-		(tuitionPaymentStatus === "0" && tuitionAmount.length < 1);
+		((tuitionPaymentStatus === "FULLY_PAID" || tuitionPaymentStatus === "PART_PAID") && tuitionAmount.length > 0) ||
+		(tuitionPaymentStatus === "UNPAID" && tuitionAmount.length < 1);
 
 	const isApplicationStatusValid =
-		applicationPaymentStatus === "1" || applicationPaymentStatus === "0";
+		applicationPaymentStatus === "FULLY_PAID" || applicationPaymentStatus === "UNPAID";
 	const isAcceptanceStatusValid =
-		acceptancePaymentStatus === "1" || acceptancePaymentStatus === "0";
+		acceptancePaymentStatus === "FULLY_PAID" || acceptancePaymentStatus === "UNPAID";
 
 	return {
 		tuitionPaymentStatus,

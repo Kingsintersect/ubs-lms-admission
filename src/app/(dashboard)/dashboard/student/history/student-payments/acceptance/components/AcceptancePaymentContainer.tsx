@@ -3,10 +3,10 @@
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { HandCoins } from 'lucide-react';
-import AdmissionDeniedBanner from '../../componenets/AdmissionDeniedBanner';
 import AcceptanceStatusCard from './AcceptanceStatusCard';
 import AcceptancePaymentModal from './AcceptancePaymentModal';
 import ContentLoader from '@/components/ui/content-loader';
+import AdmissionDeniedBanner from '@/app/(dashboard)/dashboard/student/componenets/AdmissionDeniedBanner';
 
 const AcceptancePaymentContainer = () => {
     const { user, loading } = useAuth();

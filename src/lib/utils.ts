@@ -83,3 +83,22 @@ export function filterData<T extends Record<string, any>>(
 
 	return result;
 }
+
+export const formatFieldName = (str, options = { separator: '_', replaceWith: ' ' }) => {
+	return str
+		.replace(new RegExp(options.separator, 'g'), options.replaceWith)
+		.replace(/\b\w/g, (c) => c.toUpperCase());
+};
+
+export const UniversalformatFieldName = (str, options = { separator: '_', replaceWith: ' ' }) => {
+	/**
+	 * formatFieldName("first_name"); // "First Name"
+	 * formatFieldName("firstName"); // "First Name"
+	 * formatFieldName("status");     // "Status"
+	 */
+	return str
+		// .replace(/_/g, ' ')
+		.replace(new RegExp(options.separator, 'g'), options.replaceWith)
+		.replace(/([a-z])([A-Z])/g, '$1 $2') // Adds space before capital letters
+		.replace(/\b\w/g, (c) => c.toUpperCase());
+};

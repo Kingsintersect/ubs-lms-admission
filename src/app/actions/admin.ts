@@ -162,7 +162,6 @@ export const adminCreateNewStudent = async (
 
 // result system
 export const fetchLmsCourses = async (access_token: string, short_code: string) => {
-	console.log('short_code', short_code)
 	const res = await fetch(`${remoteApiUrl}/odl/cohorts-and-categories-and-courses`, {
 		method: "GET",
 		headers: {
@@ -176,7 +175,6 @@ export const fetchLmsCourses = async (access_token: string, short_code: string) 
 		throw new Error(error.message || "Failed to fetch students");
 	}
 	const result = await res.json();
-	console.log('result', result)
 	return result.filter(
 		c => c.cohort_name.trim() === short_code
 	);

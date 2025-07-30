@@ -157,32 +157,37 @@ export const EditableSelect: React.FC<{
     placeholder?: string;
     isEditing: boolean;
     className?: string;
-}> = ({ label, value, onChange, options, placeholder = "Select an option", isEditing, className }) => (
-    <div className={className}>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-            {label}
-        </label>
-        {isEditing ? (
-            <select
-                value={value ?? undefined}
-                onChange={(e) => onChange(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-sm bg-white"
-            >
-                <option value="">{placeholder}</option>
-                {options.map((option) => (
-                    <option key={option.value} value={option.value}>
-                        {option.label}
-                    </option>
-                ))}
-            </select>
-        ) : (
-            <p className="mt-1 text-sm text-gray-900 py-2 min-h-[2rem] flex items-center">
-                {options.find(opt => opt.value === value)?.label ||
-                    <span className="text-gray-400 italic">Not selected</span>}
-            </p>
-        )}
-    </div>
-);
+}> = ({ label, value, onChange, options, placeholder = "Select an option", isEditing, className }) => {
+    // Normalize the value for comparison
+    const normalizedValue = value?.toLowerCase();
+    const selectedOption = options.find(opt => opt.value.toLowerCase() === normalizedValue);
+
+    return (
+        <div className={className}>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+                {label}
+            </label>
+            {isEditing ? (
+                <select
+                    value={selectedOption?.value ?? ''}
+                    onChange={(e) => onChange(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-sm bg-white"
+                >
+                    <option value="">{placeholder}</option>
+                    {options.map((option) => (
+                        <option key={option.value} value={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </select>
+            ) : (
+                <p className="mt-1 text-sm text-gray-900 py-2 min-h-[2rem] flex items-center">
+                    {selectedOption?.label || <span className="text-gray-400 italic">Not selected</span>}
+                </p>
+            )}
+        </div>
+    );
+}
 
 // Updated EditableProgramOptions component
 interface EditableProgramOptionsProps {
@@ -224,7 +229,7 @@ export const EditableProgramOptions: React.FC<EditableProgramOptionsProps> = ({
             </label>
             {/* <ProgramRequirementsLink className="text-xs" /> */}
             <ProgramRequirementsLink
-                className="text-xs text-orange-600  animate-bounce"
+                className="ml-20 text-xs text-orange-600  animate-bounce"
                 downloadUrl="/documents/PROGRAMME_AND_REQUIREMENTS.docx"
             />
 

@@ -286,32 +286,13 @@ export interface ApplicationDetailsType extends StudentType {
     application: AdmissionFormData;
 }
 
-export interface PersonalInfoData {
-    id?: string | number | null;
-    email: string | null;
-    phone_number: string | null;
-    nationality: string | null;
-    religion: string | null;
-    gender: string | null;
-    dob: string | null;
-    hometown: string | null;
-    lga: string | null;
-    hometown_address: string | null;
-    contact_address: string | null;
-}
-// export type PersonalInfoData = z.infer<typeof completePersonalInfoSchema>;
+export type PersonalInfoData = z.infer<typeof completePersonalInfoSchema>;
 export type AcademicInfoData = z.infer<typeof academicInfoSchema>;
 export type NextOfkinInfoData = z.infer<typeof nextOfkinInfoSchema>;
 export type SponsorInfoData = z.infer<typeof sponsorInfoSchema>;
 export type WorkExoerienceInfoData = z.infer<typeof workExoerienceInfoSchema>;
-export interface ProgramInfoData {
-    id?: string | number | null;
-    program: string | null;
-    program_id: string | null;
-    studyMode: string | null;
-    startTerm: string | null;
-}
-// export type ProgramInfoData = z.infer<typeof completeProgramInfoSchema>;
+
+export type ProgramInfoData = z.infer<typeof completeProgramInfoSchema>;
 export type OtherInfoData = z.infer<typeof otherInfoSchema>;
 export type PersonalStatementInfoData = z.infer<typeof personalStatementInfoSchema>;
 export type CareerGoalsInfoData = z.infer<typeof careerGoalsInfoSchema>;

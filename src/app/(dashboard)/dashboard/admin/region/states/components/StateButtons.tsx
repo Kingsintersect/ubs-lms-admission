@@ -8,7 +8,6 @@ import { TrashIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export const DeleteState = ({ access_token, id }: { access_token: string, id: string }) => {
-   console.log('id', id)
    const router = useRouter();
    const handleStateDelete = async (id: string) => {
       const { error, success }: any = await DeleteSingleState(access_token, id);

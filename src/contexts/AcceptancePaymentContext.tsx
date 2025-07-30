@@ -45,7 +45,6 @@ export const AcceptancePaymentProvider: React.FC<{ children: React.ReactNode }> 
             setHasAppliedForAdmission(false)
             return;
         }
-        console.log(user?.admission_status)
         if (user?.admission_status !== "ADMITTED") {
             setHasBeenAdmitted(false)
             return;

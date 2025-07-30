@@ -5,6 +5,7 @@ import { PersonalStatementInfoData } from '@/schemas/admission-schema';
 import { AlertCircle, CheckCircle, Edit3, SquarePen, Save, X } from 'lucide-react';
 import React, { useState } from 'react'
 import { EditableTextArea } from './EditableFormFields';
+import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
 
 export interface PersonalStatementInfoProps {
     application: PersonalStatementInfoData;
@@ -25,6 +26,7 @@ export default function PersonalStatementInfo({
     // Original data for cancel functionality
     const [originalData, setOriginalData] = useState<PersonalStatementInfoData>(formData);
     const [isSavingPersonalInfo, setIsSavingPersonalInfo] = useState(false);
+    const { refetchApplication } = useApplicationReview();
 
     const handleEdit = () => {
         setOriginalData(formData); // Store current data as original
@@ -44,7 +46,7 @@ export default function PersonalStatementInfo({
         try {
             await updateStudentApplicationData(String(application.id), data);
             // Optionally refresh the application data
-            // await refetchApplication();
+            await refetchApplication();
         } catch (error) {
             console.error('Failed to save personal info:', error);
             throw error; // Re-throw to let component handle the error display

@@ -19,7 +19,6 @@ export const fetchStudentsResults = async (access_token: string) => {
     if (response.error) {
         throw new Error(response.error.toString() || "Failed to fetch students results");
     }
-    console.log('response.success', response.success)
     return response.success;
 }
 export const fetchTeacherCourses = async (access_token: string) => {

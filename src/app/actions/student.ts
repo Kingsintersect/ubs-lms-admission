@@ -85,7 +85,6 @@ export async function PayAcceptanceFee(access_token: string, data: ObjectType) {
 			Authorization: `Bearer ${access_token}`,
 		},
 	})) as any;
-	console.log("response", response);
 	return response;
 }
 

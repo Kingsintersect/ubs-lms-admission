@@ -170,7 +170,6 @@ export default function useSignInMultiStepViewModel() {
     const nextStep = useCallback(async () => {
         const fields = steps[currentStep - 1].fields;
         const isFieldsValid = await trigger(fields as FieldName<SignupFormData>[], { shouldFocus: true });
-        console.log('isFieldsValid', isFieldsValid)
 
         if (!isFieldsValid) return;
         if (currentStep < steps.length) {

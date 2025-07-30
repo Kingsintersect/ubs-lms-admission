@@ -6,7 +6,6 @@ import { AlertCircle, CheckCircle, Edit3, FileStack, Save, X } from 'lucide-reac
 import React, { useState } from 'react'
 import { EditableFileUpload } from './EditableFormFields';
 import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
-import { useAuth } from '@/contexts/AuthContext';
 
 export interface QualificationDocumentsProps {
     application: QualificationDocumentsData;
@@ -37,7 +36,6 @@ export default function QualificationDocuments({
     const [newFiles, setNewFiles] = useState<File[]>([]);
     const [originalNewFiles, setOriginalNewFiles] = useState<File[]>([]);
     const { refetchApplication } = useApplicationReview();
-    const { refreshUser } = useAuth();
 
     const handleEdit = () => {
         setOriginalData(formData); // Store current data as original
@@ -61,7 +59,6 @@ export default function QualificationDocuments({
             await updateStudentApplicationData(String(application.id), data);
             // Optionally refresh the application data
             await refetchApplication();
-            await refreshUser();
         } catch (error) {
             console.error('Failed to save personal info:', error);
             throw error; // Re-throw to let component handle the error display

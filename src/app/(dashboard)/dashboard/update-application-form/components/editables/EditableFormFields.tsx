@@ -2,6 +2,8 @@ import React from 'react';
 import { Upload, X, FileText, Eye, ZoomIn, ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 import { ImagePreviewModal } from '@/components/application/ImagePreviewModal';
+import { DetachedProgramAccordionDisplay, ProgramNode } from './DetachedProgramAccordionDisplay';
+import { ProgramRequirementsLink } from '@/components/requirements/ProgramRequirementsModal';
 
 // Reusable Input Component
 export const EditableField: React.FC<{
@@ -155,33 +157,126 @@ export const EditableSelect: React.FC<{
     placeholder?: string;
     isEditing: boolean;
     className?: string;
-}> = ({ label, value, onChange, options, placeholder = "Select an option", isEditing, className }) => (
-    <div className={className}>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-            {label}
-        </label>
-        {isEditing ? (
-            <select
-                value={value ?? undefined}
-                onChange={(e) => onChange(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-sm bg-white"
-            >
-                <option value="">{placeholder}</option>
-                {options.map((option) => (
-                    <option key={option.value} value={option.value}>
-                        {option.label}
-                    </option>
-                ))}
-            </select>
-        ) : (
-            <p className="mt-1 text-sm text-gray-900 py-2 min-h-[2rem] flex items-center">
-                {options.find(opt => opt.value === value)?.label ||
-                    <span className="text-gray-400 italic">Not selected</span>}
-            </p>
-        )}
-    </div>
-);
+}> = ({ label, value, onChange, options, placeholder = "Select an option", isEditing, className }) => {
+    // Normalize the value for comparison
+    const normalizedValue = value?.toLowerCase();
+    const selectedOption = options.find(opt => opt.value.toLowerCase() === normalizedValue);
 
+    return (
+        <div className={className}>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+                {label}
+            </label>
+            {isEditing ? (
+                <select
+                    value={selectedOption?.value ?? ''}
+                    onChange={(e) => onChange(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-sm bg-white"
+                >
+                    <option value="">{placeholder}</option>
+                    {options.map((option) => (
+                        <option key={option.value} value={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </select>
+            ) : (
+                <p className="mt-1 text-sm text-gray-900 py-2 min-h-[2rem] flex items-center">
+                    {selectedOption?.label || <span className="text-gray-400 italic">Not selected</span>}
+                </p>
+            )}
+        </div>
+    );
+}
+
+// Updated EditableProgramOptions component
+interface EditableProgramOptionsProps {
+    label: string;
+    value: string | null;
+    onChange: (value: string) => void;
+    onIdChange?: (id: string) => void; // Optional callback for program ID
+    placeholder?: string;
+    isEditing: boolean;
+    className?: string;
+    programs?: ProgramNode[];
+    isLoading?: boolean;
+    isError?: boolean;
+}
+
+export const EditableProgramOptions: React.FC<EditableProgramOptionsProps> = ({
+    label,
+    value,
+    onChange,
+    onIdChange,
+    // placeholder = "Select program options",
+    isEditing,
+    className,
+    programs,
+    isLoading,
+    isError,
+}) => {
+    const handleProgramSelect = (program: { id: number; name: string }) => {
+        onChange(program.name);
+        if (onIdChange) {
+            onIdChange(String(program.id));
+        }
+    };
+
+    return (
+        <div className={className}>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+                {label}
+            </label>
+            {/* <ProgramRequirementsLink className="text-xs" /> */}
+            <ProgramRequirementsLink
+                className="ml-20 text-xs text-orange-600  animate-bounce"
+                downloadUrl="/documents/PROGRAMME_AND_REQUIREMENTS.docx"
+            />
+
+            {/* Hidden input to store the selected value */}
+            <input
+                type="hidden"
+                value={value || ''}
+                name="program"
+            />
+
+            {isEditing ? (
+                <>
+                    {isLoading && (
+                        <div className='w-full flex items-center justify-center py-8'>
+                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mr-2"></div>
+                            Loading Programs...
+                        </div>
+                    )}
+
+                    {(isError || !programs) && (
+                        <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                            <div className="flex items-center">
+                                <svg className="w-4 h-4 text-red-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                </svg>
+                                <p className="text-sm text-red-800">Failed to load programs. Please try again.</p>
+                            </div>
+                        </div>
+                    )}
+
+                    {programs && !isLoading && !isError && (
+                        <DetachedProgramAccordionDisplay
+                            programs={programs}
+                            selectedValue={value || undefined}
+                            onProgramSelect={handleProgramSelect}
+                            subHeading="Select any program from the parent to the child program..."
+                        />
+                    )}
+                </>
+            ) : (
+                <p className="mt-1 text-sm text-gray-900 py-2 min-h-[2rem] flex items-center">
+                    {value || <span className="text-gray-400 italic">Not selected</span>}
+                </p>
+            )}
+        </div>
+    );
+};
 // Date Component
 export const EditableDate: React.FC<{
     label: string;

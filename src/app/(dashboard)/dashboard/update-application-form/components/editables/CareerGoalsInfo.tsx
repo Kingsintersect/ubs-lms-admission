@@ -5,7 +5,6 @@ import { CareerGoalsInfoData } from '@/schemas/admission-schema';
 import { AlertCircle, CheckCircle, Edit3, NotebookPen, Save, X } from 'lucide-react';
 import React, { useState } from 'react'
 import { EditableTextArea } from './EditableFormFields';
-import { useAuth } from '@/contexts/AuthContext';
 import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
 
 export interface CareerGoalsInfoProps {
@@ -28,7 +27,6 @@ export default function CareerGoalsInfo({
     const [originalData, setOriginalData] = useState<CareerGoalsInfoData>(formData);
     const [isSavingPersonalInfo, setIsSavingPersonalInfo] = useState(false);
     const { refetchApplication } = useApplicationReview();
-    const { refreshUser } = useAuth();
 
     const handleEdit = () => {
         setOriginalData(formData); // Store current data as original
@@ -49,7 +47,6 @@ export default function CareerGoalsInfo({
             await updateStudentApplicationData(String(application.id), data);
             // Optionally refresh the application data
             await refetchApplication();
-            await refreshUser();
         } catch (error) {
             console.error('Failed to save personal info:', error);
             throw error; // Re-throw to let component handle the error display

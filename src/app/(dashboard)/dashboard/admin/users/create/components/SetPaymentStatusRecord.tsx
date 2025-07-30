@@ -46,15 +46,16 @@ const SetPaymentStatusRecord = ({
                                             ? 'Set Application Fee payment status'
                                             : 'Set tuition fee payment status'}
                                 </SelectLabel>
-                                <SelectItem value={'0'}>Unpaid</SelectItem>
-                                <SelectItem value={'1'}>Paid</SelectItem>
+                                <SelectItem value={'FULLY_PAID'}>Paid</SelectItem>
+                                <SelectItem value={'PART_PAID'}>Part Paid</SelectItem>
+                                <SelectItem value={'UNPAID'}>Unpaid</SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
                 </div>
                 {statusError && <p className="text-sm text-red-600">{statusError}</p>}
 
-                {statusType === "tuition_payment_status" && status === '1' && (
+                {statusType === "tuition_payment_status" && status !== "UNPAID" && (
                     <div className="grid w-full items-center gap-4 pt-5">
                         <div className="flex flex-col space-y-1.5">
                             <Input

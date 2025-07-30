@@ -24,7 +24,7 @@ import { getFriendlyError } from '@/lib/errorsHandler';
 import { AcademicCredentialsStep } from "./components/form-inputs/AcademicCredentialsStep";
 
 const AdmissionForm: React.FC = () => {
-    const { logout, access_token, updateUserInState, refreshUser } = useAuth();
+    const { logout, access_token, updateUserInState } = useAuth();
     const [currentStep, setCurrentStep] = useState(0);
     const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -60,7 +60,6 @@ const AdmissionForm: React.FC = () => {
         },
         onSuccess: async () => {
             setIsSubmitted(true);
-            await refreshUser();
             updateUserInState({ is_applied: Number(true) });
         },
     });

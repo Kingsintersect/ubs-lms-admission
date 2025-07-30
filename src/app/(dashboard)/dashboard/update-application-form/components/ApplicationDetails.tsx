@@ -1,10 +1,10 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { ApplicationDetailsType } from '@/schemas/admission-schema';
-import { AlertCircle, AlertCircleIcon, Check, Clock, TriangleAlert, X } from 'lucide-react'
+import { AlertCircle, AlertCircleIcon, Check, Clock, Eye, X, Loader } from 'lucide-react'
 import Image from 'next/image';
 import React from 'react'
-import EditablePersonalInfo from './editables/EditablePersonalInfo';
+import EditablePersonalInfo from './editables/PersonalInfo';
 import AcademicInformation from './editables/AcademicInformation';
 import NextOfkinInfo from './editables/NextOfkinInfo';
 import SponsorsInfo from './editables/SponsorsInfo';
@@ -26,16 +26,18 @@ export const ApplicationDetails = ({
 
     const getStatusIcon = (status) => {
         switch (status) {
-            case 'admitted': return <Check className="w-4 h-4" />;
-            case 'not_admitted': return <X className="w-4 h-4" />;
+            case 'ADMITTED': return <Check className="w-4 h-4" />;
+            case 'INPROGRESS': return <Loader className="w-4 h-4" />;
+            case 'NOT_ADMITTED': return <X className="w-4 h-4" />;
             default: return <Clock className="w-4 h-4" />;
         }
     };
 
     const getStatusColor = (status) => {
         switch (status) {
-            case 'admitted': return 'text-green-600 bg-green-50';
-            case 'not_admitted': return 'text-red-600 bg-red-50';
+            case 'ADMITTED': return 'text-green-600 bg-green-50';
+            case 'INPROGRESS': return 'text-cyan-600 bg-cyan-50';
+            case 'NOT_ADMITTED': return 'text-red-600 bg-red-50';
             default: return 'text-yellow-600 bg-yellow-50';
         }
     };
@@ -80,12 +82,32 @@ export const ApplicationDetails = ({
                     <div className="p-6 space-y-8">
                         {/* Personal Information */}
                         <EditablePersonalInfo
-                            application={{ ...application, ...application.application }}
+                            application={{
+                                email: String(application.email),
+                                phone_number: String(application.phone_number),
+                                nationality: String(application.nationality),
+
+                                id: String(application.application.id),
+                                lga: String(application.application.lga),
+                                dob: String(application.application.dob),
+                                gender: String(application.application.gender),
+                                hometown: String(application.application.hometown),
+                                hometown_address: String(application.application.hometown_address),
+                                contact_address: String(application.application.contact_address),
+                                religion: String(application.application.religion),
+                            }}
                         />
 
                         {/* Program Information */}
                         <ProgramInfo
-                            application={{ ...application, ...application.application }}
+                            application={{
+                                program: String(application.program),
+                                program_id: String(application.program_id),
+                                studyMode: String(application.application.studyMode),
+                                startTerm: String(application.application.startTerm),
+
+                                id: String(application.application.id),
+                            }}
                         />
 
                         {/* Essay */}
@@ -137,9 +159,9 @@ export const ApplicationDetails = ({
                 </div>
             ) : (
                 <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-                    <TriangleAlert className="w-16 h-16 text-rose-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-rose-900 mb-2">Application cannot be identified</h3>
-                    <p className="text-rose-600">Choose an application from the list to view details and make admission decisions.</p>
+                    <Eye className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">Select an Application</h3>
+                    <p className="text-gray-600">Choose an application from the list to view details and make admission decisions.</p>
                 </div>
             )}
             {error &&

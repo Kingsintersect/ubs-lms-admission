@@ -1,14 +1,8 @@
 "use client";
 
-// import { SITE_NAME } from '@/config';
-// import { Metadata } from 'next';
 import React, { ReactNode, useState } from 'react'
 import { DraggableTranscriptReminder } from './componenets/ReminderAlart';
-
-// export const metadata: Metadata = {
-//    title: `${SITE_NAME} - Student Dashboard`,
-//    description: "View your accademic statuses and manage payments",
-// };
+import { StudentStatusProvider } from '@/contexts/StudentStatusContext';
 
 type LayoutProps = {
    children: ReactNode
@@ -19,8 +13,7 @@ const Layout = ({ children }: LayoutProps) => {
 
    const handleClose = () => {
       setShowPopup(false);
-      // Auto-show again after 5 seconds for demo purposes
-      setTimeout(() => setShowPopup(true), 5000);
+      setTimeout(() => setShowPopup(true), 1800000);//30 minutes =  1,800,000 milliseconds, 1 hour = 3,600,000 milliseconds
    };
 
    const handleUpload = () => {
@@ -29,24 +22,27 @@ const Layout = ({ children }: LayoutProps) => {
    };
 
    return (
-      <div>
-         {children}
-         {!showPopup && (
-            <button
-               onClick={() => setShowPopup(true)}
-               className="fixed bottom-4 right-4 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg shadow-lg transition-colors"
-            >
-               Show Reminder
-            </button>
-         )}
-         <DraggableTranscriptReminder
-            isVisible={showPopup}
-            onClose={handleClose}
-            onUploadClick={handleUpload}
-            studentName="Alex"
-         />
+      <div className='relative min-h-screen'>
+         <StudentStatusProvider>
+            {children}
+            {!showPopup && (
+               <button
+                  onClick={() => setShowPopup(true)}
+                  className="fixed bottom-6 right-6 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg shadow-lg transition-colors"
+               >
+                  Show Reminder
+               </button>
+            )}
+            <DraggableTranscriptReminder
+               isVisible={showPopup}
+               onClose={handleClose}
+               onUploadClick={handleUpload}
+            />
+         </StudentStatusProvider>
       </div>
    )
 }
 
 export default Layout
+
+// new student diYN00J0kg1429so29LG

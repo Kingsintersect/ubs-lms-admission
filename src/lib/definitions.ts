@@ -5,4 +5,4 @@ export type SessionPayload<T = Record<string, any>> = T & {
 
 export const ssoSessionKey = "sso_auth_session_ubs";
 export const loginSessionKey = "login_session_ubs";
-export type PaymentStatus = "1" | "0" | null;
+export type PaymentStatus = "FULLY_PAID" | "PART_PAID" | "UNPAID" | null;

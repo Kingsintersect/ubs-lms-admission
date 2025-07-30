@@ -134,12 +134,11 @@ export type FormData<T> = {
 };
 
 
-    
+
 
 
 // result system
 export const fetchLmsCourses = async (access_token: string, short_code: string) => {
-    console.log('short_code', short_code)
     const res = await fetch(`${remoteApiUrl}/odl/cohorts-and-categories-and-courses`, {
         method: "GET",
         headers: {
@@ -153,33 +152,32 @@ export const fetchLmsCourses = async (access_token: string, short_code: string) 
         throw new Error(error.message || "Failed to fetch students");
     }
     const result = await res.json();
-    console.log('result', result)
     return result.filter(
         c => c.cohort_name.trim() === short_code
     );
 };
 
 export const fetchStudentScores = async (
-  access_token: string,
-  semester: string,
-  session: string
+    access_token: string,
+    semester: string,
+    session: string
 ) => {
-  const response = await apiCallerBeta({
-    url: `${remoteApiUrl}/account/result/get-user-result`,
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-      "Content-Type": "application/json",
-    },
-    data: { semester, session }
-  });
+    const response = await apiCallerBeta({
+        url: `${remoteApiUrl}/account/result/get-user-result`,
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${access_token}`,
+            "Content-Type": "application/json",
+        },
+        data: { semester, session }
+    });
 
-  if (response.error) {
-      throw new Error( "No result for the selected academic year and semester");
+    if (response.error) {
+        throw new Error("No result for the selected academic year and semester");
     }
 
-  // Return the entire response for proper structure
-  return response;
+    // Return the entire response for proper structure
+    return response;
 };
 export const publishScores = async (courseId: string | number, access_token: string) => {
     const res = await fetch(`${remoteApiUrl}/admin/course/process-gradings/${courseId}`, {

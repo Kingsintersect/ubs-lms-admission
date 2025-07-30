@@ -82,12 +82,32 @@ export const ApplicationDetails = ({
                     <div className="p-6 space-y-8">
                         {/* Personal Information */}
                         <EditablePersonalInfo
-                            application={{ ...application, ...application.application }}
+                            application={{
+                                email: String(application.email),
+                                phone_number: String(application.phone_number),
+                                nationality: String(application.nationality),
+
+                                id: String(application.application.id),
+                                lga: String(application.application.lga),
+                                dob: String(application.application.dob),
+                                gender: String(application.application.gender),
+                                hometown: String(application.application.hometown),
+                                hometown_address: String(application.application.hometown_address),
+                                contact_address: String(application.application.contact_address),
+                                religion: String(application.application.religion),
+                            }}
                         />
 
                         {/* Program Information */}
                         <ProgramInfo
-                            application={{ ...application, ...application.application }}
+                            application={{
+                                program: String(application.program),
+                                program_id: String(application.program_id),
+                                studyMode: String(application.application.studyMode),
+                                startTerm: String(application.application.startTerm),
+
+                                id: String(application.application.id),
+                            }}
                         />
 
                         {/* Essay */}

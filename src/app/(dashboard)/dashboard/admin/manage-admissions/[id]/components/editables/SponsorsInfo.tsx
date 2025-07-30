@@ -6,7 +6,6 @@ import { AlertCircle, CheckCircle, Edit3, UsersRound, Save, X } from 'lucide-rea
 import React, { useState } from 'react'
 import { EditableField } from './EditableFormFields';
 import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
-import { useAuth } from '@/contexts/AuthContext';
 
 export interface SponsorInfoProps {
     application: SponsorInfoData;
@@ -33,8 +32,6 @@ export default function SponsorsInfo({
     const [originalData, setOriginalData] = useState<SponsorInfoData>(formData);
     const [isSavingPersonalInfo, setIsSavingPersonalInfo] = useState(false);
     const { refetchApplication } = useApplicationReview();
-    const { refreshUser } = useAuth();
-
     const handleEdit = () => {
         setOriginalData(formData); // Store current data as original
         setIsEditing(true);
@@ -54,7 +51,6 @@ export default function SponsorsInfo({
             await updateStudentApplicationData(String(application.id), data);
             // Optionally refresh the application data
             await refetchApplication();
-            await refreshUser();
         } catch (error) {
             console.error('Failed to save personal info:', error);
             throw error; // Re-throw to let component handle the error display

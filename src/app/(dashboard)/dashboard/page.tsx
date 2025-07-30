@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation';
 
 const Dashboard = async () => {
    const session = await verifySession(loginSessionKey);
-   console.log('session.user.role', session.user.role);
    const basePath = `/dashboard/${(session.user.role).toLowerCase()}`;
 
    return redirect(`${basePath}`);

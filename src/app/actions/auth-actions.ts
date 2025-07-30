@@ -191,7 +191,6 @@ export const CreateUsersByCsv = async (
 	access_token: string,
 	data: GenericDataType
 ) => {
-	console.log(data);
 	const response = await apiCallerBeta({
 		url: `${remoteApiUrl}/account/multi-user-upload`,
 		method: "POST",
