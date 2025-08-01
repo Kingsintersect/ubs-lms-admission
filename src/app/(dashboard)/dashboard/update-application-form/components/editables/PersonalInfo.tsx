@@ -1,23 +1,24 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Edit3, Save, X, AlertCircle, CheckCircle, User } from 'lucide-react';
-import { updateStudentApplicationData } from '@/app/actions/applications';
-import { EditableField, EditableSelect, EditableTextArea } from './EditableFormFields';
+import { AlertCircle, CheckCircle, User } from 'lucide-react';
+// import { updateStudentApplicationData } from '@/app/actions/applications';
+import { EditableField, EditableSelect, EditableTextArea } from '../../../../../../components/forms/EditableFormFields';
 import { PersonalInfoData } from '@/schemas/admission-schema';
-import { GENDER, RELIGION } from '@/app/(application)/admission/form/constants';
-import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
+import { GENDER, RELIGION } from '@/components/forms/applicationFormConstants';
+// import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
 
 export interface EditablePersonalInfoProps {
     application: PersonalInfoData;
 }
 
 // Main Component
-export default function EditablePersonalInfo({
+export default function PersonalInfo({
     application,
 }: EditablePersonalInfoProps) {
-    const [isEditing, setIsEditing] = useState(false);
-    const [isSaving, setIsSaving] = useState(false);
+    // const [isEditing, setIsEditing] = useState(false);
+    const isEditing = false;
+    // const [isSaving, setIsSaving] = useState(false);
     const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -37,75 +38,75 @@ export default function EditablePersonalInfo({
     });
 
     // Original data for cancel functionality
-    const [originalData, setOriginalData] = useState<PersonalInfoData>(formData);
-    const [isSavingPersonalInfo, setIsSavingPersonalInfo] = useState(false);
-    const { refetchApplication } = useApplicationReview();
+    // const [originalData, setOriginalData] = useState<PersonalInfoData>(formData);
+    // const [isSavingPersonalInfo, setIsSavingPersonalInfo] = useState(false);
+    // const { refetchApplication } = useApplicationReview();
 
-    const handleEdit = () => {
-        setOriginalData(formData); // Store current data as original
-        setIsEditing(true);
-        setSaveStatus('idle');
-        setErrorMessage('');
-    };
+    // const handleEdit = () => {
+    //     setOriginalData(formData); // Store current data as original
+    //     setIsEditing(true);
+    //     setSaveStatus('idle');
+    //     setErrorMessage('');
+    // };
 
-    const handleCancel = () => {
-        setFormData(originalData); // Restore original data
-        setIsEditing(false);
-        setSaveStatus('idle');
-        setErrorMessage('');
-    };
-    const savePersonalInfo = async (data: PersonalInfoData) => {
-        setIsSavingPersonalInfo(true);
-        try {
-            await updateStudentApplicationData(String(formData.id), data);
-            // Optionally refresh the application data
-            await refetchApplication();
-        } catch (error) {
-            console.error('Failed to save personal info:', error);
-            throw error; // Re-throw to let component handle the error display
-        } finally {
-            setIsSavingPersonalInfo(false);
-        }
-    };
+    // const handleCancel = () => {
+    //     setFormData(originalData); // Restore original data
+    //     setIsEditing(false);
+    //     setSaveStatus('idle');
+    //     setErrorMessage('');
+    // };
+    // const savePersonalInfo = async (data: PersonalInfoData) => {
+    //     setIsSavingPersonalInfo(true);
+    //     try {
+    //         await updateStudentApplicationData(String(formData.id), data);
+    //         // Optionally refresh the application data
+    //         await refetchApplication();
+    //     } catch (error) {
+    //         console.error('Failed to save personal info:', error);
+    //         throw error; // Re-throw to let component handle the error display
+    //     } finally {
+    //         setIsSavingPersonalInfo(false);
+    //     }
+    // };
 
-    const handleSave = async () => {
+    // const handleSave = async () => {
 
-        // Basic validation
-        if (!formData.email || !formData.phone_number) {
-            setErrorMessage('Email and phone number are required');
-            setSaveStatus('error');
-            return;
-        }
+    //     // Basic validation
+    //     if (!formData.email || !formData.phone_number) {
+    //         setErrorMessage('Email and phone number are required');
+    //         setSaveStatus('error');
+    //         return;
+    //     }
 
-        // Email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(formData.email)) {
-            setErrorMessage('Please enter a valid email address');
-            setSaveStatus('error');
-            return;
-        }
+    //     // Email validation
+    //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    //     if (!emailRegex.test(formData.email)) {
+    //         setErrorMessage('Please enter a valid email address');
+    //         setSaveStatus('error');
+    //         return;
+    //     }
 
-        try {
-            setIsSaving(true);
-            setSaveStatus('idle');
-            setErrorMessage('');
+    //     try {
+    //         setIsSaving(true);
+    //         setSaveStatus('idle');
+    //         setErrorMessage('');
 
-            await savePersonalInfo(formData);
+    //         await savePersonalInfo(formData);
 
-            setOriginalData(formData); // Update original data after successful save
-            setIsEditing(false);
-            setSaveStatus('success');
+    //         setOriginalData(formData); // Update original data after successful save
+    //         setIsEditing(false);
+    //         setSaveStatus('success');
 
-            // Clear success message after 3 seconds
-            setTimeout(() => setSaveStatus('idle'), 3000);
-        } catch (error) {
-            console.error('Save failed:', error);
-            setErrorMessage(error instanceof Error ? error.message : 'Failed to save changes');
-            setSaveStatus('error');
-        } finally {
-            setIsSaving(false);
-        }
-    };
+    //         // Clear success message after 3 seconds
+    //         setTimeout(() => setSaveStatus('idle'), 3000);
+    //     } catch (error) {
+    //         console.error('Save failed:', error);
+    //         setErrorMessage(error instanceof Error ? error.message : 'Failed to save changes');
+    //         setSaveStatus('error');
+    //     } finally {
+    //         setIsSaving(false);
+    //     }
+    // };
 
     const updateField = (field: keyof PersonalInfoData, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }));
@@ -116,7 +117,7 @@ export default function EditablePersonalInfo({
         }
     };
 
-    const hasChanges = JSON.stringify(formData) !== JSON.stringify(originalData);
+    // const hasChanges = JSON.stringify(formData) !== JSON.stringify(originalData);
 
     return (
         <div className="bg-white rounded-lg border border-gray-200 p-6">
@@ -144,7 +145,7 @@ export default function EditablePersonalInfo({
                     )}
 
                     {/* Action buttons */}
-                    {isEditing ? (
+                    {/* {isEditing ? (
                         <>
                             <button
                                 onClick={handleSave}
@@ -181,7 +182,7 @@ export default function EditablePersonalInfo({
                             <Edit3 className="w-3 h-3 mr-1.5" />
                             Edit
                         </button>
-                    )}
+                    )} */}
                 </div>
             </div>
 
@@ -275,13 +276,13 @@ export default function EditablePersonalInfo({
             </div>
 
             {/* Unsaved changes warning */}
-            {isEditing && hasChanges && (
+            {/* {isEditing && hasChanges && (
                 <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                     <p className="text-sm text-yellow-800">
                         You have unsaved changes. Make sure to save before leaving this section.
                     </p>
                 </div>
-            )}
+            )} */}
         </div>
     );
 }

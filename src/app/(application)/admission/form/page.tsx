@@ -7,7 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { AlertCircle, CheckCircle, Loader2, LogOut } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { STEPS } from "./constants";
+import { STEPS } from "../../../../components/forms/applicationFormConstants";
 import { PersonalInformationStep } from "./components/form-inputs/PersonalInformationStep";
 import { AcademicBackgroundStep } from "./components/form-inputs/AcademicBackgroundStep";
 import { ProfessionalExperienceStep } from "./components/form-inputs/ProfessionalExperienceStep";
@@ -41,7 +41,8 @@ const AdmissionForm: React.FC = () => {
         resolver: zodResolver(admissionSchema),
         mode: 'onChange',
         defaultValues: {
-            disability: false,
+            has_disability: false,
+            disability: "",
             agreeToTerms: false,
             startTerm: "2024/2025",
             studyMode: 'online',
@@ -109,11 +110,11 @@ const AdmissionForm: React.FC = () => {
             case 2:
                 return <AcademicBackgroundStep control={control} errors={errors} setValue={setValue} />;
             case 3:
-                return <AcademicCredentialsStep control={control} errors={errors} setValue={setValue} />;
+                return <AcademicCredentialsStep control={control} errors={errors} setValue={setValue} watch={watch} />;
             case 4:
                 return <ProfessionalExperienceStep control={control} errors={errors} />;
             case 5:
-                return <ProgramAndEssaysStep control={control} errors={errors} setValue={setValue} />;
+                return <ProgramAndEssaysStep control={control} errors={errors} setValue={setValue} watch={watch} />;
             default:
                 return null;
         }

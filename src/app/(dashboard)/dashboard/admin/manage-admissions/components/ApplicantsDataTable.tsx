@@ -10,7 +10,7 @@ import { ActionMenu } from "@/components/ui/datatable/ActionMenu";
 import { NotebookTabs } from "lucide-react";
 import { StudentType } from "@/config/Types";
 
-const basePath = `${baseUrl}/dashboard/admin/manage-admissions`;
+const basePath = `${baseUrl}/dashboard/update-application-form`;
 export type StudentTableColumnsType = {
     id: string
     first_name: string
@@ -124,7 +124,7 @@ export const ApplicantsDataTable = () => {
                         row={student}
                         onCopy={(id) => navigator.clipboard.writeText(id ?? "")}
                         menu={[
-                            { title: "Application Details", url: `${basePath}/${student.id}`, icon: NotebookTabs },
+                            { title: "Application Details", url: `${basePath}?id=${student.id}`, icon: NotebookTabs },
                         ]}
                     />
                 );
@@ -173,7 +173,7 @@ export const ApplicantsDataTable = () => {
                     ]
                 },
             ]}
-            getRowClickUrl={(product) => `${basePath}/${product.id}`}
+            getRowClickUrl={(product) => `${basePath}?id=${product.id}`}
             enableRowClick={true}
         />
     )

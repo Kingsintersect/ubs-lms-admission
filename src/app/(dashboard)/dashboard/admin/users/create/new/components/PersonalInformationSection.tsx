@@ -10,7 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/datepicker";
 import { FormFieldSet } from "@/components/ui/inputs/FormFields";
-import { StudentFormData } from "../student";
+import { StudentFormData } from "../student.validation";
 
 interface PersonalInformationSectionProps {
     control: Control<StudentFormData>;

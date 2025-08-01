@@ -1,9 +1,9 @@
 import React from "react";
 import { Control } from "react-hook-form";
-import { StudentFormData } from "../student";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { FormFieldSet } from "@/components/ui/inputs/FormFields";
+import { StudentFormData } from "../student.validation";
 
 interface LoginInformationSectionProps {
     control: Control<StudentFormData>;

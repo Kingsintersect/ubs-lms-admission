@@ -5,9 +5,9 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { adminCreateNewStudent } from "@/app/actions/admin";
-import { StudentFormData } from "@/app/(dashboard)/dashboard/admin/users/create/new/student";
 import {
 	getDefaultFormValues,
+	StudentFormData,
 	studentFormSchema,
 } from "@/app/(dashboard)/dashboard/admin/users/create/new/student.validation";
 
@@ -48,7 +48,7 @@ export const useStudentForm = () => {
 		router.push("/admin/students");
 	};
 
-	const showTuitionAmount = form.watch("tuition_payment_status") === "1";
+	const showTuitionAmount = form.watch("tuition_payment_status") !== "UNPAID";
 
 	return {
 		form,

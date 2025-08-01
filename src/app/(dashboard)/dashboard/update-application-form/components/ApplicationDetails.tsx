@@ -4,7 +4,7 @@ import { ApplicationDetailsType } from '@/schemas/admission-schema';
 import { AlertCircle, AlertCircleIcon, Check, Clock, Eye, X, Loader } from 'lucide-react'
 import Image from 'next/image';
 import React from 'react'
-import EditablePersonalInfo from './editables/PersonalInfo';
+import PersonalInfo from './editables/PersonalInfo';
 import AcademicInformation from './editables/AcademicInformation';
 import NextOfkinInfo from './editables/NextOfkinInfo';
 import SponsorsInfo from './editables/SponsorsInfo';
@@ -81,7 +81,7 @@ export const ApplicationDetails = ({
 
                     <div className="p-6 space-y-8">
                         {/* Personal Information */}
-                        <EditablePersonalInfo
+                        <PersonalInfo
                             application={{
                                 email: String(application.email),
                                 phone_number: String(application.phone_number),

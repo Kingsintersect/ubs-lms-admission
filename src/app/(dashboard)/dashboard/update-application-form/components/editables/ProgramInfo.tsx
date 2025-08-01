@@ -4,8 +4,8 @@ import { updateStudentApplicationData } from '@/app/actions/applications';
 import { ProgramInfoData } from '@/schemas/admission-schema';
 import { AlertCircle, Award, CheckCircle, Edit3, Save, X } from 'lucide-react';
 import React, { useState } from 'react'
-import { EditableProgramOptions, EditableRadioGroup, EditableSelect } from './EditableFormFields';
-import { START_TERMS, STUDY_MODES } from '@/app/(application)/admission/form/constants';
+import { EditableProgramOptions, EditableRadioGroup, EditableSelect } from '../../../../../../components/forms/EditableFormFields';
+import { START_TERMS, STUDY_MODES } from '@/components/forms/applicationFormConstants';
 import { useExternalPrograms } from '@/hooks/useExternalPrograms'; // Your programs hook
 import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
 

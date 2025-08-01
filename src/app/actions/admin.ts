@@ -1,7 +1,7 @@
 import { remoteApiUrl } from "@/config";
 import { apiCallerBeta } from "@/lib/apiCaller";
 import { ObjectType } from "@/types/generic.types";
-import { StudentFormData } from "../(dashboard)/dashboard/admin/users/create/new/student";
+import { StudentFormData } from "../(dashboard)/dashboard/admin/users/create/new/student.validation";
 
 export async function fetchAllStudentApplications(access_token: string) {
 	const response = (await apiCallerBeta({

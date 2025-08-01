@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { StudentFormData } from "./student";
 
 export const studentFormSchema = z
 	.object({
@@ -39,19 +38,19 @@ export const studentFormSchema = z
 			.min(10, { message: "Contact number must be at least 10 characters" }),
 		faculty_id: z.string({ required_error: "Please select a program" }),
 		department_id: z.string({ required_error: "Please select a course" }),
-		application_payment_status: z.enum(["1", "0"], {
+		application_payment_status: z.enum(["FULLY_PAID", "PART_PAID", "UNPAID"], {
 			required_error: "Please set the application payment status",
 		}),
 		amount: z.string().optional(),
-		acceptance_fee_payment_status: z.enum(["1", "0"], {
+		acceptance_fee_payment_status: z.enum(["FULLY_PAID", "PART_PAID", "UNPAID"], {
 			required_error: "Please set the acceptance payment status",
 		}),
-		tuition_payment_status: z.enum(["1", "0"]),
+		tuition_payment_status: z.enum(["FULLY_PAID", "PART_PAID", "UNPAID"]),
 		tuition_amount_paid: z.string(),
 	})
 	.refine(
 		(data) => {
-			if (data.tuition_payment_status === "1") {
+			if (data.tuition_payment_status !== "UNPAID") {
 				return !!data.tuition_amount_paid?.trim();
 			}
 			return true;
@@ -65,7 +64,7 @@ export const studentFormSchema = z
 		message: "Passwords do not match",
 		path: ["password_confirmation"],
 	});
-
+export type StudentFormData = z.infer<typeof studentFormSchema>;
 export const getDefaultFormValues = (): Partial<StudentFormData> => ({
 	first_name: "",
 	last_name: "",
@@ -87,3 +86,7 @@ export const getDefaultFormValues = (): Partial<StudentFormData> => ({
 	password: "",
 	password_confirmation: "",
 });
+export interface Program {
+	value: string;
+	label: string;
+}

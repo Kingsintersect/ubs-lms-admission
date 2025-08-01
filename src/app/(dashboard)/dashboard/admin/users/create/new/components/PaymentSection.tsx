@@ -1,9 +1,9 @@
 import React from "react";
 import { Control } from "react-hook-form";
-import { StudentFormData } from "../student";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { StudentFormData } from "../student.validation";
 
 interface PaymentSectionProps {
     control: Control<StudentFormData>;
@@ -32,8 +32,8 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
                             <SelectContent>
                                 <SelectGroup>
                                     <SelectLabel>Application Payment Status</SelectLabel>
-                                    <SelectItem value="0">Unpaid</SelectItem>
-                                    <SelectItem value="1">Paid</SelectItem>
+                                    <SelectItem value="FULLY_PAID">FULLY PAID</SelectItem>
+                                    <SelectItem value="UNPAID">UNPAID</SelectItem>
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
@@ -56,8 +56,9 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
                             <SelectContent>
                                 <SelectGroup>
                                     <SelectLabel>Acceptance Payment Status</SelectLabel>
-                                    <SelectItem value="0">Unpaid</SelectItem>
-                                    <SelectItem value="1">Paid</SelectItem>
+                                    <SelectItem value="FULLY_PAID">FULLY PAID</SelectItem>
+                                    <SelectItem value="PART_PAID">PART PAID</SelectItem>
+                                    <SelectItem value="UNPAID">UNPAID</SelectItem>
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
@@ -80,8 +81,9 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
                             <SelectContent>
                                 <SelectGroup>
                                     <SelectLabel>Tuition Payment Status</SelectLabel>
-                                    <SelectItem value="0">Unpaid</SelectItem>
-                                    <SelectItem value="1">Paid</SelectItem>
+                                    <SelectItem value="FULLY_PAID">FULLY PAID</SelectItem>
+                                    <SelectItem value="PART_PAID">PART PAID</SelectItem>
+                                    <SelectItem value="UNPAID">UNPAID</SelectItem>
                                 </SelectGroup>
                             </SelectContent>
                         </Select>

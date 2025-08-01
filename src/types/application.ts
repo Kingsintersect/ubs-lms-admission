@@ -47,7 +47,8 @@ export interface Application {
     startTerm: string;
     personalStatement: string;
     careerGoals: string;
-    disability: boolean;
+    has_disability: boolean;
+    disability: string;
     status: ApplicationStatus;
     decisionComments?: string;
     createdAt: Date;

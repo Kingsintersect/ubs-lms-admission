@@ -9,7 +9,7 @@ import { getSession } from "@/lib/session";
 import { ApplicationChunk, ApplicationDetailsType } from "@/schemas/admission-schema";
 import { ApplicationApproveValues, ApplicationRejectValues } from "@/schemas/applicationReview-schema";
 import { ApiResponseArray, ApiResponseSingle } from "@/types/api.types";
-import { Application, ApplicationStatus } from "@/types/application";
+import { Application } from "@/types/application";
 import { SessionData } from "@/types/auth";
 
 export async function getAdmissionApplicants(options?: UseDataTableOptions): Promise<{ data: StudentType[]; total: number }> {
@@ -144,12 +144,7 @@ export async function RejectStudentApplicantion(data: ApplicationRejectValues): 
     return true;
 }
 
-
-
-
-
-
-
+// use ApplicationsHook
 export async function getApplications(
     filters?: Record<string, string>,
     access_token?: string,
@@ -171,50 +166,10 @@ export async function getApplications(
     return res.json();
 }
 
-export async function getApplicationById(id: string): Promise<Application | null> {
-    const res = await fetch(`/api/applications/${id}`);
-
-    if (res.status === 404) {
-        return null;
-    }
-
-    if (!res.ok) {
-        throw new Error("Failed to fetch application");
-    }
-
-    return res.json();
-}
-
-export async function updateApplicationStatus({
-    applicationId,
-    status,
-    decisionComments,
-}: {
-    applicationId: string;
-    status: ApplicationStatus;
-    decisionComments?: string;
-}): Promise<Application> {
-    const res = await fetch(`/api/applications/${applicationId}/status`, {
-        method: "PATCH",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status, decisionComments }),
-    });
-
-    if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message || "Failed to update application status");
-    }
-
-    return res.json();
-}
-
-
 // review editing
 export const updateStudentApplicationData = async (applicationId: string, data: ApplicationChunk): Promise<void> => {
-    console.log('applicationId', applicationId)
-    console.log('data', data)
+    const requestData = { application_id: applicationId, ...data };
+    console.log('requestData', requestData)
     const loginSession = (await getSession(loginSessionKey)) as SessionData;
     const response = await fetch(`${remoteApiUrl}/application/update-application-form`, {
         method: 'PUT',
@@ -222,15 +177,15 @@ export const updateStudentApplicationData = async (applicationId: string, data: 
             'Content-Type': 'application/json',
             Authorization: `Bearer ${loginSession.access_token}`,
         },
-        body: JSON.stringify({ application_id: applicationId, data }),
+        body: JSON.stringify(requestData),
     });
-    console.log('response', response);
-
+    console.log('response', response)
     if (!response.ok) {
         const error = await response.json();
         console.error('error', error)
         throw new Error(error.message || 'Failed to update personal information');
     }
     const result = await response.json();
-    console.log('result', result);
+    console.log('result', result)
+    return result;
 };

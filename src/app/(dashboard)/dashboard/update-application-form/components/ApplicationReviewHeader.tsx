@@ -1,9 +1,12 @@
 import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Check, X } from 'lucide-react';
 import React from 'react'
 
 export const ApplicationReviewHeader = () => {
     const { currentApplication, handleDecision } = useApplicationReview();
+    const { user } = useAuth();
+    const isAdmin = user?.role === "ADMIN";
 
     return (
         <div className="bg-white shadow-sm border-b">
@@ -14,7 +17,7 @@ export const ApplicationReviewHeader = () => {
                         <p className="text-gray-600">Unizik Business School - Application Review</p>
                     </div>
                     <div className="flex items-center space-x-4">
-                        {(currentApplication?.admission_status.toLowerCase() === 'pending') && (
+                        {((currentApplication?.admission_status.toLowerCase() === 'pending') && isAdmin) && (
                             <div className="flex space-x-2">
                                 <button
                                     onClick={() => handleDecision('admitted')}
@@ -32,9 +35,6 @@ export const ApplicationReviewHeader = () => {
                                 </button>
                             </div>
                         )}
-                        <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                            <span className="text-white font-medium">AO</span>
-                        </div>
                     </div>
                 </div>
             </div>

@@ -4,7 +4,7 @@ import { updateStudentApplicationData } from '@/app/actions/applications';
 import { CareerGoalsInfoData } from '@/schemas/admission-schema';
 import { AlertCircle, CheckCircle, Edit3, NotebookPen, Save, X } from 'lucide-react';
 import React, { useState } from 'react'
-import { EditableTextArea } from './EditableFormFields';
+import { EditableTextArea } from '../../../../../../components/forms/EditableFormFields';
 import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
 
 export interface CareerGoalsInfoProps {

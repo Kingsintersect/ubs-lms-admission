@@ -1,7 +1,7 @@
 import { Control, FieldErrors } from "react-hook-form";
-import { FormField } from "../FormField";
+import { FormField } from "../../../../../../components/forms/FormField";
 import { AdmissionFormData } from "@/schemas/admission-schema";
-import { YEARS_OF_EXPERIENCE } from "../../constants";
+import { YEARS_OF_EXPERIENCE } from "../../../../../../components/forms/applicationFormConstants";
 
 export const ProfessionalExperienceStep: React.FC<{ control: Control<AdmissionFormData>; errors: FieldErrors<AdmissionFormData> }> = ({ control, errors }) => (
     <div className="space-y-6">

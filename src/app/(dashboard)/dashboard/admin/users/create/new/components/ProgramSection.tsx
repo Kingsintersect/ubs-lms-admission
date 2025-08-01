@@ -1,8 +1,8 @@
 import React from "react";
 import { Control } from "react-hook-form";
-import { StudentFormData, Program } from "../student";
 import { FormField, FormItem, FormControl, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { StudentFormData, Program } from "../student.validation";
 
 interface ProgramSectionProps {
     control: Control<StudentFormData>;

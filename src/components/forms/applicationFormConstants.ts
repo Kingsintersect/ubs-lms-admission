@@ -40,8 +40,6 @@ export const STEPS: Step[] = [
                 'is_next_of_kin_primary_contact',
                 'next_of_kin_occupation',
                 'next_of_kin_workplace',
-                // 'next_of_kin_email',
-                // 'next_of_kin_alternate_phone_number',
             ];
 
             const sponsorFields: Path<AdmissionFormData>[] = [
@@ -58,12 +56,12 @@ export const STEPS: Step[] = [
     {
         title: 'Academic Background',
         icon: GraduationCap,
-        fields: ['undergraduateDegree', 'university', 'gpa', 'graduationYear', 'images']
+        fields: ['undergraduateDegree', 'university', 'gpa', 'graduationYear']
     },
     {
         title: 'Academic Credentials',
         icon: FileStack,
-        fields: ['primary_school_leaving', 'o_level', 'degree', 'hnd', 'ond', "others"]
+        fields: ['first_school_leaving', 'o_level', 'hnd', 'degree', "degree_transcript", 'other_documents']
     },
     {
         title: 'Professional Experience (Optional)',

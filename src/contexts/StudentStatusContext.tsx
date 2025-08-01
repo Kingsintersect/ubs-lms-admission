@@ -44,14 +44,12 @@ const fetchStudentStatus = async (studentId: string, access_token: string): Prom
 
         const applicationFeild = (!!applicationFormData) ? {
             id: profileData.id,
-            primary_school_leaving: applicationFormData.primary_school_leaving,
+            first_school_leaving: applicationFormData.first_school_leaving,
             o_level: applicationFormData.o_level,
-            degree: applicationFormData.degree,
             hnd: applicationFormData.hnd,
-            ond: applicationFormData.transcript,
-            transcript: applicationFormData.transcript,
-            others: applicationFormData.others,
-            images: applicationFormData.images,
+            degree: applicationFormData.degree,
+            degree_transcript: applicationFormData.degree_transcript,
+            other_documents: applicationFormData.other_documents,
         } : null
 
         return {
@@ -193,6 +191,7 @@ export const useAdmissionStatus = () => {
         isPending: studentStatus.data?.admission_status === 'PENDING',
         isRejected: studentStatus.data?.admission_status === 'NOT_ADMITTED',
         isWaitlisted: studentStatus.data?.admission_status === 'INPROGRESS',
+        isLoading: studentStatus.isLoading,
     };
 };
 
@@ -230,23 +229,22 @@ export const useStudentApplicationStatus = () => {
     const { studentStatus } = useStudentStatus();
     const myApplication = studentStatus.data?.application;
     if (myApplication === null) return {}
+
     return {
         id: myApplication?.id,
-        primary_school_leaving: myApplication?.primary_school_leaving,
+        first_school_leaving: myApplication?.first_school_leaving,
         o_level: myApplication?.o_level,
-        degree: myApplication?.degree,
         hnd: myApplication?.hnd,
-        ond: myApplication?.transcript,
-        transcript: myApplication?.transcript,
-        others: myApplication?.others,
-        images: myApplication?.images,
+        degree: myApplication?.degree,
+        degree_transcript: myApplication?.degree_transcript,
+        other_documents: myApplication?.other_documents,
         hasUnuUploadedDocument: [
-            myApplication?.primary_school_leaving,
+            myApplication?.first_school_leaving,
             myApplication?.o_level,
-            myApplication?.degree,
+            myApplication?.degree_transcript,
             myApplication?.hnd,
-            myApplication?.transcript,
-            myApplication?.transcript,
+            myApplication?.degree,
+            myApplication?.degree_transcript,
         ].some(value => value === undefined),
         missingDoc: myApplication
             ? Object.entries(myApplication)

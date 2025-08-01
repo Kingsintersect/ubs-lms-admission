@@ -4,7 +4,7 @@ import { updateStudentApplicationData } from '@/app/actions/applications';
 import { QualificationDocumentsData } from '@/schemas/admission-schema';
 import { AlertCircle, CheckCircle, Edit3, FileStack, Save, X } from 'lucide-react';
 import React, { useState } from 'react'
-import { EditableFileUpload } from './EditableFormFields';
+import { EditableFileUpload } from '../../../../../../components/forms/EditableFormFields';
 import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
 
 export interface QualificationDocumentsProps {
@@ -21,13 +21,13 @@ export default function QualificationDocuments({
 
     // Form state
     const [formData, setFormData] = useState<QualificationDocumentsData>({
-        primary_school_leaving: application.primary_school_leaving || undefined,
+        first_school_leaving: application.first_school_leaving || undefined,
         o_level: application.o_level || undefined,
-        degree: application.degree || undefined,
+        degree_transcript: application.degree_transcript || undefined,
         hnd: application.hnd || undefined,
-        ond: application.ond || undefined,
-        others: application.others || undefined,
-        images: application.images || [],
+        degree: application.degree || undefined,
+        other_documents: application.other_documents || [],
+        // images: application.images || [],
     });
 
     // Original data for cancel functionality
@@ -69,7 +69,7 @@ export default function QualificationDocuments({
 
     const handleSave = async () => {
         // Basic validation
-        // if (!formData.degree) {
+        // if (!formData.degree_transcript) {
         //     setErrorMessage('Degree information is required');
         //     setSaveStatus('error');
         //     return;
@@ -133,7 +133,7 @@ export default function QualificationDocuments({
     };
 
     const handleImagesChange = (urls: string[]) => {
-        updateField('images', urls);
+        updateField('other_documents', urls);
     };
 
     return (
@@ -217,8 +217,8 @@ export default function QualificationDocuments({
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 <EditableFileUpload
                     label="First school leaving certificate"
-                    value={Array.isArray(formData.primary_school_leaving) ?
-                        formData.primary_school_leaving.filter(item => typeof item === 'string') :
+                    value={Array.isArray(formData.first_school_leaving) ?
+                        formData.first_school_leaving.filter(item => typeof item === 'string') :
                         []}
                     onChange={handleImagesChange} // Handle existing file URL changes
                     onFilesChange={handleFilesChange} // Handle new files
@@ -247,8 +247,8 @@ export default function QualificationDocuments({
                 />
                 <EditableFileUpload
                     label="Degree certificate"
-                    value={Array.isArray(formData.degree) ?
-                        formData.degree.filter(item => typeof item === 'string') :
+                    value={Array.isArray(formData.degree_transcript) ?
+                        formData.degree_transcript.filter(item => typeof item === 'string') :
                         []}
                     onChange={handleImagesChange} // Handle existing file URL changes
                     onFilesChange={handleFilesChange} // Handle new files
@@ -262,8 +262,8 @@ export default function QualificationDocuments({
                 />
                 <EditableFileUpload
                     label="OND certificate"
-                    value={Array.isArray(formData.ond) ?
-                        formData.ond.filter(item => typeof item === 'string') :
+                    value={Array.isArray(formData.degree) ?
+                        formData.degree.filter(item => typeof item === 'string') :
                         []}
                     onChange={handleImagesChange} // Handle existing file URL changes
                     onFilesChange={handleFilesChange} // Handle new files
@@ -292,8 +292,8 @@ export default function QualificationDocuments({
                 />
                 <EditableFileUpload
                     label="Transcript Document"
-                    value={Array.isArray(formData.transcript) ?
-                        formData.transcript.filter(item => typeof item === 'string') :
+                    value={Array.isArray(formData.degree_transcript) ?
+                        formData.degree_transcript.filter(item => typeof item === 'string') :
                         []}
                     onChange={handleImagesChange} // Handle existing file URL changes
                     onFilesChange={handleFilesChange} // Handle new files
@@ -311,8 +311,8 @@ export default function QualificationDocuments({
             {/* multiple other document upload */}
             <EditableFileUpload
                 label="Other relivant documents (you can add multiple files)"
-                value={Array.isArray(formData.images) ?
-                    formData.images.filter(item => typeof item === 'string') :
+                value={Array.isArray(formData.other_documents) ?
+                    formData.other_documents.filter(item => typeof item === 'string') :
                     []}
                 onChange={handleImagesChange} // Handle existing file URL changes
                 onFilesChange={handleFilesChange} // Handle new files

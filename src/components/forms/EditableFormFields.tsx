@@ -639,7 +639,7 @@ export const EditableFileUpload: React.FC<{
                                 </>
                             ) : (
                                 // Document preview - centered icon with filename under
-                                <div className="p-8 text-center">
+                                <div className="px-8 py-3 text-center">
                                     <div className="flex flex-col items-center space-y-4">
                                         <FileText className="w-16 h-16 text-blue-500" />
                                         <div className="w-full">
@@ -666,12 +666,6 @@ export const EditableFileUpload: React.FC<{
                                                         title="Remove"
                                                     >
                                                         <X className="w-4 h-4" />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleFileInputClick()}
-                                                        className="text-blue-600 hover:text-blue-800 px-3 py-1 text-sm rounded border border-blue-200 hover:bg-blue-50"
-                                                    >
-                                                        Change file
                                                     </button>
                                                 </>
                                             )}

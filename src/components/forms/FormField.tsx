@@ -1,11 +1,12 @@
 import { Textarea } from "@/components/ui/textarea";
-import { FormFieldProps } from "../constants";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Controller } from "react-hook-form";
+import { Control, Controller, FieldErrors } from "react-hook-form";
+import { FormFieldProps } from "@/components/forms/applicationFormConstants";
+import { EditableFileUpload } from "./EditableFormFields";
 
 export const FormField: React.FC<FormFieldProps> = ({
     name,
@@ -112,5 +113,67 @@ export const FormField: React.FC<FormFieldProps> = ({
                 <p className="text-red-500 text-sm mt-1">{errors[name]?.message}</p>
             )}
         </div>
+    );
+};
+
+interface FileUploadFormFieldProps {
+    name: string;
+    label: string;
+    control: Control<any>;
+    errors: FieldErrors<any>;
+    accept?: string;
+    multiple?: boolean;
+    maxFiles?: number;
+    maxSize?: number;
+    showPreview?: boolean;
+    className?: string;
+}
+
+export const FileUploadFormField: React.FC<FileUploadFormFieldProps> = ({
+    name,
+    label,
+    control,
+    errors,
+    accept = ".pdf,.doc,.docx,.jpg,.png",
+    multiple = false,
+    maxFiles = 5,
+    maxSize = 10,
+    showPreview = true,
+    className
+}) => {
+    return (
+        <Controller
+            name={name}
+            control={control}
+            render={({ field: { onChange, value } }) => (
+                <div className={className}>
+                    <EditableFileUpload
+                        label={label}
+                        value={[]} // Always empty for fresh uploads
+                        onChange={() => { }} // Not used for fresh uploads
+                        onFilesChange={(files) => {
+                            // For single file upload, set the first file
+                            // For multiple files, set the array
+                            if (multiple) {
+                                onChange(files);
+                            } else {
+                                onChange(files[0] || null);
+                            }
+                        }}
+                        isEditing={true}
+                        accept={accept}
+                        multiple={multiple}
+                        maxFiles={maxFiles}
+                        maxSize={maxSize}
+                        showPreview={showPreview}
+                    />
+                    {errors[name] && (
+                        <p className="mt-1 text-sm text-red-600">
+                            {errors[name]?.message?.toString() || 'This field is required'}
+                        </p>
+                    )}
+                </div>
+            )}
+        />
     );
 };

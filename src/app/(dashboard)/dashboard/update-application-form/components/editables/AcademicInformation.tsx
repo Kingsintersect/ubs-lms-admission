@@ -4,7 +4,7 @@ import { updateStudentApplicationData } from '@/app/actions/applications';
 import { AcademicInfoData } from '@/schemas/admission-schema';
 import { AlertCircle, CheckCircle, Edit3, GraduationCap, Save, X } from 'lucide-react';
 import React, { useState } from 'react'
-import { EditableField } from './EditableFormFields';
+import { EditableField } from '../../../../../../components/forms/EditableFormFields';
 import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
 
 export interface AcademicInformationProps {

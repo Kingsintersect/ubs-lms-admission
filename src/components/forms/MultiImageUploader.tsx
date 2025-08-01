@@ -12,7 +12,7 @@ import { AdmissionFormData } from "@/schemas/admission-schema";
 import { getSafeImageUrl } from "@/lib/imageUrl";
 import { XButton } from "@/components/XButton";
 interface AcademicImageUploaderProps {
-    productId?: number | null;
+    image_id?: number | null;
     imagesUrlArray: string[] | undefined;
     register?: UseFormReturn<AdmissionFormData>['register'] | null;
     setValue?: UseFormReturn<AdmissionFormData>['setValue'] | null;
@@ -20,14 +20,14 @@ interface AcademicImageUploaderProps {
     formKey?: keyof AdmissionFormData;
     title?: string;
 }
-const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register, previewOnly = true, formKey = "images", title = "" }: AcademicImageUploaderProps) => {
-    const [images, setImages] = useState<AcademicImage[]>([]);
+const MultiImageUploader = ({ image_id, imagesUrlArray, setValue, register, previewOnly = true, formKey = "other_documents", title = "" }: AcademicImageUploaderProps) => {
+    const [other_documents, setOtherDocuments] = useState<AcademicImage[]>([]);
     const [selectedImage, setSelectedImage] = useState<AcademicImage | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     useEffect(() => {
         const converted = convertImageUrlsToPictures(imagesUrlArray ?? []);
-        setImages(converted);
+        setOtherDocuments(converted);
         if (setValue) setValue(formKey, []);
     }, [formKey, imagesUrlArray, setValue]);
 
@@ -43,7 +43,7 @@ const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register, pre
             primary: false,
         }));
 
-        setImages((prev) => {
+        setOtherDocuments((prev) => {
             const updated = [...prev, ...newImageObjs];
             updateFormImagesField(updated);
             return updated;
@@ -51,7 +51,7 @@ const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register, pre
     };
 
     const setPrimaryImage = (imageId: number) => {
-        setImages((prev) => {
+        setOtherDocuments((prev) => {
             const updated = prev.map((img) => ({
                 ...img,
                 primary: img.id === imageId,
@@ -61,19 +61,19 @@ const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register, pre
         });
     };
 
-    const updateFormImagesField = (images: AcademicImage[]) => {
-        const fileImages = images.filter((img) => img.file).map((img) => img.file!);
+    const updateFormImagesField = (other_documents: AcademicImage[]) => {
+        const fileImages = other_documents.filter((img) => img.file).map((img) => img.file!);
         if (setValue) setValue(formKey, fileImages);
     };
 
     const deleteImageMutation = useMutation({
         mutationFn: async (imageUrl: string) => {
-            if (!productId) return;
-            await deleteAcademicImage(productId, [imageUrl]);
+            if (!image_id) return;
+            await deleteAcademicImage(image_id, [imageUrl]);
             return imageUrl;
         },
         onSuccess: (deletedUrl) => {
-            setImages((prev) => {
+            setOtherDocuments((prev) => {
                 const updated = prev.filter((img) => img.url !== deletedUrl);
                 updateFormImagesField(updated);
                 return updated;
@@ -87,11 +87,11 @@ const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register, pre
 
 
     const removeImage = (imageId: number) => {
-        const image = images.find((img) => img.id === imageId);
+        const image = other_documents.find((img) => img.id === imageId);
         if (!image) return;
 
         if (image.file) {
-            setImages((prev) => {
+            setOtherDocuments((prev) => {
                 const updated = prev.filter((img) => img.id !== imageId);
                 updateFormImagesField(updated);
                 return updated;
@@ -109,7 +109,7 @@ const MultiImageUploader = ({ productId, imagesUrlArray, setValue, register, pre
                 {/* <div className="italic mb-4 text-site-a-dark">you can uplload as many as available</div> */}
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-4 ">
-                    {images.map((image) => (
+                    {other_documents.map((image) => (
                         <div key={image.id} className="relative group">
                             <div className="relative w-full aspect-[4/4]">
                                 {image.url?.startsWith("blob:") ? (

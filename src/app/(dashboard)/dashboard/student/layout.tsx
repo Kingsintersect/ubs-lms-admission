@@ -45,4 +45,3 @@ const Layout = ({ children }: LayoutProps) => {
 
 export default Layout
 
-// new student diYN00J0kg1429so29LG

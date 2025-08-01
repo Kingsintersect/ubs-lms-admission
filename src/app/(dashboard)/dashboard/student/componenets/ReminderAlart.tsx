@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { X, AlertCircle, GripVertical } from 'lucide-react';
-import { useStudentApplicationStatus, useStudentPaymentStatus } from '@/contexts/StudentStatusContext';
+import { useAdmissionStatus, useStudentApplicationStatus, useStudentPaymentStatus } from '@/contexts/StudentStatusContext';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -44,7 +44,7 @@ export const DraggableTranscriptReminder: React.FC<DraggableTranscriptReminderPr
     const { user } = useAuth();
     const studentName = user?.first_name + " " + user?.last_name
 
-    // const { isAccepted, admissionStatus } = useAdmissionStatus();
+    const { isLoading } = useAdmissionStatus();
     // const { isApplied, canUpdate } = useApplicationStatus();
     const { hasOutstandingPayments, unpaidFees } = useStudentPaymentStatus();
     const { missingDoc, hasUnuUploadedDocument } = useStudentApplicationStatus();
@@ -157,7 +157,7 @@ export const DraggableTranscriptReminder: React.FC<DraggableTranscriptReminderPr
     };
 
     if (!isVisible || !mounted) return null;
-    if (hasOutstandingPayments && hasUnuUploadedDocument) return <></>;
+    if ((!hasOutstandingPayments && !hasUnuUploadedDocument) || isLoading) return <></>;
 
     return (
         <div

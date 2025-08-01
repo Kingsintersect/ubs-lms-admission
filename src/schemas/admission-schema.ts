@@ -48,13 +48,12 @@ export const baseAdmissionSchema = z.object({
     next_of_kin_workplace: z.string().optional(),
 
     // Sponsors Information
-    primary_school_leaving: z.instanceof(File).optional(),//to be changed to has_sponsor
+    first_school_leaving: z.instanceof(File).optional(),//to be changed to has_sponsor
     o_level: z.instanceof(File).optional(),
-    degree: z.instanceof(File).optional(),
     hnd: z.instanceof(File).optional(),
-    ond: z.instanceof(File).optional(),
-    transcript: z.instanceof(File).optional(),
-    others: z
+    degree: z.instanceof(File).optional(),
+    degree_transcript: z.instanceof(File).optional(),
+    other_documents: z
         .array(z.instanceof(File))
         .optional()
         .refine((files) => files ? files.every(file => file.size <= MAX_FILE_SIZE) : true, "Each image must be ≤ 5MB")
@@ -97,16 +96,9 @@ export const baseAdmissionSchema = z.object({
         .nonempty("Career goals is required"),
 
     // Additional Information
-    disability: z.boolean().default(false),
+    has_disability: z.boolean().default(false),
+    disability: z.string().optional(),
     agreeToTerms: z.boolean().refine((val) => val === true, 'You must agree to terms and conditions'),
-
-    // Academic Images
-    images: z
-        .array(z.instanceof(File))
-        .optional()
-        // .default([]) // ensures it's always defined as an array
-        .refine((files) => files ? files.every(file => file.size <= MAX_FILE_SIZE) : true, "Each image must be ≤ 5MB")
-        .refine((files) => files ? files.every(file => ACCEPTED_IMAGE_TYPES.includes(file.type)) : true, "Unsupported image type"),
 
     // Profile Picture
     passportPhoto: z.instanceof(File).optional(),
@@ -129,6 +121,16 @@ type SponsorCheck = {
 };
 
 function validateSponsorFields(data: AdmissionFormData, ctx: z.RefinementCtx) {
+    // Validate disability fields if has_disability is true
+    if (data.has_disability && !data.disability) {
+        ctx.addIssue({
+            path: ['disability'],
+            code: z.ZodIssueCode.custom,
+            message: "Please describe your disability",
+        });
+    }
+
+    // Validate sponsor fields if has_sponsor is true
     if (data.has_sponsor) {
         const checks: SponsorCheck[] = [
             {
@@ -270,14 +272,13 @@ export const careerGoalsInfoSchema = baseAdmissionSchema.pick({
 
 export const qualificationDocumentsSchema = baseAdmissionSchema.pick({
     id: true,
-    primary_school_leaving: true,
+    first_school_leaving: true,
     o_level: true,
-    degree: true,
     hnd: true,
-    ond: true,
-    transcript: true,
-    others: true,
-    images: true,
+    degree: true,
+    degree_transcript: true,
+    other_documents: true,
+    // images: true,
 });
 
 

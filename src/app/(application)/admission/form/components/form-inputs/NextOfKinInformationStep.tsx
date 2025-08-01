@@ -1,8 +1,8 @@
 
 import { AdmissionFormData } from "@/schemas/admission-schema";
-import { FormField } from "../FormField";
 import { Control, FieldErrors, UseFormWatch } from "react-hook-form";
 import Fade from "@/components/application/animatives/Fade";
+import { FormField } from "@/components/forms/FormField";
 
 interface NextOfKinInformationStepProps {
     control: Control<AdmissionFormData>;
@@ -14,7 +14,67 @@ export const NextOfKinInformationStep: React.FC<NextOfKinInformationStepProps> =
 
     return (
         <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <h5 className=" h-5 text-red-400">Do you have a sponsor</h5>
+            <FormField
+                name="has_sponsor"
+                control={control}
+                errors={errors}
+                label="Check this box if someone else is sponsoring you"
+                required
+                type="checkbox"
+            />
+
+            <hr className="my-16" />
+            <Fade duration={200} in={has_sponsor} className="">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <FormField
+                        name="sponsor_name"
+                        control={control}
+                        errors={errors}
+                        label="Sponsor's Full Name"
+                        placeholder="e.g. Ani Chukwu..."
+                        required={has_sponsor}
+                    />
+                    <FormField
+                        name="sponsor_relationship"
+                        control={control}
+                        errors={errors}
+                        label="Relationship with Sponsor"
+                        placeholder="e.g. Father, Mother, Guardian"
+                        required={has_sponsor}
+                    />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <FormField
+                        name="sponsor_email"
+                        control={control}
+                        errors={errors}
+                        label="Sponsor's Email"
+                        placeholder="e.g. sponsor@gmail.com"
+                        required={has_sponsor}
+                    />
+                    <FormField
+                        name="sponsor_phone_number"
+                        control={control}
+                        errors={errors}
+                        label="Sponsor's Phone Number"
+                        placeholder="+234 8123456780"
+                        required={has_sponsor}
+                    />
+                </div>
+
+                <FormField
+                    name="sponsor_contact_address"
+                    control={control}
+                    errors={errors}
+                    label="Sponsor's Contact Address"
+                    placeholder="e.g. 123 Sponsor St, City, State"
+                    required={has_sponsor}
+                />
+            </Fade>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-10">
                 <FormField
                     name="next_of_kin_name"
                     control={control}
@@ -94,64 +154,6 @@ export const NextOfKinInformationStep: React.FC<NextOfKinInformationStepProps> =
                     placeholder="e.g. 567 work St, city, state... "
                 />
             </div>
-            <hr className="my-16" />
-
-            <FormField
-                name="has_sponsor"
-                control={control}
-                errors={errors}
-                label="Check this box if someone else is sponsoring you"
-                required
-                type="checkbox"
-            />
-            <Fade duration={200} in={has_sponsor}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <FormField
-                        name="sponsor_name"
-                        control={control}
-                        errors={errors}
-                        label="Sponsor's Full Name"
-                        placeholder="e.g. Ani Chukwu..."
-                        required={has_sponsor}
-                    />
-                    <FormField
-                        name="sponsor_relationship"
-                        control={control}
-                        errors={errors}
-                        label="Relationship with Sponsor"
-                        placeholder="e.g. Father, Mother, Guardian"
-                        required={has_sponsor}
-                    />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <FormField
-                        name="sponsor_email"
-                        control={control}
-                        errors={errors}
-                        label="Sponsor's Email"
-                        placeholder="e.g. sponsor@gmail.com"
-                        required={has_sponsor}
-                    />
-                    <FormField
-                        name="sponsor_phone_number"
-                        control={control}
-                        errors={errors}
-                        label="Sponsor's Phone Number"
-                        placeholder="+234 8123456780"
-                        required={has_sponsor}
-                    />
-                </div>
-
-                <FormField
-                    name="sponsor_contact_address"
-                    control={control}
-                    errors={errors}
-                    label="Sponsor's Contact Address"
-                    placeholder="e.g. 123 Sponsor St, City, State"
-                    required={has_sponsor}
-                />
-            </Fade>
         </div>
     );
 }

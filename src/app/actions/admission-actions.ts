@@ -2,32 +2,36 @@
 
 import { remoteApiUrl } from "@/config";
 import { apiCall } from "@/lib/apiCaller";
-import { appendFormData, seeFormData } from "@/lib/formUtils";
+import { appendFormData } from "@/lib/formUtils";
 import { AdmissionFormData } from "@/schemas/admission-schema";
 
 
 export const submitAdmissionForm = async (data: AdmissionFormData, access_token: string) => {
     const formData = new FormData();
     appendFormData(formData, data);
-    seeFormData(formData)
+    // seeFormData(formData)
     const res = await fetch(`${remoteApiUrl}/application/application-form`, {
         method: "POST",
         headers: {
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${access_token}`,
         },
         body: formData,
     });
 
+    console.log('res', res)
+
     if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
+        console.log('res.status', res.status)
+        console.log('await res.text()', await res.text())
+        const error = await res.json();
         throw new Error(
-            `HTTP error! status: ${res.status}, details: ${JSON.stringify(errorData)}`
+            `HTTP error! status: ${res.status}, details: ${JSON.stringify(error)}`
         );
     }
 
-    return res.json();
+    return await res.json();
 };
-
 
 
 export interface DeleteResponse {

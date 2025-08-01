@@ -1,17 +1,19 @@
-import { Control, FieldErrors, UseFormReturn } from "react-hook-form";
-import { STUDY_MODES } from "../../constants";
-import { FormField } from "../FormField";
+import { Control, FieldErrors, UseFormReturn, UseFormWatch } from "react-hook-form";
 import { AdmissionFormData } from "@/schemas/admission-schema";
-import { PhotoUploader } from "./PhotoUploader";
 import Link from "next/link";
+import Fade from "@/components/application/animatives/Fade";
+import { PhotoUploader } from "@/components/forms/PhotoUploader";
+import { FormField } from "@/components/forms/FormField";
+import { STUDY_MODES } from "@/components/forms/applicationFormConstants";
 
 interface ProgramAndEssaysStepProps {
     control: Control<AdmissionFormData>;
     errors: FieldErrors<AdmissionFormData>;
     setValue: UseFormReturn<AdmissionFormData>['setValue'];
+    watch: UseFormWatch<AdmissionFormData>;
 }
-export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ control, errors, setValue }) => {
-
+export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ control, errors, setValue, watch }) => {
+    const has_disability = watch("has_disability");
     return (
         <div className="space-y-6">
             <div className="w-fill flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-around">
@@ -24,7 +26,7 @@ export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ cont
                     />
                 </div>
                 <div className=" flex flex-col gap-4">
-                    <div className="">( Current session - <span className="text-site-a-dark font-bold"> 2024 / 2025</span> )</div>
+                    <div className="">( Current session - <span className="text-site-a-dark font-bold"> 2025 / 2026</span> )</div>
                 </div>
             </div>
 
@@ -62,22 +64,35 @@ export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ cont
 
             <div className="space-y-4">
                 <FormField
-                    name="disability"
+                    name="has_disability"
                     control={control}
                     errors={errors}
                     label="I have disabilities"
                     type="checkbox"
                 />
-                <div className="flex items-center gap-5">
+                <Fade duration={200} in={has_disability}>
                     <FormField
-                        name="agreeToTerms"
+                        name="disability"
                         control={control}
                         errors={errors}
-                        label="I agree to the terms and conditions *"
-                        type="checkbox"
+                        label="Explain disability"
+                        required
+                        type="textarea"
+                        placeholder="Describe the nature of your disability..."
+                        rows={6}
                     />
-                    <Link className="block text-sm text-blue-600 font-bold animate-bounce mt-2" href={"/admission/terms-and-conditions"}>Read the terms and conditions</Link>
-                </div>
+                </Fade>
+            </div>
+
+            <div className="flex items-center gap-5">
+                <FormField
+                    name="agreeToTerms"
+                    control={control}
+                    errors={errors}
+                    label="I agree to the terms and conditions *"
+                    type="checkbox"
+                />
+                <Link className="block text-sm text-blue-600 font-bold animate-bounce mt-2" href={"/admission/terms-and-conditions"}>Read the terms and conditions</Link>
             </div>
         </div>
     );

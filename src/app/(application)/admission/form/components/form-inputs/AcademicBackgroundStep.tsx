@@ -1,5 +1,5 @@
 import { Control, FieldErrors, UseFormReturn } from "react-hook-form";
-import { FormField } from "../FormField";
+import { FormField } from "../../../../../../components/forms/FormField";
 import { AdmissionFormData } from "@/schemas/admission-schema";
 
 export const AcademicBackgroundStep: React.FC<{ control: Control<AdmissionFormData>; errors: FieldErrors<AdmissionFormData>; setValue: UseFormReturn<AdmissionFormData>['setValue'] }> = ({ control, errors }) => (
@@ -65,13 +65,5 @@ export const AcademicBackgroundStep: React.FC<{ control: Control<AdmissionFormDa
                 placeholder="110"
             />
         </div>
-        {/* <div className="col-span-full">
-            <MultiImageUploader
-                imagesUrlArray={undefined}
-                productId={0}
-                register={control.register}
-                setValue={setValue}
-            />
-        </div> */}
     </div>
 );
