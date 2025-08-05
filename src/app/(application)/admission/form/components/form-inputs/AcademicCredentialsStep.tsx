@@ -29,7 +29,7 @@ export const AcademicCredentialsStep: React.FC<AcademicCredentialsStepProps> = (
 				showPreview={true}
 				className='sm:col-span-2 md:col-span-2'
 			/>
-
+			{/* Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cum, voluptatum laborum voluptate minima soluta architecto accusantium rem porro magni voluptas! */}
 			<FileUploadFormField
 				name="o_level"
 				label="Ordinary Level (O'Level) Certificate"
@@ -79,7 +79,7 @@ export const AcademicCredentialsStep: React.FC<AcademicCredentialsStepProps> = (
 				label="Other Accademic Qualification Documents (Upload multiple files/images clear image of the document)"
 				control={control}
 				errors={errors}
-				accept=".pdf,.doc,.docx,.jpg,.png"
+				accept=".pdf,.doc,.docx"
 				multiple={true}
 				showPreview={true}
 				className='sm:col-span-full md:col-span-4 md:col-start-2'

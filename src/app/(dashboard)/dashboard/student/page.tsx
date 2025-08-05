@@ -129,14 +129,14 @@ const StudentHome = () => {
 
                      <StatusCheckCard
                         admission={student.admission_status}
-                        url="/dashboard/student/acceptance"
+                        url="/dashboard/history/student-payments/acceptance"
                         dataStatus={student.acceptance_fee_payment_status as StatusType}
                         title={"ACCEPTANCE FEE"}
                      />
 
                      <StatusCheckCard
                         admission={student.admission_status}
-                        url="/dashboard/student/tuition"
+                        url="/dashboard/history/student-payments/tuition"
                         dataStatus={student.tuition_payment_status as StatusType}
                         title={"TUITION FEE"}
                      />

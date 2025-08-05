@@ -13,6 +13,7 @@ import ProgramInfo from './editables/ProgramInfo';
 import PersonalStatementInfo from './editables/PersonalStatementInfo';
 import CareerGoalsInfo from './editables/CareerGoalsInfo';
 import QualificationDocuments from './editables/QualificationDocuments';
+import { FormatImageUrl } from '@/lib/imageUrl';
 
 export const ApplicationDetails = ({
     isLoading,
@@ -41,7 +42,7 @@ export const ApplicationDetails = ({
             default: return 'text-yellow-600 bg-yellow-50';
         }
     };
-
+    console.log('application?.application.passport', FormatImageUrl(application?.application.passport as unknown as string));
     return (
         <div className="lg:col-span-2">
             {isLoading ? (
@@ -63,7 +64,7 @@ export const ApplicationDetails = ({
                                 </div>
                                 <div className="relative h-42 w-24">
                                     <Image
-                                        src={application.application.passport ?? "/avatars/avatar-man.jpg"}
+                                        src={FormatImageUrl(application?.application.passport as unknown as string) ?? "/avatars/avatar-man.jpg"}
                                         fill
                                         className="object-contain rounded-lg"
                                         alt='Passport'
@@ -87,14 +88,14 @@ export const ApplicationDetails = ({
                                 phone_number: String(application.phone_number),
                                 nationality: String(application.nationality),
 
-                                id: String(application.application.id),
-                                lga: String(application.application.lga),
-                                dob: String(application.application.dob),
-                                gender: String(application.application.gender),
-                                hometown: String(application.application.hometown),
-                                hometown_address: String(application.application.hometown_address),
-                                contact_address: String(application.application.contact_address),
-                                religion: String(application.application.religion),
+                                id: String(application?.application.id),
+                                lga: String(application?.application.lga),
+                                dob: String(application?.application.dob),
+                                gender: String(application?.application.gender),
+                                hometown: String(application?.application.hometown),
+                                hometown_address: String(application?.application.hometown_address),
+                                contact_address: String(application?.application.contact_address),
+                                religion: String(application?.application.religion),
                             }}
                         />
 
@@ -103,47 +104,47 @@ export const ApplicationDetails = ({
                             application={{
                                 program: String(application.program),
                                 program_id: String(application.program_id),
-                                studyMode: String(application.application.studyMode),
-                                startTerm: String(application.application.startTerm),
+                                studyMode: String(application?.application.studyMode),
+                                startTerm: String(application?.application.startTerm),
 
-                                id: String(application.application.id),
+                                id: String(application?.application.id),
                             }}
                         />
 
                         {/* Essay */}
                         <PersonalStatementInfo
-                            application={application.application}
+                            application={application?.application}
                         />
                         {/* Career Golas */}
                         <CareerGoalsInfo
-                            application={application.application}
+                            application={application?.application}
                         />
                         {/* CERTIFICATE IMAGES */}
                         <div className="col-span-full">
                             <QualificationDocuments
-                                application={application.application}
+                                application={application?.application}
                             />
                         </div>
 
                         {/* Academic Information */}
                         <AcademicInformation
-                            application={application.application}
+                            application={application?.application}
                         />
 
                         {/* Work Experience */}
                         <WorkExperienceInfo
-                            application={application.application}
+                            application={application?.application}
                         />
 
                         {/* Next of kin Information */}
                         <NextOfkinInfo
-                            application={application.application}
+                            application={application?.application}
                         />
 
                         {/* Sponsors Information */}
 
                         <SponsorsInfo
-                            application={application.application}
+                            application={application?.application}
                         />
                         {/* Application Notes */}
                         {application.reason_for_denial && <div>
@@ -169,7 +170,7 @@ export const ApplicationDetails = ({
                     <hr />
                     <Alert variant="destructive">
                         <AlertCircleIcon />
-                        <AlertTitle>Unable to fetch application application.application.</AlertTitle>
+                        <AlertTitle>Unable to fetch application application?.application?.</AlertTitle>
                         <AlertDescription>
                             <p>Please verify netwoork and try again.</p>
                         </AlertDescription>

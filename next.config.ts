@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
 	/* config options here */
 	experimental: {
 		serverActions: {
-			bodySizeLimit: '10mb', //increasing the body size limit for server actions
+			bodySizeLimit: '20mb', //increasing the body size limit for server actions
 		},
 	},
 	eslint: {
@@ -57,7 +57,20 @@ const nextConfig: NextConfig = {
 					},
 					{
 						key: "Access-Control-Allow-Headers",
-						value: "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Authorization, Date, X-Api-Version",
+						// Add multipart-specific headers
+						value: [
+							"X-CSRF-Token",
+							"X-Requested-With",
+							"Accept",
+							"Accept-Version",
+							"Content-Length",
+							"Content-MD5",
+							// Critical for FormData:
+							"Content-Type",
+							"Authorization",
+							"Date",
+							"X-Api-Version"
+						].join(", "),
 					},
 				],
 			},

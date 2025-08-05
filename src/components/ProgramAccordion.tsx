@@ -7,14 +7,17 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion";
 import { FieldErrors, Path, PathValue, UseFormGetValues, UseFormSetValue, UseFormWatch } from "react-hook-form";
+import { ProgramRequirementsLink } from "./requirements/ProgramRequirementsModal";
 
+
+type genericObjectType = Record<string, any>;
 export type ProgramNode = {
     id: number;
     name: string;
     children?: ProgramNode[];
 };
 
-interface ProgramAccordionProps<T extends Record<string, any>> {
+interface ProgramAccordionProps<T extends genericObjectType> {
     nodes: ProgramNode[];
     level?: number;
     fieldKey: string;
@@ -23,7 +26,7 @@ interface ProgramAccordionProps<T extends Record<string, any>> {
     watch: UseFormWatch<T>;
 }
 
-export default function ProgramAccordion<T extends Record<string, any>>({
+export default function ProgramAccordion<T extends genericObjectType>({
     nodes,
     level = 0,
     fieldKey,
@@ -73,8 +76,7 @@ export default function ProgramAccordion<T extends Record<string, any>>({
     );
 }
 
-
-interface ProgramAccordionDisplayProps<T extends Record<string, any>> {
+interface ProgramAccordionDisplayProps<T extends genericObjectType> {
     programs: ProgramNode[],
     setValue: UseFormSetValue<T>,
     watch: UseFormWatch<T>,
@@ -85,7 +87,7 @@ interface ProgramAccordionDisplayProps<T extends Record<string, any>> {
     heading?: string;
     subHeading?: string;
 }
-export const ProgramAccordionDisplay = <T extends Record<string, any>>({
+export const ProgramAccordionDisplay = <T extends genericObjectType>({
     programs,
     setValue,
     getValues,
@@ -101,7 +103,12 @@ export const ProgramAccordionDisplay = <T extends Record<string, any>>({
     return (
         <div className="max-w-3xl mx-auto p-4">
             {heading && <h1 className="text-2xl font-bold mb-0 text-site-b-dark">{heading}</h1>}
-            {subHeading && <p className="italic text-site-a-dark mb-4">{subHeading}</p>}
+            {subHeading && <p className="italic text-blue-500 mb-4">{subHeading}</p>}
+
+            <ProgramRequirementsLink
+                className="ml-20 text-xs text-orange-600  animate-bounce"
+                downloadUrl="/documents/PROGRAMME_AND_REQUIREMENTS.docx"
+            />
 
             <ProgramAccordion
                 nodes={programs}

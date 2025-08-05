@@ -10,8 +10,8 @@ import { StudentType } from "@/config/Types";
 
 const navigation = {
    applicationFormUrl: `${baseUrl}/admission/form`,
-   acceptanceFeeUrl: `${baseUrl}/dashboard/student/acceptance`,
-   tuitionFeeUrl: `${baseUrl}/dashboard/student/tuition`,
+   acceptanceFeeUrl: `${baseUrl}/dashboard/history/student-payments/acceptance`,
+   tuitionFeeUrl: `${baseUrl}/dashboard/history/student-payments/tuition`,
 }
 
 const StudentBanner = ({ student }: { student: StudentType }) => {

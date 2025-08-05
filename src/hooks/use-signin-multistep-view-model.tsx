@@ -16,7 +16,7 @@ export const baseSignupSchema = z
     .object({
         first_name: z.string().min(1, { message: "Required" }),
         last_name: z.string().min(1, { message: "Required" }),
-        other_name: z.string().min(1, { message: "Required" }),
+        other_name: z.string().optional(),
         username: z.string().min(1, { message: "Required" }),
         phone_number: z.string().min(1, { message: "Required" }),
         gender: z.string().refine((value) => value !== "", {
@@ -61,7 +61,7 @@ const steps = [
     {
         id: 1,
         label: "Personal Info",
-        fields: ["first_name", "last_name", "other_name", "phone_number", "gender", "nationality", "state", "hometown_address", "residential_address"],
+        fields: ["first_name", "last_name", "phone_number", "gender", "nationality", "state", "hometown_address", "residential_address"],
     },
     {
         id: 2,

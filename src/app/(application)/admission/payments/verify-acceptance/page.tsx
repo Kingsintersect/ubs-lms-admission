@@ -45,7 +45,7 @@ const VerifyAcceptance = () => {
    };
 
    const handleRedirect = () => {
-      router.push(`${baseUrl}/dashboard/student/tuition`);
+      router.push(`${baseUrl}/dashboard/history/student-payments/tuition`);
       router.refresh();
    }
 
@@ -112,7 +112,7 @@ export default VerifyAcceptance
 //                description: success.message,
 //                variant: 'success',
 //             }, 10000);
-//             router.push(`${baseUrl}/dashboard/student/tuition`);
+//             router.push(`${baseUrl}/dashboard/history/student-payments/tuition`);
 //             router.refresh();
 //          }
 //          if (error) {

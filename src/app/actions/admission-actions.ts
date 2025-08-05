@@ -2,37 +2,70 @@
 
 import { remoteApiUrl } from "@/config";
 import { apiCall } from "@/lib/apiCaller";
-import { appendFormData } from "@/lib/formUtils";
+import { handleApiError } from "@/lib/errorsHandler";
+import { appendFormData, seeFormData } from "@/lib/formUtils";
 import { AdmissionFormData } from "@/schemas/admission-schema";
 
-
-export const submitAdmissionForm = async (data: AdmissionFormData, access_token: string) => {
+/**
+ * submit function
+ */
+export const submitAdmissionForm = async (
+    data: AdmissionFormData,
+    access_token: string
+) => {
     const formData = new FormData();
-    appendFormData(formData, data);
-    // seeFormData(formData)
-    const res = await fetch(`${remoteApiUrl}/application/application-form`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${access_token}`,
-        },
-        body: formData,
-    });
+    const MAX_UPLOAD_SIZE = 10 * 1024 * 1024; // 10MB
+    let totalSize = 0;
 
-    console.log('res', res)
-
-    if (!res.ok) {
-        console.log('res.status', res.status)
-        console.log('await res.text()', await res.text())
-        const error = await res.json();
-        throw new Error(
-            `HTTP error! status: ${res.status}, details: ${JSON.stringify(error)}`
-        );
+    // Prepare FormData
+    try {
+        appendFormData(formData, data);
+        seeFormData(formData); // for debugging
+    } catch (error) {
+        console.error("FormData preparation failed:", error);
+        throw new Error("Failed to prepare form data");
     }
 
-    return await res.json();
-};
+    // Calculate total file size
+    for (const value of formData.values()) {
+        if (value instanceof File) {
+            totalSize += value.size;
+        }
+    }
 
+    if (totalSize > MAX_UPLOAD_SIZE) {
+        throw new Error(`Total upload size ${totalSize} exceeds maximum allowed`);
+    }
+
+    try {
+        // Use native fetch instead of axios
+        const res = await fetch(
+            `${remoteApiUrl}/application/application-form`,
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${access_token}`,
+                    // DO NOT set Content-Type - let browser handle it
+                },
+                body: formData,
+            }
+        );
+
+        if (!res.ok) {
+            // const errorData = await res.json().catch(() => null);
+            // console.error("API Error Details:", errorData);
+
+            // throw new Error(errorData?.message || `HTTP error! status: ${res.status}`);
+            await handleApiError(res);
+        }
+
+        return await res.json();
+    } catch (error) {
+        console.error("Network or API error:", error);
+        throw new Error("Failed to submit application. Please try again later.");
+    }
+};
+// ended submit function
 
 export interface DeleteResponse {
     status: boolean;

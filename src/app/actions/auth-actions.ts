@@ -123,22 +123,6 @@ export const getUser = async (): Promise<ApiResponse<UserResponse>> => {
 	return res as ApiResponse<UserResponse>;
 };
 
-export async function refetchUserSessionData() {
-	try {
-		const loginSessionData = (await getSession(
-			loginSessionKey
-		)) as SessionData | null;
-
-		if (!loginSessionData) {
-			return { error: { message: "No active session" }, success: null };
-		}
-
-		return { success: loginSessionData, error: null };
-	} catch {
-		return { error: { message: "Failed to update session" }, success: null };
-	}
-}
-
 export async function refetchUserData() {
 	try {
 

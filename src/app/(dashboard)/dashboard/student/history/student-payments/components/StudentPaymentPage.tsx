@@ -31,34 +31,33 @@ type Payment = {
 
 export const dynamic = "force-dynamic";
 
-const PaymentStatusCard = ({ 
-  type, 
-  latestPayment 
-}: { 
-  type: 'tuition' | 'acceptance'; 
-  latestPayment?: Payment 
+const PaymentStatusCard = ({
+  type,
+  latestPayment
+}: {
+  type: 'tuition' | 'acceptance';
+  latestPayment?: Payment
 }) => {
   const title = type === 'tuition' ? 'Tuition Fee' : 'Acceptance Fee';
-  const paymentLink = type === 'tuition' ? '/dashboard/student/tuition' : '/dashboard/student/acceptance';
-  
+  const paymentLink = type === 'tuition' ? '/dashboard/history/student-payments/tuition' : '/dashboard/history/student-payments/acceptance';
+
   return (
     <Card className="p-4 h-full">
       <div className="flex flex-col h-full">
         <h3 className="font-semibold text-xl mb-2">{title} Status</h3>
-        
+
         {latestPayment ? (
           <>
             <div className="space-y-2 mb-2">
               <p className="text-md text-gray-400 ">Academic Session: <span className='text-gray-100'>{latestPayment.session}</span> </p>
               {/* <p className="font-medium inline">{latestPayment.session}</p> */}
             </div>
-            
+
             <div className="space-y-2 mb-4">
-              <p className="text-md text-gray-400">Status: <span className={`font-medium w-[30%] text-lg rounded-md ${
-                latestPayment.status === 'paid' ? 'text-green-600' : 
-                latestPayment.status === 'pending' ? 'text-yellow-600' : 
-                'text-red-600'
-              }`}>
+              <p className="text-md text-gray-400">Status: <span className={`font-medium w-[30%] text-lg rounded-md ${latestPayment.status === 'paid' ? 'text-green-600' :
+                latestPayment.status === 'pending' ? 'text-yellow-600' :
+                  'text-red-600'
+                }`}>
                 {latestPayment.status.charAt(0).toUpperCase() + latestPayment.status.slice(1)}
               </span></p>
               {/* <span className={`font-medium w-[30%] text-lg rounded-md ${
@@ -69,7 +68,7 @@ const PaymentStatusCard = ({
                 {latestPayment.status.charAt(0).toUpperCase() + latestPayment.status.slice(1)}
               </span> */}
             </div>
-            
+
             {latestPayment.status !== 'paid' && (
               <div className="mt-auto">
                 <Button asChild variant="default">
@@ -108,7 +107,7 @@ const StudentsPaymentPage = () => {
     const date = new Date(dateString);
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
-    
+
     if (month >= 1 && month <= 8) {
       return `${year - 1}/${year}`;
     }
@@ -135,7 +134,7 @@ const StudentsPaymentPage = () => {
       const { success, error } = await GetStudentPaymentHistory(access_token);
       if (success) {
         const transformedData = transformPaymentData(success.data);
-        const sortedData = transformedData.sort((a, b) => 
+        const sortedData = transformedData.sort((a, b) =>
           new Date(b.date).getTime() - new Date(a.date).getTime()
         );
         setPaymentHistory(sortedData);
@@ -179,7 +178,7 @@ const StudentsPaymentPage = () => {
           Overview of all your Payment Histories are available below.
         </p>
       </div>
-      
+
       {/* Improved cards layout */}
       {/* <div className='flex flex-col sm:flex-row gap-4 mt-6'>
         <div className={`${hasPaidAcceptanceFee ? 'w-full sm:w-1/2' : 'w-full sm:w-1/2'}`}>
@@ -198,7 +197,7 @@ const StudentsPaymentPage = () => {
           </div>
         )} 
       </div> */}
-      
+
       <Card className="mt-7 p-4 sm:p-10">
         <div className="font-normal text-gray-700 dark:text-gray-400 space-y-6 sm:space-y-10 mb-7">
           <div className="grid sm:grid-cols-2 gap-3 md:gap-10">
@@ -227,13 +226,13 @@ const StudentsPaymentPage = () => {
               </Select>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-1">
-            <DataTable 
-              columns={StudentsPaymentTable} 
-              data={filteredData} 
+            <DataTable
+              columns={StudentsPaymentTable}
+              data={filteredData}
               isLoading={loading}
-              // noDataMessage={error || "No payment records found"}
+            // noDataMessage={error || "No payment records found"}
             />
           </div>
         </div>

@@ -215,7 +215,7 @@ export const useStudentPaymentStatus = () => {
             ? Object.entries(myPayments)
                 .filter(([, value]) => value !== "FULLY_PAID")
                 .map(([key]) => {
-                    const link = (key === "acceptance_fee_payment_status") ? acceptanceUrl : (key === "acceptance_fee_payment_status") ? tuitionUrl : "";
+                    const link = (key === "acceptance_fee_payment_status") ? acceptanceUrl : (key === "tuition_payment_status") ? tuitionUrl : "";
                     return ({
                         label: UniversalformatFieldName(key),
                         url: `${link}`

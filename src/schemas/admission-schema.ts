@@ -5,7 +5,17 @@ import z from "zod";
 
 // Max file size (e.g., 5MB)
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
-const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+const ACCEPTED_FILE_TYPES = [
+    // Images
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/webp",
+    // Documents
+    "application/pdf",
+    "application/msword", // .doc
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+];
 
 // Zod validation schema
 // export const admissionSchema = z.object({
@@ -56,16 +66,28 @@ export const baseAdmissionSchema = z.object({
     other_documents: z
         .array(z.instanceof(File))
         .optional()
-        .refine((files) => files ? files.every(file => file.size <= MAX_FILE_SIZE) : true, "Each image must be ≤ 5MB")
-        .refine((files) => files ? files.every(file => ACCEPTED_IMAGE_TYPES.includes(file.type)) : true, "Unsupported image type"),
+        .refine((files) => files ? files.every(file => file.size <= MAX_FILE_SIZE) : true,
+            {
+                message: "Each file must be ≤ 5MB",
+                path: ["fileSize"]
+            }
+        ).refine((files) => files ? files.every(file => ACCEPTED_FILE_TYPES.includes(file.type)) : true,
+            {
+                message: "Unsupported file type. Only images (JPEG, JPG, PNG, WEBP) and documents (PDF, DOC, DOCX) are allowed",
+                path: ["fileType"]
+            }
+        ),
 
     // Academic Information
     undergraduateDegree: z.string().min(1, 'Undergraduate degree is required'),
     university: z.string().min(2, 'University name is required'),
-    gpa: z.string().refine((val) => {
-        const num = parseFloat(val);
-        return !isNaN(num) && num >= 0 && num <= 4.0;
-    }, 'GPA must be between 0.0 and 4.0'),
+    gpa: z.string()
+        .optional()
+        .refine((val) => {
+            if (!val) return true; // Allow undefined/empty values
+            const num = parseFloat(val);
+            return !isNaN(num) && num >= 0 && num <= 4.0;
+        }, 'GPA must be between 0.0 and 4.0'),
     graduationYear: z.string().min(4, 'Graduation year is required'),
 
     // Test Scores
@@ -92,18 +114,18 @@ export const baseAdmissionSchema = z.object({
     careerGoals: z
         .string()
         .min(100, 'Career goals must be at least 100 characters')
-        .max(150, "Career goals must be under 150 characters")
+        .max(250, "Career goals must be under 150 characters")
         .nonempty("Career goals is required"),
 
     // Additional Information
     has_disability: z.boolean().default(false),
-    disability: z.string().optional(),
+    disability: z.string().optional().default("None"),
     agreeToTerms: z.boolean().refine((val) => val === true, 'You must agree to terms and conditions'),
 
     // Profile Picture
-    passportPhoto: z.instanceof(File).optional(),
+    passport: z.instanceof(File).optional(),
 
-    passport: z.string().optional(),
+    // passport: z.string().optional(),
     awaiting_result: z.boolean().default(true),
 })
 

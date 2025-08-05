@@ -56,7 +56,7 @@ export const STEPS: Step[] = [
     {
         title: 'Academic Background',
         icon: GraduationCap,
-        fields: ['undergraduateDegree', 'university', 'gpa', 'graduationYear']
+        fields: ['undergraduateDegree', 'university', 'graduationYear']
     },
     {
         title: 'Academic Credentials',

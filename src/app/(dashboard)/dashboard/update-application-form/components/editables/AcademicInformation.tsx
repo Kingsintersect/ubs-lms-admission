@@ -202,7 +202,7 @@ export default function AcademicInformation({
                 <EditableField
                     label="GPA"
                     type='text'
-                    value={formData.gpa}
+                    value={formData.gpa ?? null}
                     onChange={(value) => updateField('gpa', value)}
                     placeholder="Enter GPA eg 3.8"
                     isEditing={isEditing}

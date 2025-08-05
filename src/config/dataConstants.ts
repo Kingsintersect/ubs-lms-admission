@@ -170,11 +170,11 @@ export const StudentNavMain: SidebarNavConfig = {
 			items: [
 				{
 					title: "Pay Acceptance Fee",
-					url: "/dashboard/student/acceptance",
+					url: "/dashboard/history/student-payments/acceptance",
 				},
 				{
 					title: "Pay Tuition Fee",
-					url: "/dashboard/student/tuition",
+					url: "/dashboard/history/student-payments/tuition",
 				},
 			],
 			display: false,

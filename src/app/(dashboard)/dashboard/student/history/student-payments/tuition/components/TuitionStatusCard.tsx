@@ -76,7 +76,7 @@ const TuitionStatusCard = ({ student }: { student: StudentType }) => {
 									</div>
 									<h3 className="text-xl font-medium text-red-700 dark:text-red-300 mb-2">Acceptance Yet To Be Paid...</h3>
 									<Button variant={"destructive"} asChild className='animate-bounce'>
-										<Link href={`${baseUrl}/dashboard/student/acceptance`} className='text-white'>
+										<Link href={`${baseUrl}/dashboard/history/student-payments/acceptance`} className='text-white'>
 											PAY ACCEPTANCE
 										</Link>
 									</Button>

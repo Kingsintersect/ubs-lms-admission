@@ -89,4 +89,28 @@ export const getFriendlyError = (error: unknown): string => {
 	return "An unexpected error occurred. Please try again.";
 };
 
+export async function handleApiError(res: Response): Promise<never> {
+	let message = `Request failed with status ${res.status}`;
+	console.log('res', res);
 
+	try {
+		const contentType = res.headers.get("content-type") || "";
+
+		if (contentType.includes("application/json")) {
+			const error = await res.json();
+			message = error?.message || JSON.stringify(error) || message;
+		} else {
+			const text = await res.text();
+			if (res.status === 503 && text.includes("Service Unavailable")) {
+				message = "The server is temporarily unavailable (503). Please try again shortly.";
+			} else {
+				message = "Unexpected error occurred. Please try again.";
+			}
+		}
+	} catch (err) {
+		message = "An unknown error occurred while processing the response.";
+		console.log('Raw Error', err)
+	}
+
+	throw new Error(message);
+}

@@ -1,6 +1,5 @@
 "use client";
 
-import { submitAdmissionForm } from "@/app/actions/admission-actions";
 import { AdmissionFormData, admissionSchema } from "@/schemas/admission-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -22,9 +21,10 @@ import { toast } from "sonner";
 import { NextOfKinInformationStep } from "./components/form-inputs/NextOfKinInformationStep";
 import { getFriendlyError } from '@/lib/errorsHandler';
 import { AcademicCredentialsStep } from "./components/form-inputs/AcademicCredentialsStep";
+import { submitAdmissionForm } from "@/app/actions/admission-actions";
 
 const AdmissionForm: React.FC = () => {
-    const { logout, access_token, updateUserInState } = useAuth();
+    const { logout, access_token, updateUserInState, refreshUser } = useAuth();
     const [currentStep, setCurrentStep] = useState(0);
     const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -42,7 +42,7 @@ const AdmissionForm: React.FC = () => {
         mode: 'onChange',
         defaultValues: {
             has_disability: false,
-            disability: "",
+            disability: "None",
             agreeToTerms: false,
             startTerm: "2024/2025",
             studyMode: 'online',
@@ -62,6 +62,8 @@ const AdmissionForm: React.FC = () => {
         onSuccess: async () => {
             setIsSubmitted(true);
             updateUserInState({ is_applied: Number(true) });
+            refreshUser();
+            toast.success("Application submitted successfully!");
         },
     });
 

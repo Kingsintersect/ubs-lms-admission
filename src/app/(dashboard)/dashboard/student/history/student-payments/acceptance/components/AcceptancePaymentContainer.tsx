@@ -10,6 +10,7 @@ import AdmissionDeniedBanner from '@/app/(dashboard)/dashboard/student/componene
 
 const AcceptancePaymentContainer = () => {
     const { user, loading } = useAuth();
+    console.log('user', user)
 
     if (loading) {
         return (

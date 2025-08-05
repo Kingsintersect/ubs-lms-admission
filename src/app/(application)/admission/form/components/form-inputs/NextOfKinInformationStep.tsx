@@ -93,6 +93,14 @@ export const NextOfKinInformationStep: React.FC<NextOfKinInformationStepProps> =
                 />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                    name="next_of_kin_address"
+                    control={control}
+                    errors={errors}
+                    label="address of your Next-of-kin"
+                    required
+                    placeholder="e.g. 123 mykin's St, city, state, country... "
+                />
                 <div className="border border-gray-300 p-10 rounded-2xl">
                     <FormField
                         name="next_of_kin_phone_number"
@@ -111,14 +119,6 @@ export const NextOfKinInformationStep: React.FC<NextOfKinInformationStepProps> =
                         type="checkbox"
                     />
                 </div>
-                <FormField
-                    name="next_of_kin_address"
-                    control={control}
-                    errors={errors}
-                    label="address of your Next-of-kin"
-                    required
-                    placeholder="e.g. 123 mykin's St, city, state, country... "
-                />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField

@@ -2,8 +2,8 @@ import { Control, FieldErrors, UseFormReturn, UseFormWatch } from "react-hook-fo
 import { AdmissionFormData } from "@/schemas/admission-schema";
 import Link from "next/link";
 import Fade from "@/components/application/animatives/Fade";
-import { PhotoUploader } from "@/components/forms/PhotoUploader";
-import { FormField } from "@/components/forms/FormField";
+// import { PhotoUploader } from "@/components/forms/PhotoUploader";
+import { FileUploadFormField, FormField } from "@/components/forms/FormField";
 import { STUDY_MODES } from "@/components/forms/applicationFormConstants";
 
 interface ProgramAndEssaysStepProps {
@@ -12,23 +12,32 @@ interface ProgramAndEssaysStepProps {
     setValue: UseFormReturn<AdmissionFormData>['setValue'];
     watch: UseFormWatch<AdmissionFormData>;
 }
-export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ control, errors, setValue, watch }) => {
+export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ control, errors, watch }) => {
     const has_disability = watch("has_disability");
     return (
-        <div className="space-y-6">
-            <div className="w-fill flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-around">
+        <div className="space-y-7">
+            <div className="w-full flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
                 {/* Document Upload */}
-                <div className="space-y-6">
-                    <PhotoUploader
-                        onFileChange={(file) => setValue('passportPhoto', file ?? undefined)}
-                        error={errors.passportPhoto?.message}
-                        setValue={setValue}
+                <div className="w-full sm:w-1/2 space-y-4 sm:px-20">
+                    <FileUploadFormField
+                        name="passport"
+                        label="Passport photograph"
+                        control={control}
+                        errors={errors}
+                        accept=".jpeg,.jpg,.png"
+                        multiple={false}
+                        showPreview={true}
                     />
                 </div>
-                <div className=" flex flex-col gap-4">
-                    <div className="">( Current session - <span className="text-site-a-dark font-bold"> 2025 / 2026</span> )</div>
+
+                {/* Current session info */}
+                <div className="w-full sm:w-1/2 flex justify-start sm:justify-center items-center my-auto">
+                    <div className="text-sm sm:text-base">
+                        ( Current session - <span className="text-site-a-dark font-semibold">2025 / 2026</span> )
+                    </div>
                 </div>
             </div>
+
 
             <FormField
                 name="studyMode"

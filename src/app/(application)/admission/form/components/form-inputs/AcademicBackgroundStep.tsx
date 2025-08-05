@@ -25,20 +25,19 @@ export const AcademicBackgroundStep: React.FC<{ control: Control<AdmissionFormDa
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
-                name="gpa"
-                control={control}
-                errors={errors}
-                label="GPA"
-                required
-                placeholder="3.8"
-            />
-            <FormField
                 name="graduationYear"
                 control={control}
                 errors={errors}
                 label="Graduation Year"
                 required
                 placeholder="2022"
+            />
+            <FormField
+                name="gpa"
+                control={control}
+                errors={errors}
+                label="GPA"
+                placeholder="3.8"
             />
         </div>
 

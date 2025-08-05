@@ -10,8 +10,7 @@ import {
     studentSignin,
     adminSignin,
     logout as serverLogout,
-    refetchUserSessionData as refreshCurrentUser,
-    refetchUserData
+    refetchUserData as refreshCurrentUser,
 } from '@/app/actions/auth-actions';
 import { notify } from './ToastProvider';
 import { baseUrl, Roles } from '@/config';
@@ -191,7 +190,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setAuthState({ ...authState, loading: true });
 
         try {
-            const { success } = await refetchUserData();
+            const { success } = await refreshCurrentUser();
 
             if (success && success.user) {
                 setAuthState({
