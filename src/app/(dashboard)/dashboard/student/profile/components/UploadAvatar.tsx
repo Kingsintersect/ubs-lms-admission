@@ -50,7 +50,7 @@ const UploadAvatar = ({ imageUrl }: UploadAvatarProps) => {
                <div className={`absolute inset-0 rounded-full ${isHovering ? 'ring-4 ring-blue-500 ring-offset-2' : 'ring-4 ring-white dark:ring-gray-800'} transition-all duration-300`}>
                   <Image
                      src="/random/profile-avatar.jpg"
-                     alt="User Avatar"
+                     alt="UserInterface Avatar"
                      fill
                      className="rounded-full object-cover"
                   />

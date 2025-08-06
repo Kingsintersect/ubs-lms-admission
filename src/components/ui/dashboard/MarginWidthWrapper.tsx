@@ -9,13 +9,13 @@ import { AppSidebar } from '@/components/app-sidebar';
 import SiteHeader from '@/components/site-header';
 
 const MarginWidthWrapper = ({ children }: { children: ReactNode }) => {
-   const { user, logout } = useAuth();
+   const { user, initializeLogout } = useAuth();
    // const isLoggedIn = !!user; // Check if user is logged in
    return (
       <SidebarProvider>
          <AppSidebar user={user} />
          <SidebarInset>
-            <SiteHeader logout={logout} />
+            <SiteHeader logout={initializeLogout} />
             {children}
          </SidebarInset>
       </SidebarProvider>

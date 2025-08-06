@@ -64,7 +64,7 @@ export const AdminNavMain: SidebarNavConfig = {
 				// 	url: "/dashboard/admin/users",
 				// },
 				{
-					title: "Add New User",
+					title: "Add New UserInterface",
 					url: "/dashboard/admin/users/create",
 				},
 				{

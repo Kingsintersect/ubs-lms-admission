@@ -1,11 +1,11 @@
 "use client";
 import { Roles } from '@/config';
-import { AdmissionStatusType, SittingCourse, StatusType, StudentType } from '@/config/Types';
+import { AdmissionStatusType, SittingCourse, StatusType, UserInterface } from '@/config/Types';
 import { ensureClient } from '@/lib/ensureClient';
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 type AppState = {
-   student: StudentType;
+   student: UserInterface;
    isAuthenticated: boolean;
    isPageLoading: boolean;
    passportUrl: string | null;
@@ -20,8 +20,8 @@ type AppState = {
 
 type AppContextType = {
    state: AppState;
-   setStudent: (newStudentData: Partial<StudentType>) => void;
-   getStudent: () => StudentType;
+   setStudent: (newStudentData: Partial<UserInterface>) => void;
+   getStudent: () => UserInterface;
    removeStudent: () => void;
    setAuthentication: (status: boolean) => void;
    setIsPageLoading: (status: boolean) => void;
@@ -94,7 +94,7 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
    }, []);
 
    // Function to update student
-   const setStudent = (newStudentData: Partial<StudentType>) => {
+   const setStudent = (newStudentData: Partial<UserInterface>) => {
       if (isClient) {
          localStorage.setItem("student", JSON.stringify(newStudentData));
          setState((prevState) => ({

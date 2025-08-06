@@ -1,15 +1,15 @@
 import { Roles } from "@/config";
-import { StudentType } from "@/config/Types";
+import { UserInterface } from "@/config/Types";
 import { ObjectType } from "@/types/generic.types";
 
-export interface User {
-	id: string;
-	name: string;
-	email: string;
-	role: Roles;
-}
+// export interface UserType {
+// 	id: string;
+// 	name: string;
+// 	email: string;
+// 	role: Roles;
+// }
 
-export interface Student extends StudentType {
+export interface Student extends UserInterface {
 	role: Roles.STUDENT;
 	studentId: string;
 	course: string;
@@ -17,14 +17,14 @@ export interface Student extends StudentType {
 	passport: string;
 }
 
-export interface Admin extends StudentType {
+export interface Admin extends UserInterface {
 	role: Roles.ADMIN;
 	adminId: string;
 	department: string;
 	passport: string;
 }
 
-export interface Teacher extends StudentType {
+export interface Teacher extends UserInterface {
 	role: Roles.TEACHER;
 	teacherId: string;
 	department: string;

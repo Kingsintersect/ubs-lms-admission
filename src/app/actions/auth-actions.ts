@@ -14,29 +14,33 @@ import { SessionData } from "@/types/auth";
 import { ObjectType } from "@/types/generic.types";
 import { GenericDataType } from "@/types/generic.types";
 import { redirect } from "next/navigation";
-import { StudentType } from "@/config/Types";
+import { UserInterface } from "@/config/Types";
 
-export const studentSignin = async (
+export const signinAction = async (
 	data: ObjectType
 ): Promise<GenericDataType> => {
-	const response = (await apiCallerBeta({
+	const { success, error } = (await apiCallerBeta({
 		url: `${remoteApiUrl}/application/login`,
 		method: "POST",
 		data: { ...data },
 	})) as GenericDataType;
-	if (response.success) {
-		const { user, access_token } = response.success;
-		user.role = user.role ?? "STUDENT";
-		await setSession(
-			loginSessionKey,
-			{
-				user: user,
-				access_token: access_token,
-			},
-			"1h"
-		);
+
+	if (error) {
+		console.log('Sign in error', error)
+		return { error };
 	}
-	return response;
+	const user = success?.user as UserInterface;
+	const access_token = success?.access_token as string;
+	user.role = user.role ?? "STUDENT";
+	await setSession(
+		loginSessionKey,
+		{
+			user: user,
+			access_token: access_token,
+		},
+		"1h"
+	);
+	return { success: true, user, access_token };
 };
 
 export const CreateStudentAccount = async (
@@ -53,30 +57,7 @@ export const CreateStudentAccount = async (
 	return response;
 };
 
-export const adminSignin = async (
-	data: ObjectType
-): Promise<GenericDataType> => {
-	const response = (await apiCallerBeta({
-		url: `${remoteApiUrl}/admin/admin-login`,
-		method: "POST",
-		data: { ...data },
-	})) as GenericDataType;
-	if (response.success) {
-		const { user, access_token } = response.success;
-		user.role = user.role ?? "ADMIN";
-		await setSession(
-			loginSessionKey,
-			{
-				user: user,
-				access_token: access_token,
-			},
-			"1h"
-		);
-	}
-	return response;
-};
-
-export async function logout() {
+export async function signOutAction(platform?: "client" | "server"): Promise<GenericDataType> {
 	const loginSession = (await getSession(
 		loginSessionKey
 	)) as SessionData | null;
@@ -88,15 +69,18 @@ export async function logout() {
 			return { role: userRole };
 		} catch (error) {
 			console.error(error);
-			return false;
+			return { success: false, role: userRole };;
 		}
 	}
-
-	redirect(`/auth/signin`);
-	return false;
+	if (platform === "server") {
+		redirect("/auth/signin");
+	} else if (platform === "client") {
+		return { success: true, role: userRole };
+	}
+	return { success: true, role: userRole };
 }
 interface UserResponse {
-	user: StudentType; // StudentType is the actual user data
+	user: UserInterface; // UserInterface is the actual user data
 	// ... other possible response fields
 }
 interface ApiResponse<T> {
@@ -124,13 +108,13 @@ export const getUser = async (): Promise<ApiResponse<UserResponse>> => {
 };
 
 export async function refetchUserData() {
+	let updatedLoginSessionData: SessionData | null = null;
 	try {
-
-		const loginSessionData = (await getSession(
+		updatedLoginSessionData = (await getSession(
 			loginSessionKey
 		)) as SessionData | null;
 
-		if (!loginSessionData) {
+		if (!updatedLoginSessionData) {
 			return { error: { message: "No active session" }, success: null };
 		}
 
@@ -140,14 +124,16 @@ export async function refetchUserData() {
 		};
 
 		const newUser = success?.user;
-		await updateSessionKey(loginSessionKey, {
-			user: {
-				...newUser
-			}
-		});
-		const updatedLoginSessionData = (await getSession(
-			loginSessionKey
-		)) as SessionData | null;
+		if (newUser) {
+			await updateSessionKey(loginSessionKey, {
+				user: {
+					...newUser
+				}
+			});
+			updatedLoginSessionData = (await getSession(
+				loginSessionKey
+			)) as SessionData | null;
+		}
 
 
 		return { success: updatedLoginSessionData, error: null };

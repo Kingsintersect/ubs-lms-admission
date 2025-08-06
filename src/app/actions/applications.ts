@@ -1,7 +1,7 @@
 "use server";
 
 import { remoteApiUrl } from "@/config";
-import { StudentType } from "@/config/Types";
+import { UserInterface } from "@/config/Types";
 import { UseDataTableOptions } from "@/hooks/useDataTable";
 import { apiCall } from "@/lib/apiCaller";
 import { loginSessionKey } from "@/lib/definitions";
@@ -12,7 +12,7 @@ import { ApiResponseArray, ApiResponseSingle } from "@/types/api.types";
 import { Application } from "@/types/application";
 import { SessionData } from "@/types/auth";
 
-export async function getAdmissionApplicants(options?: UseDataTableOptions): Promise<{ data: StudentType[]; total: number }> {
+export async function getAdmissionApplicants(options?: UseDataTableOptions): Promise<{ data: UserInterface[]; total: number }> {
     const loginSession = (await getSession(loginSessionKey)) as SessionData;
     const {
         pageIndex = 0,
@@ -32,7 +32,7 @@ export async function getAdmissionApplicants(options?: UseDataTableOptions): Pro
         ...filters,
     });
 
-    const response = await apiCall<undefined, ApiResponseArray<StudentType>>({
+    const response = await apiCall<undefined, ApiResponseArray<UserInterface>>({
         // url: `/admin/all-applications?academicSession=2024/2025&${query.toString()}`,
         url: `/admin/all-applications?${query.toString()}`,
         method: "GET",
@@ -50,7 +50,7 @@ export async function getAdmissionApplicants(options?: UseDataTableOptions): Pro
     }
 }
 
-export async function getAdmittedApplicants(options?: UseDataTableOptions): Promise<{ data: StudentType[]; total: number }> {
+export async function getAdmittedApplicants(options?: UseDataTableOptions): Promise<{ data: UserInterface[]; total: number }> {
     const loginSession = (await getSession(loginSessionKey)) as SessionData;
     const {
         pageIndex = 0,
@@ -70,7 +70,7 @@ export async function getAdmittedApplicants(options?: UseDataTableOptions): Prom
         ...filters,
     });
 
-    const response = await apiCall<undefined, ApiResponseArray<StudentType>>({
+    const response = await apiCall<undefined, ApiResponseArray<UserInterface>>({
         url: `/admin/approved-applicants?academicSession=2024/2025&${query.toString()}`,
         method: "GET",
         accessToken: loginSession.access_token

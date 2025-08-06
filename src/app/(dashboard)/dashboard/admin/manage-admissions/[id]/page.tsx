@@ -15,7 +15,7 @@ import { PagePropsWithId } from "@/types/generic.types"
 import { useAuth } from "@/contexts/AuthContext"
 import { notify } from "@/contexts/ToastProvider"
 import { FULL_TUITION_FEE } from "@/config"
-import { StudentType } from "@/config/Types"
+import { UserInterface } from "@/config/Types"
 
 // API service functions
 const userService = {
@@ -28,7 +28,7 @@ const userService = {
 };
 
 // Define the type for student data
-interface Student extends StudentType {
+interface Student extends UserInterface {
     department: string;
     level: string;
     admissionYear: string;

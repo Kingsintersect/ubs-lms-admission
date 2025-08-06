@@ -1,10 +1,10 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { StudentType } from "@/config/Types";
+import { UserInterface } from "@/config/Types";
 import { ClipboardCopy, BookOpen, Building, GraduationCap } from "lucide-react";
 import { useEffect, useState } from "react";
 
-const PageHeader = ({ student }: { student: StudentType | null }) => {
+const PageHeader = ({ student }: { student: UserInterface | null }) => {
    const [isClient, setIsClient] = useState(false);
    const [copied, setCopied] = useState(false);
    const courses: { faculty?: string; department?: string; course_category?: string } = {

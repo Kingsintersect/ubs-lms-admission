@@ -5,9 +5,10 @@ import { SessionData } from "@/types/auth";
 export async function verifySession(key?: string) {
 	try {
 		const loginSession = (await getSession(key || "")) as SessionData;
-		if (!loginSession) {
-			redirect("/auth/signin");
-		}
+		console.log('loginSession', loginSession)
+		// if (!loginSession) {
+		// 	redirect("/auth/signin");
+		// }
 		return loginSession;
 	} catch {
 		redirect("/auth/signin");

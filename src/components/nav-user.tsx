@@ -43,7 +43,7 @@ export function NavUser({
     role: Roles
   }
 }) {
-  const { logout } = useAuth()
+  const { initializeLogout } = useAuth()
   const { isMobile } = useSidebar()
 
   return (
@@ -109,7 +109,7 @@ export function NavUser({
               </DropdownMenuGroup>
             )}
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={logout}>
+            <DropdownMenuItem onClick={initializeLogout}>
               <LogOut />
               Log out
             </DropdownMenuItem>

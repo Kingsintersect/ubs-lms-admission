@@ -12,7 +12,7 @@ import ContentLoader from "@/components/ui/content-loader";
 
 const StudentProfile = () => {
    const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
-   const { user, loading, logout } = useAuth();
+   const { user, loading, initializeLogout } = useAuth();
    const baseLink = `${baseUrl}/dashboard/student`;
 
    const student = {
@@ -86,7 +86,7 @@ const StudentProfile = () => {
                                  </Link> */}
                                  <button
                                     className="w-full flex items-center gap-3 p-4 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
-                                    onClick={logout}
+                                    onClick={initializeLogout}
                                  >
                                     <LogOut className="h-5 w-5" />
                                     Sign Out

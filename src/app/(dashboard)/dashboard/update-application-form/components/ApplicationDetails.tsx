@@ -42,7 +42,6 @@ export const ApplicationDetails = ({
             default: return 'text-yellow-600 bg-yellow-50';
         }
     };
-    console.log('application?.application.passport', FormatImageUrl(application?.application.passport as unknown as string));
     return (
         <div className="lg:col-span-2">
             {isLoading ? (

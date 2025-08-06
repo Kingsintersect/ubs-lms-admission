@@ -4,8 +4,8 @@ import { updateStudentApplicationData } from '@/app/actions/applications';
 import { QualificationDocumentsData } from '@/schemas/admission-schema';
 import { AlertCircle, CheckCircle, Edit3, FileStack, Save, X } from 'lucide-react';
 import React, { useState } from 'react'
-import { EditableFileUpload } from '../../../../../../components/forms/EditableFormFields';
 import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
+import { EditableFileUpload } from '@/components/forms/EditableFormFields';
 
 export interface QualificationDocumentsProps {
     application: QualificationDocumentsData;
@@ -18,7 +18,6 @@ export default function QualificationDocuments({
     const [isSaving, setIsSaving] = useState(false);
     const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState('');
-
     // Form state
     const [formData, setFormData] = useState<QualificationDocumentsData>({
         first_school_leaving: application.first_school_leaving || undefined,
@@ -217,9 +216,7 @@ export default function QualificationDocuments({
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 <EditableFileUpload
                     label="First school leaving certificate"
-                    value={Array.isArray(formData.first_school_leaving) ?
-                        formData.first_school_leaving.filter(item => typeof item === 'string') :
-                        []}
+                    value={[`${formData.first_school_leaving}`]}
                     onChange={handleImagesChange} // Handle existing file URL changes
                     onFilesChange={handleFilesChange} // Handle new files
                     accept=".pdf,.doc,.docx,.jpg,.png"
@@ -232,9 +229,7 @@ export default function QualificationDocuments({
                 />
                 <EditableFileUpload
                     label="O'Level certificate"
-                    value={Array.isArray(formData.o_level) ?
-                        formData.o_level.filter(item => typeof item === 'string') :
-                        []}
+                    value={[`${formData.o_level}`]}
                     onChange={handleImagesChange} // Handle existing file URL changes
                     onFilesChange={handleFilesChange} // Handle new files
                     accept=".pdf,.doc,.docx,.jpg,.png"
@@ -247,24 +242,7 @@ export default function QualificationDocuments({
                 />
                 <EditableFileUpload
                     label="Degree certificate"
-                    value={Array.isArray(formData.degree_transcript) ?
-                        formData.degree_transcript.filter(item => typeof item === 'string') :
-                        []}
-                    onChange={handleImagesChange} // Handle existing file URL changes
-                    onFilesChange={handleFilesChange} // Handle new files
-                    accept=".pdf,.doc,.docx,.jpg,.png"
-                    multiple={false}
-                    maxFiles={1}
-                    maxSize={10}
-                    isEditing={isEditing}
-                    baseUrl="https://uni-portal-system-backend.qverselearning.org/storage/" // For existing files
-                    showPreview={true} // Enable/disable preview mode
-                />
-                <EditableFileUpload
-                    label="OND certificate"
-                    value={Array.isArray(formData.degree) ?
-                        formData.degree.filter(item => typeof item === 'string') :
-                        []}
+                    value={[`${formData.degree}`]}
                     onChange={handleImagesChange} // Handle existing file URL changes
                     onFilesChange={handleFilesChange} // Handle new files
                     accept=".pdf,.doc,.docx,.jpg,.png"
@@ -277,9 +255,7 @@ export default function QualificationDocuments({
                 />
                 <EditableFileUpload
                     label="HND certificate"
-                    value={Array.isArray(formData.hnd) ?
-                        formData.hnd.filter(item => typeof item === 'string') :
-                        []}
+                    value={[`${formData.hnd}`]}
                     onChange={handleImagesChange} // Handle existing file URL changes
                     onFilesChange={handleFilesChange} // Handle new files
                     accept=".pdf,.doc,.docx,.jpg,.png"
@@ -292,9 +268,7 @@ export default function QualificationDocuments({
                 />
                 <EditableFileUpload
                     label="Transcript Document"
-                    value={Array.isArray(formData.degree_transcript) ?
-                        formData.degree_transcript.filter(item => typeof item === 'string') :
-                        []}
+                    value={[`${formData.degree_transcript}`]}
                     onChange={handleImagesChange} // Handle existing file URL changes
                     onFilesChange={handleFilesChange} // Handle new files
                     accept=".pdf,.doc,.docx,.jpg,.png"

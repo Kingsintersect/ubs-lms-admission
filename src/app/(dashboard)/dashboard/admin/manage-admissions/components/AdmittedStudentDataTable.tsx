@@ -8,7 +8,7 @@ import { getAdmittedApplicants } from "@/app/actions/applications";
 import { ActionMenu } from "@/components/ui/datatable/ActionMenu";
 import { EditIcon, NotebookTabs } from "lucide-react";
 import { baseUrl } from "@/config";
-import { StudentType } from "@/config/Types";
+import { UserInterface } from "@/config/Types";
 
 const basePath = `${baseUrl}/dashboard/admin/manage-admissions`;
 export type StudentTableColumnsType = {
@@ -43,7 +43,7 @@ export const AdmittedStudentDataTable = () => {
         setSearch,
         setFilter,
         setSorting,
-    } = useDataTable<StudentType>({
+    } = useDataTable<UserInterface>({
         fetchFn: getAdmittedApplicants,
         queryKey: ["getAllAdmittedStudents"],
         initialState: {
@@ -54,7 +54,7 @@ export const AdmittedStudentDataTable = () => {
         },
     });
 
-    const columns: ColumnDef<Record<string, unknown>, StudentType>[] = [
+    const columns: ColumnDef<Record<string, unknown>, UserInterface>[] = [
         // {
         //     accessorKey: "id",
         //     header: "Student ID",
@@ -129,7 +129,7 @@ export const AdmittedStudentDataTable = () => {
     ]
 
     return (
-        <DataTable<Record<string, unknown>, StudentType>
+        <DataTable<Record<string, unknown>, UserInterface>
             columns={columns}
             fetchedData={data as unknown as Record<string, unknown>[]}
             isLoading={isLoading}

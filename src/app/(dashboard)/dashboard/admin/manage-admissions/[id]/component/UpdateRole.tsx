@@ -104,7 +104,7 @@ export function UpdateRole({
                 <CardTitle className="text-lg text-cyan-800">{feeTypeTitle} Status</CardTitle>
                 <CardDescription className="text-orange-600">
                     {statusType === 'role_assignment'
-                        ? 'Assign Role To This User'
+                        ? 'Assign Role To This UserInterface'
                         : 'Update...'}
                 </CardDescription>
             </CardHeader>
@@ -113,7 +113,7 @@ export function UpdateRole({
                 <form onSubmit={handleSubmit}>
                     <div className="space-y-4">
                         <div className="w-full flex flex-col space-y-1.5">
-                            <Label htmlFor="role">Select User Role</Label>
+                            <Label htmlFor="role">Select UserInterface Role</Label>
                             <Select
                                 value={newRole}
                                 onValueChange={(val) => setNewRole(val)}

@@ -148,7 +148,7 @@ export function FeeToggleCard({
                         : statusType === 'application_payment_status'
                             ? 'Update the Application Fee payment status'
                             : statusType === 'role_assignment'
-                                ? 'Assign Role To This User'
+                                ? 'Assign Role To This UserInterface'
                                 : 'Update the tuition fee payment status'}
                 </CardDescription>
             </CardHeader>

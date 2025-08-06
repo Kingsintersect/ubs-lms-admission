@@ -42,7 +42,7 @@ export enum StatusType {
 	PART_PAID = "PART_PAID",
 	UNPAID = "UNPAID"
 }
-export interface StudentType extends Record<string, unknown> {
+export interface UserInterface extends Record<string, unknown> {
 	id: number | null;
 	pictureRef: string | null;
 	last_name: string | null;
@@ -74,7 +74,7 @@ export interface StudentType extends Record<string, unknown> {
 	level: string | null;
 	tuition_amount_paid: number | null;
 }
-export interface StudentApplicationType extends StudentType {
+export interface StudentApplicationType extends UserInterface {
 	religion: string;
 	gender: string;
 	disability: string;
@@ -105,12 +105,6 @@ export interface Profile {
 	deleted_at: string | null;
 	level: string | null;
 }
-
-export type User = {
-	id: string;
-	role: string;
-	access_token: string;
-};
 
 export type Department = {
 	id: string;

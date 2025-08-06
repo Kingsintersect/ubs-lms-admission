@@ -20,7 +20,7 @@ const Header = () => {
 				</div>
 
 				<div className="flex items-center space-x-4 mt-4 sm:mt-0 flex-1 sm:flex-none">
-					{/* User area */}
+					{/* UserInterface area */}
 					<Link href={""}></Link>
 				</div>
 			</div>

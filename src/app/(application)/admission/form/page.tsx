@@ -24,7 +24,7 @@ import { AcademicCredentialsStep } from "./components/form-inputs/AcademicCreden
 import { submitAdmissionForm } from "@/app/actions/admission-actions";
 
 const AdmissionForm: React.FC = () => {
-    const { logout, access_token, updateUserInState, refreshUser } = useAuth();
+    const { user, initializeLogout, access_token, updateUserInState, refreshUserData } = useAuth();
     const [currentStep, setCurrentStep] = useState(0);
     const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -61,8 +61,10 @@ const AdmissionForm: React.FC = () => {
         },
         onSuccess: async () => {
             setIsSubmitted(true);
-            updateUserInState({ is_applied: Number(true) });
-            refreshUser();
+            if (user) {
+                updateUserInState({ ...user, is_applied: Number(true) });
+            }
+            refreshUserData();
             toast.success("Application submitted successfully!");
         },
     });
@@ -130,7 +132,7 @@ const AdmissionForm: React.FC = () => {
         <div className="relative min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
             <button
                 className="absolute right-10 top-10 z-50 flex items-center gap-3 p-4 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors font-bold rounded-lg shadow-md"
-                onClick={logout}
+                onClick={initializeLogout}
             >
                 Sign Out
                 <LogOut className="h-5 w-5" />

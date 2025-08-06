@@ -6,10 +6,10 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Info } from "lucide-react"
 import { UpdateRole } from "./UpdateRole"
 import { ACCEPTANCE_FEE } from "@/config"
-import { StudentType } from "@/config/Types"
+import { UserInterface } from "@/config/Types"
 
 interface StatusManagementProps {
-    studentData: StudentType;
+    studentData: UserInterface;
 }
 
 export default function StatusManagement({ studentData }: StatusManagementProps) {

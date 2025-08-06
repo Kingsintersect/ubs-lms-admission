@@ -6,7 +6,7 @@ import { baseUrl } from "@/config";
 import { useRouter } from "next/navigation";
 import Typewriter from "@/components/TypeWritter";
 import { Button } from "@/components/ui/button";
-import { StudentType } from "@/config/Types";
+import { UserInterface } from "@/config/Types";
 
 const navigation = {
    applicationFormUrl: `${baseUrl}/admission/form`,
@@ -14,7 +14,7 @@ const navigation = {
    tuitionFeeUrl: `${baseUrl}/dashboard/history/student-payments/tuition`,
 }
 
-const StudentBanner = ({ student }: { student: StudentType }) => {
+const StudentBanner = ({ student }: { student: UserInterface }) => {
    const [isClient, setIsClient] = useState(false);
    const [copied, setCopied] = useState(false);
    const [goto, setGoto] = useState('');

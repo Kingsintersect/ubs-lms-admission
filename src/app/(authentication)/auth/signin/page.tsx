@@ -18,7 +18,7 @@ type SigninFormData = z.infer<typeof SigninSchema>;
 export default function AuthPage() {
     const searchParams = useSearchParams();
     const referenceNumber = searchParams.get('transRef') || '';
-    const { studentSignin, loading } = useAuth();
+    const { initializeLogin, loading } = useAuth();
     const {
         register,
         handleSubmit,
@@ -40,7 +40,7 @@ export default function AuthPage() {
     }, [referenceNumber, setValue]);
 
     const onSubmit: SubmitHandler<SigninFormData> = async (data) => {
-        await studentSignin(data);
+        await initializeLogin(data);
     };
 
     return (

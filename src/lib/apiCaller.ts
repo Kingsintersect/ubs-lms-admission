@@ -17,12 +17,16 @@ interface FetchOptions<T> {
 	method?: FetchMethod;
 	data?: T;
 	accessToken?: string;
+	credentials?: "include" | "same-origin" | "omit";
+	cache?: "no-store" | "default" | "force-cache" | "only-if-cached";
 }
 export const apiCall = async <TRequest = unknown, TResponse = unknown>({
 	url,
 	method = "GET",
 	data,
 	accessToken,
+	credentials = "include",
+	cache = "no-store",
 }: FetchOptions<TRequest>): Promise<TResponse | null> => {
 	const isFormData = typeof FormData !== "undefined" && data instanceof FormData;
 
@@ -38,6 +42,8 @@ export const apiCall = async <TRequest = unknown, TResponse = unknown>({
 		const response = await fetch(`${remoteApiUrl}${url}`, {
 			method,
 			headers,
+			credentials,
+			cache,
 			body: method !== "GET"
 				? isFormData
 					? data as FormData

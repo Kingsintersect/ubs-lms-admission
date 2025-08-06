@@ -1,4 +1,4 @@
-import { StudentType } from "@/config/Types";
+import { UserInterface } from "@/config/Types";
 import { baseSignupSchema } from "@/hooks/use-signin-multistep-view-model";
 import z from "zod";
 
@@ -305,7 +305,7 @@ export const qualificationDocumentsSchema = baseAdmissionSchema.pick({
 
 
 export type AdmissionFormData = z.infer<typeof admissionSchema>;
-export interface ApplicationDetailsType extends StudentType {
+export interface ApplicationDetailsType extends UserInterface {
     application: AdmissionFormData;
 }
 
