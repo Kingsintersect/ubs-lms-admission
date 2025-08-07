@@ -169,7 +169,6 @@ export async function getApplications(
 // review editing
 export const updateStudentApplicationData = async (applicationId: string, data: ApplicationChunk): Promise<void> => {
     const requestData = { application_id: applicationId, ...data };
-    console.log('requestData', requestData)
     const loginSession = (await getSession(loginSessionKey)) as SessionData;
     const response = await fetch(`${remoteApiUrl}/application/update-application-form`, {
         method: 'PUT',
@@ -179,13 +178,11 @@ export const updateStudentApplicationData = async (applicationId: string, data: 
         },
         body: JSON.stringify(requestData),
     });
-    console.log('response', response)
     if (!response.ok) {
         const error = await response.json();
         console.error('error', error)
         throw new Error(error.message || 'Failed to update personal information');
     }
     const result = await response.json();
-    console.log('result', result)
     return result;
 };

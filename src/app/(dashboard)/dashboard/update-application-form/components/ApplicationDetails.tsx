@@ -47,7 +47,7 @@ export const ApplicationDetails = ({
             {isLoading ? (
                 <div className='w-full flex items-center justify-center'>
                     <LoadingSpinner size="sm" className="mr-2" />
-                    Loading Application Details...
+                    Loading Application Review Data...
                 </div>
             ) : application ? (
                 <div className="bg-white rounded-lg shadow-sm">

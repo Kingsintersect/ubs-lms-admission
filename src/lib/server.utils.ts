@@ -5,12 +5,12 @@ import { SessionData } from "@/types/auth";
 export async function verifySession(key?: string) {
 	try {
 		const loginSession = (await getSession(key || "")) as SessionData;
-		console.log('loginSession', loginSession)
-		// if (!loginSession) {
-		// 	redirect("/auth/signin");
-		// }
+		if (!loginSession) {
+			redirect("/auth/signin");
+		}
 		return loginSession;
-	} catch {
+	} catch (error) {
+		console.error("Session verification failed", error);
 		redirect("/auth/signin");
 	}
 }

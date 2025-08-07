@@ -26,7 +26,7 @@ export const signinAction = async (
 	})) as GenericDataType;
 
 	if (error) {
-		console.log('Sign in error', error)
+		console.error('Sign in error', error)
 		return { error };
 	}
 	const user = success?.user as UserInterface;

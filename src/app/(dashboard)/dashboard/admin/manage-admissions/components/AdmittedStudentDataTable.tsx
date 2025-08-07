@@ -118,7 +118,7 @@ export const AdmittedStudentDataTable = () => {
                         row={student}
                         onCopy={(id) => navigator.clipboard.writeText(id ?? "")}
                         menu={[
-                            { title: "Application Details", url: `${baseUrl}/dashboard/update-application-form?id=${student.id}`, icon: NotebookTabs },
+                            { title: "Review Application", url: `${baseUrl}/dashboard/update-application-form?id=${student.id}`, icon: NotebookTabs },
                             { title: "Update Record", url: `${basePath}/${student.id}`, icon: EditIcon },
                         ]}
                     />

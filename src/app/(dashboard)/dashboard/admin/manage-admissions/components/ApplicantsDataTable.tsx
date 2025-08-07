@@ -124,7 +124,7 @@ export const ApplicantsDataTable = () => {
                         row={student}
                         onCopy={(id) => navigator.clipboard.writeText(id ?? "")}
                         menu={[
-                            { title: "Application Details", url: `${basePath}?id=${student.id}`, icon: NotebookTabs },
+                            { title: "Review Application", url: `${basePath}?id=${student.id}`, icon: NotebookTabs },
                         ]}
                     />
                 );

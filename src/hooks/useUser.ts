@@ -2,75 +2,75 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { UserInterface } from "@/config/Types";
 import { apiCall } from "@/lib/apiCaller";
-import { fetchUserResponse } from "@/contexts/AuthContext";
+import { FetchUserResponse } from "@/contexts/AuthContext";
 
 export function useAuthSession() {
     return useQuery({
         queryKey: ["access_token"],
         queryFn: async () => {
-            const res = await fetch("/api/session");
+            const res = await fetch("/api/user");
             if (!res.ok) throw new Error("Failed to get session");
 
             const data = await res.json();
-            console.log('data-session', data);
-
-            if (!data?.access_token) {
+            if (!data?.user) {
                 throw new Error("Access token not found in session data");
             }
-
-            return data;
+            return { user: data.user, access_token: data.access_token };
         },
         staleTime: 1000 * 60 * 5, // 5 minutes
-        // refetchOnWindowFocus: true,
+        refetchOnWindowFocus: false,
     });
 }
 
-export function useUser() {
-    const { data: sessionData, isLoading: loadingToken } = useAuthSession();
-    const access_token = sessionData?.access_token;
-    const queryClient = useQueryClient();
+// export function useUser() {
+//     const { data: sessionData, isLoading: loadingToken } = useAuthSession();
+//     const access_token = sessionData?.access_token;
+//     const queryClient = useQueryClient();
 
-    const query = useQuery({
-        queryKey: ["user"],
-        enabled: !!access_token && !loadingToken,
-        queryFn: () =>
-            apiCall<null, UserInterface>({
-                url: "/application/profile",
-                method: "GET",
-                accessToken: access_token,
-                credentials: "omit",
-                cache: "no-store",
-            }),
-        staleTime: 30000,
-        // refetchOnWindowFocus: true,
-    });
+//     const query = useQuery({
+//         queryKey: ["user"],
+//         enabled: !!access_token && !loadingToken,
+//         queryFn: () =>
+//             apiCall<null, UserInterface>({
+//                 url: "/application/profile",
+//                 method: "GET",
+//                 accessToken: access_token,
+//                 credentials: "omit",
+//                 cache: "no-store",
+//             }),
+//         staleTime: 30000,
+//         refetchOnWindowFocus: false,
+//     });
 
-    // Function to manually refresh user data
-    const refreshUser = async () => {
-        await query.refetch();
-        // Also invalidate the session to ensure consistency
-        await queryClient.invalidateQueries({ queryKey: ["access_token"] });
-    };
+//     // Function to manually refresh user data
+//     const refreshUser = async () => {
+//         await query.refetch();
+//         // Also invalidate the session to ensure consistency
+//         await queryClient.invalidateQueries({ queryKey: ["access_token"] });
+//     };
 
-    // Function to update user data optimistically
-    const updateUserOptimistically = (newUserData: Partial<UserInterface>) => {
-        queryClient.setQueryData(["user"], (oldData: { success?: UserInterface } | undefined) => {
-            if (!oldData?.success) return oldData;
-            return {
-                ...oldData,
-                success: { ...oldData.success, ...newUserData }
-            };
-        });
-    };
+//     // Function to update user data optimistically
+//     const updateUserOptimistically = (newUserData: Partial<UserInterface>) => {
+//         queryClient.setQueryData(["user"], (oldData: { success?: UserInterface } | undefined) => {
+//             if (!oldData?.success) return oldData;
+//             return {
+//                 ...oldData,
+//                 success: { ...oldData.success, ...newUserData }
+//             };
+//         });
+//     };
 
-    return {
-        ...query,
-        refreshUser,
-        updateUserOptimistically,
-    };
-}
+//     return {
+//         ...query,
+//         refreshUser,
+//         updateUserOptimistically,
+//     };
+// }
+
+
 
 // Custom hook for specific user update scenarios
+
 export function useUserUpdates() {
     const queryClient = useQueryClient();
     const { data: sessionData } = useAuthSession();
@@ -89,19 +89,19 @@ export function useUserUpdates() {
         });
 
         try {
-            const response = await apiCall<Partial<UserInterface>, fetchUserResponse>({
+            const response = await apiCall<Partial<UserInterface>, FetchUserResponse>({
                 url: "/application/profile",
                 method: "PUT",
                 data: profileData,
                 accessToken: access_token,
             });
 
-            if (response?.success) {
+            if (response?.status === 200) {
                 // Update session
                 await fetch('/api/session/update-user', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user: response?.success }),
+                    body: JSON.stringify({ user: response?.user }),
                 });
 
                 // Invalidate and refetch to ensure consistency
@@ -127,14 +127,14 @@ export function useUserUpdates() {
         if (!access_token) throw new Error("No access token available");
 
         try {
-            const response = await apiCall<TuitionPaymentData, fetchUserResponse>({
+            const response = await apiCall<TuitionPaymentData, FetchUserResponse>({
                 url: "/application/payment/tuition",
                 method: "POST",
                 data: paymentData,
                 accessToken: access_token,
             });
 
-            if (response?.success) {
+            if (response?.status === 200) {
                 // Refresh user data to get updated payment status
                 await queryClient.invalidateQueries({ queryKey: ["user"] });
                 await queryClient.invalidateQueries({ queryKey: ["access_token"] });
@@ -151,53 +151,3 @@ export function useUserUpdates() {
         payTuitionFee,
     };
 }
-
-
-
-
-
-
-// import { UserInterface } from "@/config/Types";
-// import { apiCall } from "@/lib/apiCaller";
-// import { useQuery } from "@tanstack/react-query";
-
-// export function useAuthSession() {
-//     return useQuery({
-//         queryKey: ["access_token"],
-//         queryFn: async () => {
-//             const res = await fetch("/api/session");
-//             if (!res.ok) throw new Error("Failed to get session");
-
-//             const data = await res.json();
-//             console.log('data-session', data);
-
-//             // Return a valid string or throw an error
-//             if (!data?.access_token) {
-//                 throw new Error("Access token not found in session data");
-//             }
-
-//             return data;
-//         },
-//         staleTime: 1000 * 60 * 5, // 5 minutes
-//     });
-// }
-
-
-// export function useUser() {
-//     const { data: sessionData, isLoading: loadingToken } = useAuthSession();
-//     const access_token = sessionData?.access_token;
-//     return useQuery({
-//         queryKey: ["user"],
-//         enabled: !!access_token && !loadingToken,
-//         queryFn: () =>
-//             apiCall<null, UserInterface>({
-//                 url: "/application/profile",
-//                 method: "GET",
-//                 accessToken: access_token,
-//                 credentials: "omit",
-//                 cache: "no-store",
-//             }),
-//         staleTime: 30000,
-//         refetchOnWindowFocus: true,
-//     });
-// }

@@ -64,6 +64,7 @@ export default async function middleware(req: NextRequest) {
 	// For loged in users, handle specific paths
 	if (user) {
 		// Admission form special case
+
 		if (path.startsWith('/admission/form')) {
 			if (hasApplied && role === Roles.STUDENT) {
 				return NextResponse.redirect(new URL('/dashboard/student', req.url));

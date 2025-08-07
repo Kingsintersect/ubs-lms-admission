@@ -5,6 +5,7 @@ import { DataTableCheckboxColumn, DataTableColumnHeader } from "@/components/ui/
 import { ActionMenu } from "@/components/ui/datatable/ActionMenu";
 import { baseUrl } from "@/config";
 import { CheckCircleIcon, NotebookTabs, EditIcon, XCircle } from "lucide-react";
+import { AdmissionStatusType } from "@/config/Types";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -16,8 +17,8 @@ export type StudentTableColumnsType = {
     email: string
     reference: string
     phone_number: string
-    is_applied: any
-    admission_status: any
+    is_applied: string | number
+    admission_status: AdmissionStatusType
     // actions: string
 }
 
@@ -106,7 +107,7 @@ export const student_columns: ColumnDef<Partial<StudentTableColumnsType>>[] = [
             row={row.original as StudentTableColumnsType}
             onCopy={(id) => navigator.clipboard.writeText(id ?? "")}
             menu={[
-                { title: "Application Details", url: `${basePath}/${row.original.id}`, icon: NotebookTabs },
+                { title: "Review Application", url: `${basePath}/${row.original.id}`, icon: NotebookTabs },
                 { title: "Update Record", url: `${basePath}/${row.original.id}/update`, icon: EditIcon },
             ]}
         />,
