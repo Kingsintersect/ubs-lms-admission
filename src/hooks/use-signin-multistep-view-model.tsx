@@ -14,6 +14,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 
 export const baseSignupSchema = z
     .object({
+        id: z.string().optional(),
         first_name: z.string().min(1, { message: "Required" }),
         last_name: z.string().min(1, { message: "Required" }),
         other_name: z.string().optional(),

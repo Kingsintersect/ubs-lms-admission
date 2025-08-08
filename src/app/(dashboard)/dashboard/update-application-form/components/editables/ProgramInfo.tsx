@@ -186,7 +186,7 @@ export default function ProgramInfo({
             {/* Editable Fields */}
             <div className="grid grid-cols-1 gap-4">
                 <EditableProgramOptions
-                    label=""
+                    label="Selected Program"
                     value={formData.program}
                     onChange={(value) => updateField('program', value)}
                     onIdChange={(id) => updateField('program_id', id)}

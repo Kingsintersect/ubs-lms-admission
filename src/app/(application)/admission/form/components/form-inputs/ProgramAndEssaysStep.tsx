@@ -1,18 +1,23 @@
+"use client";
+
 import { Control, FieldErrors, UseFormReturn, UseFormWatch } from "react-hook-form";
 import { AdmissionFormData } from "@/schemas/admission-schema";
-import Link from "next/link";
+// import Link from "next/link";
 import Fade from "@/components/application/animatives/Fade";
 // import { PhotoUploader } from "@/components/forms/PhotoUploader";
 import { FileUploadFormField, FormField } from "@/components/forms/FormField";
 import { STUDY_MODES } from "@/components/forms/applicationFormConstants";
+import { TermsAndConditionsTrigger } from "./TermsAndConditionsContent";
 
 interface ProgramAndEssaysStepProps {
     control: Control<AdmissionFormData>;
     errors: FieldErrors<AdmissionFormData>;
     setValue: UseFormReturn<AdmissionFormData>['setValue'];
     watch: UseFormWatch<AdmissionFormData>;
+    setILunched: (boolean) => void;
 }
-export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ control, errors, watch }) => {
+export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ control, errors, watch, setILunched }) => {
+
     const has_disability = watch("has_disability");
     return (
         <div className="space-y-7">
@@ -101,7 +106,11 @@ export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ cont
                     label="I agree to the terms and conditions *"
                     type="checkbox"
                 />
-                <Link className="block text-sm text-blue-600 font-bold animate-bounce mt-2" href={"/admission/terms-and-conditions"}>Read the terms and conditions</Link>
+                {/* <Link className="block text-sm text-blue-600 font-bold animate-bounce mt-2" href={"/admission/terms-and-conditions"}>Read the terms and conditions</Link> */}
+                <TermsAndConditionsTrigger
+                    className="text-sm text-blue-600 font-bold animate-bounce mt-2"
+                    setILunched={setILunched}
+                />
             </div>
         </div>
     );

@@ -215,6 +215,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             } else {
                 toastApiError("Logout failed, please try again.");
             }
+
             populateAuthState({
                 user: null,
                 access_token: null,

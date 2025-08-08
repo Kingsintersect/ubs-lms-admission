@@ -15,6 +15,8 @@ import { ObjectType } from "@/types/generic.types";
 import { GenericDataType } from "@/types/generic.types";
 import { redirect } from "next/navigation";
 import { UserInterface } from "@/config/Types";
+// import { signIn, signOut } from "next-auth/react";
+// import { AuthError } from "@auth/core/errors";
 
 export const signinAction = async (
 	data: ObjectType
@@ -66,7 +68,7 @@ export async function signOutAction(platform?: "client" | "server"): Promise<Gen
 		try {
 			await deleteSessionKey(loginSessionKey);
 			deleteSession();
-			return { role: userRole };
+			return { success: true, role: userRole };
 		} catch (error) {
 			console.error(error);
 			return { success: false, role: userRole };;
@@ -172,3 +174,66 @@ export const CreateUsersByCsv = async (
 	});
 	return response;
 };
+
+
+
+// NEXT AUTH IMPEMENTATION
+/**
+ * 
+ * @param data called from the next auth credentials provider
+ * @returns 
+ */
+export const authenticateUser = async (
+	data: ObjectType
+): Promise<GenericDataType> => {
+	const { success, error } = (await apiCallerBeta({
+		url: `${remoteApiUrl}/application/login`,
+		method: "POST",
+		data: { ...data },
+	})) as GenericDataType;
+
+	if (error) {
+		console.error('Sign in error', error)
+		return { error };
+	}
+	const user = success?.user as UserInterface;
+	const access_token = success?.access_token as string;
+	user.role = user.role ?? "STUDENT";
+	await setSession(
+		loginSessionKey,
+		{
+			user: user,
+			access_token: access_token,
+		},
+		"1h"
+	);
+	return { success: true, user, access_token };
+};
+
+
+
+// export const nextAuthAuthenticateAction = async (
+// 	data: ObjectType
+// ) => {
+// 	try {
+// 		await signIn("credentials", {
+// 			...data,
+// 			redirect: false,
+// 		});
+// 	} catch (error: unknown) {
+// 		if (error instanceof AuthError) {
+// 			switch (error.type) {
+// 				case 'CredentialsSignin':
+// 					return 'Invalid credentials.';
+// 				default:
+// 					return 'Something went wrong.';
+// 			}
+// 		}
+// 		throw error;
+// 	}
+// }
+
+// export const nextAuthSignOutAction = async (platform?: "client" | "server") => {
+// 	console.log('platform', platform)
+// 	await signOut({ redirect: false });
+// };

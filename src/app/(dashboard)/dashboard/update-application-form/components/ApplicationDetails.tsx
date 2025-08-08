@@ -14,6 +14,7 @@ import PersonalStatementInfo from './editables/PersonalStatementInfo';
 import CareerGoalsInfo from './editables/CareerGoalsInfo';
 import QualificationDocuments from './editables/QualificationDocuments';
 import { FormatImageUrl } from '@/lib/imageUrl';
+import { ImagePreviewModal } from '@/components/application/ImagePreviewModal';
 
 export const ApplicationDetails = ({
     isLoading,
@@ -24,7 +25,7 @@ export const ApplicationDetails = ({
     error: string | null;
     application: ApplicationDetailsType;
 }) => {
-
+    const [isModalOpen, setIsModalOpen] = React.useState(false);
     const getStatusIcon = (status) => {
         switch (status) {
             case 'ADMITTED': return <Check className="w-4 h-4" />;
@@ -53,20 +54,29 @@ export const ApplicationDetails = ({
                 <div className="bg-white rounded-lg shadow-sm">
                     <div className="p-6 border-b">
                         <div className="flex items-center justify-between">
-                            <div>
-                                <div className="">
+                            <div className="">
+                                <div className="mb-5">
                                     <h2 className="text-xl font-semibold text-gray-900">
                                         {(application.first_name + " " + application.last_name).toUpperCase()}
                                     </h2>
                                     <hr className='mt-1 mb-2' />
                                     <p className="text-gray-600">{application.program} Application</p>
                                 </div>
-                                <div className="relative h-42 w-24">
-                                    <Image
-                                        src={FormatImageUrl(application?.application.passport as unknown as string) ?? "/avatars/avatar-man.jpg"}
-                                        fill
-                                        className="object-contain rounded-lg"
-                                        alt='Passport'
+                                <div className="">
+                                    <div className="relative w-52 h-auto aspect-square cursor-pointer">
+                                        <Image
+                                            src={FormatImageUrl(application?.application.passport as unknown as string) ?? "/avatars/avatar-man.jpg"}
+                                            fill
+                                            className="object-cover rounded-lg"
+                                            alt='Passport'
+                                            onClick={() => setIsModalOpen(true)}
+                                        />
+                                    </div>
+                                    <ImagePreviewModal
+                                        isOpen={isModalOpen}
+                                        onClose={() => setIsModalOpen(false)}
+                                        imageUrl={FormatImageUrl(application?.application.passport as unknown as string) || ''}
+                                        imageName={String(application.first_name)}
                                     />
                                 </div>
                             </div>
@@ -86,6 +96,7 @@ export const ApplicationDetails = ({
                                 email: String(application.email),
                                 phone_number: String(application.phone_number),
                                 nationality: String(application.nationality),
+                                userId: String(application.id),
 
                                 id: String(application?.application.id),
                                 lga: String(application?.application.lga),

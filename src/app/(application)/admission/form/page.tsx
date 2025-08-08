@@ -22,11 +22,13 @@ import { NextOfKinInformationStep } from "./components/form-inputs/NextOfKinInfo
 import { getFriendlyError } from '@/lib/errorsHandler';
 import { AcademicCredentialsStep } from "./components/form-inputs/AcademicCredentialsStep";
 import { submitAdmissionForm } from "@/app/actions/admission-actions";
+import TermsAndConditions from "./components/form-inputs/TermsAndConditionsContent";
 
 const AdmissionForm: React.FC = () => {
     const { user, initializeLogout, access_token, updateUserInState, refreshUserData } = useAuth();
     const [currentStep, setCurrentStep] = useState(0);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [lauched, setILunched] = useState(false);
 
     const {
         control,
@@ -118,7 +120,7 @@ const AdmissionForm: React.FC = () => {
             case 4:
                 return <ProfessionalExperienceStep control={control} errors={errors} />;
             case 5:
-                return <ProgramAndEssaysStep control={control} errors={errors} setValue={setValue} watch={watch} />;
+                return <ProgramAndEssaysStep control={control} errors={errors} setValue={setValue} watch={watch} setILunched={setILunched} />;
             default:
                 return null;
         }
@@ -141,7 +143,7 @@ const AdmissionForm: React.FC = () => {
                 {/* Header */}
                 <div className="text-center mb-8">
                     <h1 className="text-4xl font-bold text-(--color-site-b-dark) mb-2">
-                        Unizik Business School Admission
+                        UNIZIK Business School Admission
                     </h1>
                     <p className="text-lg text-(--color-site-a-dark)">
                         Take the next step in your business career
@@ -246,6 +248,7 @@ const AdmissionForm: React.FC = () => {
                     <p>Need help? Contact our admissions team at support@university.edu</p>
                 </div>
             </div>
+            <TermsAndConditions lauched={lauched} setILunched={setILunched} />
         </div>
     );
 };

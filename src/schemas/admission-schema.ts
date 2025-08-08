@@ -78,7 +78,7 @@ export const baseAdmissionSchema = z.object({
             }
         ),
 
-    // Academic Information
+    // Academic Information  
     undergraduateDegree: z.string().min(1, 'Undergraduate degree is required'),
     university: z.string().min(2, 'University name is required'),
     gpa: z.string()
@@ -86,8 +86,8 @@ export const baseAdmissionSchema = z.object({
         .refine((val) => {
             if (!val) return true; // Allow undefined/empty values
             const num = parseFloat(val);
-            return !isNaN(num) && num >= 0 && num <= 4.0;
-        }, 'GPA must be between 0.0 and 4.0'),
+            return !isNaN(num) && num >= 0 && num <= 5.0;
+        }, 'GPA must be between 0.0 and 5.0'),
     graduationYear: z.string().min(4, 'Graduation year is required'),
 
     // Test Scores
@@ -117,7 +117,7 @@ export const baseAdmissionSchema = z.object({
         .max(250, "Career goals must be under 150 characters")
         .nonempty("Career goals is required"),
 
-    // Additional Information
+    // Additional Informationand terms-and-conditions
     has_disability: z.boolean().default(false),
     disability: z.string().optional().default("None"),
     agreeToTerms: z.boolean().refine((val) => val === true, 'You must agree to terms and conditions'),
@@ -167,12 +167,12 @@ function validateSponsorFields(data: AdmissionFormData, ctx: z.RefinementCtx) {
                 minLength: 2,
                 message: "Sponsor's relationship is required",
             },
-            {
-                key: "sponsor_email",
-                value: data.sponsor_email,
-                message: "Sponsor's email is required",
-                validate: () => !!data.sponsor_email && /\S+@\S+\.\S+/.test(data.sponsor_email),
-            },
+            // {
+            //     key: "sponsor_email",
+            //     value: data.sponsor_email,
+            //     message: "Sponsor's email is required",
+            //     validate: () => !!data.sponsor_email && /\S+@\S+\.\S+/.test(data.sponsor_email),
+            // },
             {
                 key: "sponsor_contact_address",
                 value: data.sponsor_contact_address,
@@ -211,6 +211,8 @@ export const personalInfoSchema = baseSignupSchema.pick({
     email: true,
     phone_number: true,
     nationality: true,
+}).extend({
+    userId: baseSignupSchema.shape.id
 });
 export const personalInfoSchema2 = baseAdmissionSchema.pick({
     id: true,

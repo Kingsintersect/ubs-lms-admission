@@ -186,3 +186,27 @@ export const updateStudentApplicationData = async (applicationId: string, data: 
     const result = await response.json();
     return result;
 };
+export const updateStudentPersonalInfoData = async (data: ApplicationChunk): Promise<void> => {
+    const requestData = { ...data };
+    const loginSession = (await getSession(loginSessionKey)) as SessionData;
+    const routeUrl = (loginSession.user.role === "STUDENT")
+        ? `/application/profile/update`
+        : (loginSession.user.role === "ADMIN")
+            ? `${remoteApiUrl}/account/user-update`
+            : "";
+    const response = await fetch(`${routeUrl}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${loginSession.access_token}`,
+        },
+        body: JSON.stringify(requestData),
+    });
+    if (!response.ok) {
+        const error = await response.json();
+        console.error('error', error)
+        throw new Error(error.message || 'Failed to update personal information');
+    }
+    const result = await response.json();
+    return result;
+};

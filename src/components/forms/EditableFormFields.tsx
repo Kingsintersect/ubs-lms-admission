@@ -224,14 +224,14 @@ export const EditableProgramOptions: React.FC<EditableProgramOptionsProps> = ({
 
     return (
         <div className={className}>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-                {label}
-            </label>
             {/* <ProgramRequirementsLink className="text-xs" /> */}
             <ProgramRequirementsLink
                 className="ml-20 text-xs text-orange-600  animate-bounce"
                 downloadUrl="/documents/PROGRAMME_AND_REQUIREMENTS.docx"
             />
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+                {label}
+            </label>
 
             {/* Hidden input to store the selected value */}
             <input
@@ -634,6 +634,15 @@ export const EditableFileUpload: React.FC<{
                                                     Change file
                                                 </button>
                                             )}
+                                        </div>
+                                        <div className="w-full flex items-center justify-center mt-2">
+                                            <button
+                                                onClick={() => handleImagePreview(fileItem)}
+                                                className="text-blue-500 hover:text-blue-700"
+                                                title="Preview"
+                                            >
+                                                <ZoomIn className="w-4 h-4" />
+                                            </button>
                                         </div>
                                     </div>
                                 </>

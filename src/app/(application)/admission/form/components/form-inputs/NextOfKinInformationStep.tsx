@@ -47,20 +47,19 @@ export const NextOfKinInformationStep: React.FC<NextOfKinInformationStepProps> =
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                     <FormField
-                        name="sponsor_email"
-                        control={control}
-                        errors={errors}
-                        label="Sponsor's Email"
-                        placeholder="e.g. sponsor@gmail.com"
-                        required={has_sponsor}
-                    />
-                    <FormField
                         name="sponsor_phone_number"
                         control={control}
                         errors={errors}
                         label="Sponsor's Phone Number"
                         placeholder="+234 8123456780"
                         required={has_sponsor}
+                    />
+                    <FormField
+                        name="sponsor_email"
+                        control={control}
+                        errors={errors}
+                        label="Sponsor's Email"
+                        placeholder="e.g. sponsor@gmail.com"
                     />
                 </div>
 
