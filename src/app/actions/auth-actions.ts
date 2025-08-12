@@ -15,6 +15,7 @@ import { ObjectType } from "@/types/generic.types";
 import { GenericDataType } from "@/types/generic.types";
 import { redirect } from "next/navigation";
 import { UserInterface } from "@/config/Types";
+import { throwFormattedError } from "@/lib/errorsHandler";
 // import { signIn, signOut } from "next-auth/react";
 // import { AuthError } from "@auth/core/errors";
 
@@ -54,7 +55,11 @@ export const CreateStudentAccount = async (
 		data: { ...data },
 	})) as GenericDataType;
 	if (response.error) {
-		throw response.error;
+		// console.log('response.error', response.error)
+		// const message = response.error.message || "Failed to create student account";
+		// console.error(message);
+		throwFormattedError(response.error);
+		// throw response.error;
 	}
 	return response;
 };

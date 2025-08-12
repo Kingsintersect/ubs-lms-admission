@@ -20,7 +20,7 @@ export const CreateUserCard = ({ basePath }: CreateUserCardProps) => {
             <CardFooter className="flex justify-end">
                 <Button asChild className="bg-site-b-dark hover:bg-site-b">
                     <Link href={`${basePath}/create/new`}>
-                        <PlusIcon /> Add New UserInterface
+                        <PlusIcon /> Add New User
                     </Link>
                 </Button>
             </CardFooter>

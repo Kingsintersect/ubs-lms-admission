@@ -2,14 +2,14 @@ import { remoteApiUrl } from "@/config";
 import { apiCallerBeta } from "@/lib/apiCaller";
 import { FormObjectPayloaddType, ObjectType } from "@/types/generic.types";
 
-export const applicationPurchase = async (studentData: ObjectType) => {
-	const response = (await apiCallerBeta({
-		url: `${remoteApiUrl}/application/purchase`,
-		method: "POST",
-		data: { ...studentData },
-	})) as any;
-	return response;
-};
+// export const applicationPurchase = async (studentData: ObjectType) => {
+// 	const response = (await apiCallerBeta({
+// 		url: `${remoteApiUrl}/application/purchase`,
+// 		method: "POST",
+// 		data: { ...studentData },
+// 	})) as any;
+// 	return response;
+// };
 
 export const verifyApplicationPurchase = async (transRef: string) => {
 	const response = (await apiCallerBeta({

@@ -150,13 +150,14 @@ export default function useSignInMultiStepViewModel() {
         mutationFn: CreateStudentAccount,
         onSuccess: (res) => {
             notify({ message: "Successfully Created Account", variant: "success", timeout: 5000 });
-            localStorage.setItem('application_data', JSON.stringify(res.success.data));
+            // localStorage.setItem('application_data', JSON.stringify(res.success.data));
             router.push(res.success.data.authorizationUrl);
-            reset();
-            setCurrentStep(1);
+            // reset();
+            // setCurrentStep(1);
         },
         onError: (error) => {
             const errorMessages = extractErrorMessages(error);
+            console.log('errorMessages', errorMessages)
             errorMessages.forEach((msg) => {
                 notify({ message: msg, variant: "error", timeout: 5000 });
             });

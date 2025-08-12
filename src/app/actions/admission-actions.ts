@@ -52,6 +52,7 @@ export const submitAdmissionForm = async (
         );
 
         if (!res.ok) {
+            console.log('erer', res.status, res.statusText);
             // const errorData = await res.json().catch(() => null);
             // console.error("API Error Details:", errorData);
 

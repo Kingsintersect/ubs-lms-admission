@@ -114,3 +114,30 @@ export async function handleApiError(res: Response): Promise<never> {
 
 	throw new Error(message);
 }
+export function throwFormattedError(errorResponse: {
+	errors?: Record<string, string[] | string>;
+	message?: string;
+	[key: string]: any;
+}): never {
+	let errorMessage: string;
+
+	// Handle error responses with nested errors object
+	if (errorResponse.errors && typeof errorResponse.errors === 'object') {
+		const formattedErrors = Object.entries(errorResponse.errors)
+			.map(([field, messages]) => {
+				if (Array.isArray(messages)) {
+					return `${field}: ${messages.join(', ')}`;
+				}
+				return `${field}: ${messages}`;
+			})
+			.join('\n');
+
+		errorMessage = formattedErrors;
+	}
+	// Fallback to regular message or stringify
+	else {
+		errorMessage = errorResponse.message || JSON.stringify(errorResponse);
+	}
+
+	throw new Error(errorMessage);
+}
