@@ -1,6 +1,6 @@
 import { Control, FieldErrors, UseFormReturn } from "react-hook-form";
-import { FormField } from "../../../../../../components/forms/FormField";
 import { AdmissionFormData } from "@/schemas/admission-schema";
+import { FormField } from "@/components/forms/FormField";
 
 export const AcademicBackgroundStep: React.FC<{ control: Control<AdmissionFormData>; errors: FieldErrors<AdmissionFormData>; setValue: UseFormReturn<AdmissionFormData>['setValue'] }> = ({ control, errors }) => (
     <div className="space-y-6">

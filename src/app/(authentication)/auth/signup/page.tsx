@@ -11,6 +11,7 @@ import { useExternalPrograms } from "@/hooks/useExternalPrograms";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ProgramAccordionDisplay } from "@/components/ProgramAccordion";
+import { FormErrorList } from "@/components/forms/FormErrorList";
 
 
 // type SignupFormData = z.infer<typeof SignupSchema>;
@@ -27,6 +28,7 @@ export default function SignupPage() {
         onSubmit,
         control,
         errors,
+        allErrors,
         isSubmitting,
         steps,
         // parentPrograms,
@@ -46,7 +48,7 @@ export default function SignupPage() {
     return (
         <div className="block w-full space-y-1 text-left">
             <Stepper steps={steps} currentStep={currentStep} />
-
+            <FormErrorList allErrors={allErrors} />
             <form
                 onSubmit={isLastStep ? handleSubmit(onSubmit) : (e) => e.preventDefault()}
                 onKeyDown={(e) => {
@@ -228,7 +230,7 @@ export default function SignupPage() {
                                 <Card className="w-full max-w-md">
                                     <CardHeader className="text-center">
                                         <CheckCircle2 className="mx-auto h-12 w-12 text-site-a-dark" />
-                                        <CardTitle className="text-2xl font-bold text-gray-500">Your will be charged the sum of <br /><strong className="text-orange-500 text-3xl animate-pulse">{formatToCurrency(APPLICATION_FEE)}</strong> <br /> to purchae the admission form.</CardTitle>
+                                        <CardTitle className="text-2xl font-bold text-gray-500">You will be charged the Sum of <br /><strong className="text-orange-500 text-3xl animate-pulse">{formatToCurrency(APPLICATION_FEE)}</strong> <br /> to Purchase the Admission Form.</CardTitle>
                                         <CardDescription>
 
                                         </CardDescription>

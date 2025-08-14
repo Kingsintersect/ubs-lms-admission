@@ -4,14 +4,14 @@ import { CreateStudentAccount } from "@/app/actions/auth-actions";
 import { GetAllProgram } from "@/app/actions/faculty.api";
 import { APPLICATION_FEE, Gender, Nationality, State } from "@/config";
 import { notify } from "@/contexts/ToastProvider";
-import { extractErrorMessages } from "@/lib/errorsHandler";
+import { extractErrorMessages, getReactHookFormErrorMessages } from "@/lib/errorsHandler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { FieldName, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { useQuery, useMutation } from "@tanstack/react-query";
-
+import { useCurrentSemester, useCurrentSession } from "./useAccademics";
 export const baseSignupSchema = z
     .object({
         id: z.string().optional(),
@@ -41,8 +41,9 @@ export const baseSignupSchema = z
         program_id: z.string().min(1, 'Program selection is required'),
 
         // Accademic session
-        academic_session: z.string().min(1, 'Ivalid value for academic session'),
-        start_year: z.string().min(1, 'Ivalid value for start year'),
+        academic_session: z.string().min(1, 'Invalid value for academic session'),
+        academic_semester: z.string().min(1, 'Invalid value for academic session'),
+        start_year: z.string().min(1, 'Invalid value for start year'),
     })
 export const SignupSchema = baseSignupSchema.refine((data) => data.password === data.password_confirmation, {
     message: "Passwords do not match",
@@ -89,24 +90,31 @@ export default function useSignInMultiStepViewModel() {
     const [selectedProgramId, setSelectedProgramId] = useState<number | null>(null);
     const [selectedProgramName, setSelectedProgramName] = useState<number | null>(null);
 
-    const {
-        register,
-        handleSubmit,
-        watch,
-        reset,
-        trigger,
-        control,
-        setValue,
-        getValues,
-        formState: { errors },
-    } = useForm<SignupFormData>({
+    const form = useForm<SignupFormData>({
         resolver: zodResolver(SignupSchema),
         mode: "onChange",
         defaultValues: {
-            academic_session: "2024/2025",
-            start_year: "2024/2025",
+            academic_session: "",
+            academic_semester: "",
+            start_year: "",
         }
     });
+
+    const { register, handleSubmit, watch, reset, control, setValue, getValues, trigger, formState: { errors } } = form;
+    const allErrors = getReactHookFormErrorMessages(errors);
+
+    const { data: currentSession, isSuccess: isSessionLoaded } = useCurrentSession();
+    const { data: currentSemester, isSuccess: isSemesterLoaded } = useCurrentSemester();
+
+    useEffect(() => {
+        if (isSessionLoaded && isSemesterLoaded) {
+            reset({
+                academic_session: currentSession?.name ?? "",
+                academic_semester: currentSemester?.name ?? "",
+                start_year: "2025",
+            });
+        }
+    }, [isSessionLoaded, isSemesterLoaded, currentSession, currentSemester, reset]);
 
     const { data: programData, isLoading: isProgramsLoading } = useQuery({
         queryKey: ["programs"],
@@ -125,7 +133,7 @@ export default function useSignInMultiStepViewModel() {
             }));
     }, [programData]);
 
-    // Extract children based on selected program
+    // Extract children based on Selected Programme
     const childPrograms = useMemo(() => {
         return (programData || [])
             .filter((item: ProgramItem) => item.parent === selectedProgramId)
@@ -204,6 +212,7 @@ export default function useSignInMultiStepViewModel() {
         setValue,
         getValues,
         errors,
+        allErrors,
         isSubmitting: signinMutation.isPending,
         control,
         delta,
@@ -229,6 +238,7 @@ export default function useSignInMultiStepViewModel() {
         watch,
         reset,
         errors,
+        allErrors,
         signinMutation.isPending,
         control,
         setValue,

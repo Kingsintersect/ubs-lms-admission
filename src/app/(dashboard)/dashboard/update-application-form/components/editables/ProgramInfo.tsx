@@ -4,10 +4,10 @@ import { updateStudentApplicationData } from '@/app/actions/applications';
 import { ProgramInfoData } from '@/schemas/admission-schema';
 import { AlertCircle, Award, CheckCircle, Edit3, Save, X } from 'lucide-react';
 import React, { useState } from 'react'
-import { EditableProgramOptions, EditableRadioGroup, EditableSelect } from '../../../../../../components/forms/EditableFormFields';
-import { START_TERMS, STUDY_MODES } from '@/components/forms/applicationFormConstants';
+import { ACADEMIC_SESSION, STUDY_MODES } from '@/components/forms/applicationFormConstants';
 import { useExternalPrograms } from '@/hooks/useExternalPrograms'; // Your programs hook
 import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
+import { EditableProgramOptions, EditableRadioGroup, EditableSelect } from '@/components/forms/EditableFormFields';
 
 export interface ProgramInfoProps {
     application: ProgramInfoData;
@@ -30,6 +30,7 @@ export default function ProgramInfo({
         program_id: (application.program_id as string) || '',
         studyMode: application.studyMode || '',
         startTerm: application.startTerm || '',
+        academic_session: application.academic_session || '',
     });
 
     // Original data for cancel functionality
@@ -186,7 +187,7 @@ export default function ProgramInfo({
             {/* Editable Fields */}
             <div className="grid grid-cols-1 gap-4">
                 <EditableProgramOptions
-                    label="Selected Program"
+                    label="Selected Programme"
                     value={formData.program}
                     onChange={(value) => updateField('program', value)}
                     onIdChange={(id) => updateField('program_id', id)}
@@ -206,10 +207,10 @@ export default function ProgramInfo({
                     />
 
                     <EditableSelect
-                        label="Start Term"
-                        value={formData.startTerm}
-                        onChange={(value) => updateField('startTerm', value)}
-                        options={START_TERMS}
+                        label="Academic Session"
+                        value={formData.academic_session}
+                        onChange={(value) => updateField('academic_session', value)}
+                        options={ACADEMIC_SESSION}
                         isEditing={isEditing}
                     />
                 </div>

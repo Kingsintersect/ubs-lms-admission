@@ -1,5 +1,7 @@
 "use client";
 
+// import { ACADEMIC_SESSION } from '@/components/forms/applicationFormConstants';
+// import { EditableSelect } from '@/components/forms/EditableFormFields';
 import { Textarea } from '@/components/ui/textarea';
 import { ApplicationDetailsType } from '@/schemas/admission-schema';
 import { ApplicationApproveValues, ApplicationRejectValues, applicationReview } from '@/schemas/applicationReview-schema';
@@ -38,13 +40,14 @@ export const DecisionModal = ({
     const program = application?.program as string;
     const program_id = String(application?.program_id);
     const study_mode = application?.application.studyMode as string;
-    const startTerm = application?.application.startTerm as string;
+    const academic_session = application?.academic_session as string;
+    const semester = application?.academic_semester as string;
 
     // Handle form submission differently based on decision type
     const handleFormSubmit = async (formData: ApplicationRejectValues) => {
         if (decisionType === 'admitted') {
             // For approval, we don't need form data
-            await onSubmit({ application_id, program, program_id, study_mode, startTerm, semester: "1SM" });
+            await onSubmit({ application_id, program, program_id, study_mode, academic_session, semester });
         } else {
             // For rejection, pass the form data
             await onSubmit({
@@ -56,7 +59,7 @@ export const DecisionModal = ({
 
     // Handle direct approval (bypass form validation)
     const handleDirectApproval = async () => {
-        await onSubmit({ application_id, program, program_id, study_mode, startTerm, semester: "1SM" });
+        await onSubmit({ application_id, program, program_id, study_mode, academic_session, semester });
     };
 
     return (
@@ -126,7 +129,9 @@ export const DecisionModal = ({
                             </div>
                             <div className="flex flex-row gap-5">
                                 <div className="w-32 font-bold text-lg text-orange-950">BEGINS: </div>
-                                <div className="grow text-gray-700">{startTerm}</div>
+                                <div className="grow text-gray-700">
+                                    {academic_session}
+                                </div>
                             </div>
                         </div>
 
@@ -201,7 +206,7 @@ export const DecisionModal = ({
 //     const queryClient = useQueryClient();
 //     const program = application?.program as string;
 //     const study_mode = application?.application.studyMode as string;
-//     const startTerm = application?.application.startTerm as string;
+//     const academic_session = application?.application.academic_session as string;
 
 //     const {
 //         handleSubmit,
@@ -247,7 +252,7 @@ export const DecisionModal = ({
 //                 application_id: application.id,
 //                 program: application.program,
 //                 program_id: String(application.program_id),
-//                 semester: "1SM",//application.accademic_semester,
+//                 academic_semester: "1SM",//application.accademic_semester,
 //                 accademic_session: application.accademic_session
 //             });
 //         }
@@ -296,7 +301,7 @@ export const DecisionModal = ({
 //                                 </div>
 //                                 <div className="flex flex-row gap-5">
 //                                     <div className="w-32 font-bold text-lg text-orange-950">BEGINS: </div>
-//                                     <div className="grow text-gray-700">{startTerm}</div>
+//                                     <div className="grow text-gray-700">{academic_session}</div>
 //                                 </div>
 //                             </div>
 //                         </div>

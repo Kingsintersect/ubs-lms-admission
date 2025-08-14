@@ -11,7 +11,7 @@ export type ApplicationApproveValues = {
     program: string;
     program_id: string;
     study_mode: string;
-    startTerm: string;
+    academic_session: string;
     semester: string;
 }
 export type admissionDecitionActionData =

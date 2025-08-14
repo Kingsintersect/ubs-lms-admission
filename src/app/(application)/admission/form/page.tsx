@@ -4,7 +4,7 @@ import { AdmissionFormData, admissionSchema } from "@/schemas/admission-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { AlertCircle, CheckCircle, Loader2, LogOut } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { STEPS } from "../../../../components/forms/applicationFormConstants";
 import { PersonalInformationStep } from "./components/form-inputs/PersonalInformationStep";
@@ -19,10 +19,12 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { NextOfKinInformationStep } from "./components/form-inputs/NextOfKinInformationStep";
-import { getFriendlyError } from '@/lib/errorsHandler';
+import { getFriendlyError, getReactHookFormErrorMessages } from '@/lib/errorsHandler';
 import { AcademicCredentialsStep } from "./components/form-inputs/AcademicCredentialsStep";
 import { submitAdmissionForm } from "@/app/actions/admission-actions";
 import TermsAndConditions from "./components/form-inputs/TermsAndConditionsContent";
+import { FormErrorList } from "@/components/forms/FormErrorList";
+import { useCurrentSession } from "@/hooks/useAccademics";
 
 const AdmissionForm: React.FC = () => {
     const { user, initializeLogout, access_token, updateUserInState, refreshUserData } = useAuth();
@@ -46,13 +48,28 @@ const AdmissionForm: React.FC = () => {
             has_disability: false,
             disability: "None",
             agreeToTerms: false,
-            startTerm: "2024/2025",
+            startTerm: "",
             studyMode: 'online',
             awaiting_result: true,
             has_sponsor: false,
             is_next_of_kin_primary_contact: false,
         }
     });
+    const allErrors = getReactHookFormErrorMessages(errors);
+
+
+    const { data: currentSession, isSuccess: isSessionLoaded } = useCurrentSession();
+    // const { data: currentSemester, isSuccess: isSemesterLoaded } = useCurrentSemester();
+
+    useEffect(() => {
+        if (isSessionLoaded) {
+            reset({
+                startTerm: currentSession?.name ?? "",
+                // academic_semester: currentSemester?.name ?? "",
+                // start_year: "2025",
+            });
+        }
+    }, [isSessionLoaded,  currentSession, reset]);
 
     const mutation = useMutation({
         mutationFn: async (data: AdmissionFormData) => {
@@ -102,7 +119,7 @@ const AdmissionForm: React.FC = () => {
     };
 
     const handleReset = () => {
-        setIsSubmitted(false);
+        // setIsSubmitted(false);
         setCurrentStep(0);
         reset();
     };
@@ -171,6 +188,7 @@ const AdmissionForm: React.FC = () => {
                         </div>
                     </div>
                     <Progress value={((currentStep + 1) / STEPS.length) * 100} className="h-2" />
+                    <FormErrorList allErrors={allErrors} />
                 </div>
 
 

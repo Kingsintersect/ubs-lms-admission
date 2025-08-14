@@ -10,7 +10,7 @@ import { FieldErrors, Path, PathValue, UseFormGetValues, UseFormSetValue, UseFor
 import { ProgramRequirementsLink } from "./requirements/ProgramRequirementsModal";
 
 
-type genericObjectType = Record<string, any>;
+type genericObjectType = Record<string, unknown>;
 export type ProgramNode = {
     id: number;
     name: string;
@@ -131,7 +131,7 @@ export const ProgramAccordionDisplay = <T extends genericObjectType>({
 
             {programValue && (
                 <div className="mt-6 text-green-700 font-semibold border-t pt-4">
-                    ✅ You selected: <span className="text-primary">{programValue}</span>
+                    ✅ You selected: <span className="text-primary">{String(programValue)}</span>
                 </div>
             )}
         </div>

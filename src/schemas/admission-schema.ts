@@ -271,6 +271,7 @@ export const workExoerienceInfoSchema = baseAdmissionSchema.pick({
 export const programInfoSchema = baseSignupSchema.pick({
     program: true,
     program_id: true,
+    academic_session: true,
 });
 export const programInfoSchema2 = baseAdmissionSchema.pick({
     id: true,

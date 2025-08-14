@@ -87,10 +87,9 @@ export const RELIGION = [
     { value: 'other', label: 'Other' },
 ]
 
-export const START_TERMS = [
+export const ACADEMIC_SESSION = [
+    { value: '2025/2026', label: '2025 / 2026' },
     { value: '2024/2025', label: '2024 / 2025' },
-    { value: '20225/2025', label: '2025 / 2026' },
-    { value: '2026/2027', label: '2026 / 2027' },
 ];
 
 export const YEARS_OF_EXPERIENCE = [

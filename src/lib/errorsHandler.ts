@@ -141,3 +141,18 @@ export function throwFormattedError(errorResponse: {
 
 	throw new Error(errorMessage);
 }
+
+type FieldError = {
+	message?: string;
+	[key: string]: unknown;
+};
+
+export const getReactHookFormErrorMessages = (errObj: Record<string, FieldError>) => {
+	return Object.values(errObj).flatMap((err: FieldError) =>
+		err?.message
+			? [err.message] // direct field error
+			: typeof err === "object"
+				? getReactHookFormErrorMessages(err as Record<string, FieldError>) // nested errors
+				: []
+	);
+};

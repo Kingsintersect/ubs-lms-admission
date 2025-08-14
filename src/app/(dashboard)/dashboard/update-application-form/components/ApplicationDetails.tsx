@@ -116,6 +116,7 @@ export const ApplicationDetails = ({
                                 program_id: String(application.program_id),
                                 studyMode: String(application?.application.studyMode),
                                 startTerm: String(application?.application.startTerm),
+                                academic_session: String(application?.academic_session),
 
                                 id: String(application?.application.id),
                             }}

@@ -3,6 +3,7 @@
 import React, { ReactNode, useState } from 'react'
 import { DraggableTranscriptReminder } from './componenets/ReminderAlart';
 import { StudentStatusProvider } from '@/contexts/StudentStatusContext';
+import { toast } from 'sonner';
 
 type LayoutProps = {
    children: ReactNode
@@ -17,7 +18,7 @@ const Layout = ({ children }: LayoutProps) => {
    };
 
    const handleUpload = () => {
-      alert('Opening transcript upload page...\n\nIn a real app, this would navigate to your upload form or open a file picker.');
+      toast.info('Opening transcript upload page...\n\nIn a real app, this would navigate to your upload form or open a file picker.');
       setShowPopup(false);
    };
 
