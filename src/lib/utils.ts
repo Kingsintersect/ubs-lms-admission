@@ -38,10 +38,10 @@ export function formatNumberWithCommas(amount: number): string {
 /**
  * Generic filter function that works for any dataset
  */
-export function filterData<T extends Record<string, any>>(
+export function filterData<T extends Record<string, unknown>>(
 	data: T[],
 	filterKey: keyof T | null,
-	filterValue: any,
+	filterValue: string | number | 'ALL',
 	searchKeys: (keyof T)[],
 	query: string
 ): T[] {

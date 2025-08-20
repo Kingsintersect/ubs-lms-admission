@@ -19,8 +19,8 @@ export const SuccessScreen: React.FC<{ onReset: () => void }> = ({ onReset }) =>
                     Thank you for your application. We'll review it and get back to you soonest.
                 </p>
                 <Button onClick={onReset} className="w-full" asChild>
-                    <Link href="/dashboard/student">
-                        Proceed to Dashboard
+                    <Link href="/admission">
+                        Continue to overview
                     </Link>
                 </Button>
             </CardContent>

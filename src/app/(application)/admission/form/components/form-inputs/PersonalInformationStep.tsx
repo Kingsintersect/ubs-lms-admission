@@ -1,7 +1,7 @@
 import { AdmissionFormData } from "@/schemas/admission-schema";
-import { FormField } from "../../../../../../components/forms/FormField";
+import { FormField } from "@/components/forms/FormField";
 import { Control, FieldErrors } from "react-hook-form";
-import { GENDER, RELIGION } from "../../../../../../components/forms/applicationFormConstants";
+import { GENDER, RELIGION } from "@/components/forms/applicationFormConstants";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircleIcon } from "lucide-react";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";

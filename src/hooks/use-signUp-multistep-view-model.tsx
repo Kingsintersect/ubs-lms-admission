@@ -2,7 +2,7 @@
 
 import { CreateStudentAccount } from "@/app/actions/auth-actions";
 import { GetAllProgram } from "@/app/actions/faculty.api";
-import { APPLICATION_FEE, Gender, Nationality, State } from "@/config";
+import { APPLICATION_FEE, baseUrl, Gender, Nationality, State } from "@/config";
 import { notify } from "@/contexts/ToastProvider";
 import { extractErrorMessages, getReactHookFormErrorMessages } from "@/lib/errorsHandler";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,25 +15,25 @@ import { useCurrentSemester, useCurrentSession } from "./useAccademics";
 export const baseSignupSchema = z
     .object({
         id: z.string().optional(),
-        first_name: z.string().min(1, { message: "Required" }),
-        last_name: z.string().min(1, { message: "Required" }),
+        first_name: z.string().min(1, { message: "First name is required" }),
+        last_name: z.string().min(1, { message: "LAst name is required" }),
         other_name: z.string().optional(),
-        username: z.string().min(1, { message: "Required" }),
-        phone_number: z.string().min(1, { message: "Required" }),
+        username: z.string().min(1, { message: "Username is required" }),
+        phone_number: z.string().min(1, { message: "Phone number is required" }),
         gender: z.string().refine((value) => value !== "", {
             message: "Your gender must be selected",
         }),
         // dob: z.string().min(1, { message: "Required" }),
-        nationality: z.string().refine((value) => value !== "", { message: "Required" }),
-        state: z.string().refine((value) => value !== "", { message: "Required" }),
-        hometown_address: z.string().min(1, { message: "Required" }),
-        residential_address: z.string().min(1, { message: "Required" }),
+        nationality: z.string().refine((value) => value !== "", { message: "Nationality is required" }),
+        state: z.string().refine((value) => value !== "", { message: "State is required" }),
+        hometown_address: z.string().min(1, { message: "Home Town is required" }),
+        residential_address: z.string().min(1, { message: "Residential address isrequired" }),
         email: z.string().email({ message: "Please enter a valid email." }),
         password: z.string().min(6, { message: "Should be at least 6 characters long" }),
         password_confirmation: z.string(),
         // department_id: z.string().min(1, { message: "Required" }),
         // faculty_id: z.string().min(1, { message: "Required" }),
-        amount: z.number().min(1, { message: "Required" }),
+        amount: z.number().min(1, { message: "Amount is requird" }),
         // accademicSession: z.string().min(1, 'accademic session is missing'),
 
         // Program Selection
@@ -75,11 +75,11 @@ const steps = [
         label: "Application Data",
         fields: ["email", "username", "password", "password_confirmation"],
     },
-    {
-        id: 4,
-        label: "Confirmation",
-        fields: ["amount"],
-    },
+    // {
+    //     id: 4,
+    //     label: "Confirmation",
+    //     fields: ["amount"],
+    // },
 ];
 
 export default function useSignInMultiStepViewModel() {
@@ -97,6 +97,7 @@ export default function useSignInMultiStepViewModel() {
             academic_session: "",
             academic_semester: "",
             start_year: "",
+            amount: APPLICATION_FEE,
         }
     });
 
@@ -112,6 +113,7 @@ export default function useSignInMultiStepViewModel() {
                 academic_session: currentSession?.name ?? "",
                 academic_semester: currentSemester?.name ?? "",
                 start_year: "2025",
+                amount: APPLICATION_FEE,
             });
         }
     }, [isSessionLoaded, isSemesterLoaded, currentSession, currentSemester, reset]);
@@ -154,12 +156,14 @@ export default function useSignInMultiStepViewModel() {
     }, [parentPrograms]);
 
 
-    const signinMutation = useMutation({
+    const signUpMutation = useMutation({
         mutationFn: CreateStudentAccount,
         onSuccess: (res) => {
             notify({ message: "Successfully Created Account", variant: "success", timeout: 5000 });
             // localStorage.setItem('application_data', JSON.stringify(res.success.data));
-            router.push(res.success.data.authorizationUrl);
+            // router.push(res.success.data.authorizationUrl);
+            const transRef = res.success.data.credoReference;
+            router.push(`${baseUrl}/auth/signin?transRef=${transRef}`);
             // reset();
             // setCurrentStep(1);
         },
@@ -174,8 +178,8 @@ export default function useSignInMultiStepViewModel() {
 
     const onSubmit = useCallback<SubmitHandler<SignupFormData>>((data, event) => {
         event?.preventDefault();
-        signinMutation.mutate(data);
-    }, [signinMutation]);
+        signUpMutation.mutate(data);
+    }, [signUpMutation]);
 
     const nextStep = useCallback(async () => {
         const fields = steps[currentStep - 1].fields;
@@ -213,7 +217,7 @@ export default function useSignInMultiStepViewModel() {
         getValues,
         errors,
         allErrors,
-        isSubmitting: signinMutation.isPending,
+        isSubmitting: signUpMutation.isPending,
         control,
         delta,
         steps,
@@ -239,7 +243,7 @@ export default function useSignInMultiStepViewModel() {
         reset,
         errors,
         allErrors,
-        signinMutation.isPending,
+        signUpMutation.isPending,
         control,
         setValue,
         getValues,

@@ -231,6 +231,7 @@ export const useStudentApplicationStatus = () => {
     if (myApplication === null) return {}
 
     return {
+        isLoading: studentStatus.isLoading,
         id: myApplication?.id,
         first_school_leaving: myApplication?.first_school_leaving,
         o_level: myApplication?.o_level,

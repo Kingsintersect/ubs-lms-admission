@@ -1,5 +1,6 @@
 export const baseUrl = process.env.NEXT_PUBLIC_BASE_URL_UBS ?? "";
 export const apiUrl = process.env.NEXT_PUBLIC_API_URL_UBS ?? "";
+export const credoPaymentBaseUrl = process.env.NEXT_CREDO_PAYMENT_GATEWAY_URL ?? "https://pay.credodemo.com/v4";
 
 export const remoteApiUrl = process.env.NEXT_PUBLIC_REMOTE_API_URL_UBS ?? "";
 export const lmsLoginUrl = process.env.NEXT_PUBLIC_LMS_LOGIN_URL_UBS ?? "";

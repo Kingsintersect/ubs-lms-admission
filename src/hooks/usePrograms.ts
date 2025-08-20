@@ -1,4 +1,4 @@
-import useSignInMultiStepViewModel from "@/hooks/use-signin-multistep-view-model";
+import useSignInMultiStepViewModel from "@/hooks/use-signUp-multistep-view-model";
 
 export const usePrograms = () => {
 	const {

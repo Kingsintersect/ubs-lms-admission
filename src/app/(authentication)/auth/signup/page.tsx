@@ -1,12 +1,12 @@
 "use client";
 import Stepper from "@/components/Stepper";
 import { FormFieldSet, InputFormField, SelectFormField } from '@/components/ui/inputs/FormFields';
-import { AlertCircleIcon, CheckCircle2, Loader2, SaveAll } from "lucide-react";
+import { AlertCircleIcon, Loader2, SaveAll } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import useSignInMultiStepViewModel, { SignupFormData } from "@/hooks/use-signin-multistep-view-model";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatToCurrency } from "@/lib/utils";
+import useSignInMultiStepViewModel, { SignupFormData } from "@/hooks/use-signUp-multistep-view-model";
+// import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+// import { formatToCurrency } from "@/lib/utils";
 import { useExternalPrograms } from "@/hooks/useExternalPrograms";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -40,7 +40,7 @@ export default function SignupPage() {
         watch,
         setValue,
         getValues,
-        APPLICATION_FEE,
+        // APPLICATION_FEE,
     } = useSignInMultiStepViewModel();
     const isLastStep = currentStep === steps.length;
     const { data: programs, isLoading, isError } = useExternalPrograms();
@@ -219,7 +219,7 @@ export default function SignupPage() {
                         </FormFieldSet>
                     </motion.div>
                 )}
-                {currentStep == 4 && (
+                {/* {currentStep == 4 && (
                     <motion.div
                         initial={{ x: delta >= 1 ? '80%' : '-80%', opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
@@ -252,7 +252,7 @@ export default function SignupPage() {
                             </div>
                         </FormFieldSet>
                     </motion.div>
-                )}
+                )} */}
 
                 <div className="mt-6 flex justify-between">
                     <button

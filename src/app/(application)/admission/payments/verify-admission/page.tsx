@@ -41,7 +41,8 @@ const VerifyApplicationPayment = () => {
       );
    };
    const handleRedirect = () => {
-      router.push(`${baseUrl}/auth/signin?transRef=${transRef}`);
+      // router.push(`${baseUrl}/auth/signin?transRef=${transRef}`);
+      router.push(`${baseUrl}/admission`);
       router.refresh();
    }
 

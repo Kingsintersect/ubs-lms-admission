@@ -3,7 +3,7 @@
 import { AdmissionFormData, admissionSchema } from "@/schemas/admission-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { AlertCircle, CheckCircle, Loader2, LogOut } from "lucide-react";
+import { AlertCircle, CheckCircle, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { STEPS } from "../../../../components/forms/applicationFormConstants";
@@ -25,9 +25,10 @@ import { submitAdmissionForm } from "@/app/actions/admission-actions";
 import TermsAndConditions from "./components/form-inputs/TermsAndConditionsContent";
 import { FormErrorList } from "@/components/forms/FormErrorList";
 import { useCurrentSession } from "@/hooks/useAccademics";
+import Link from "next/link";
 
 const AdmissionForm: React.FC = () => {
-    const { user, initializeLogout, access_token, updateUserInState, refreshUserData } = useAuth();
+    const { user, access_token, updateUserInState, refreshUserData } = useAuth();
     const [currentStep, setCurrentStep] = useState(0);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [lauched, setILunched] = useState(false);
@@ -69,7 +70,7 @@ const AdmissionForm: React.FC = () => {
                 // start_year: "2025",
             });
         }
-    }, [isSessionLoaded,  currentSession, reset]);
+    }, [isSessionLoaded, currentSession, reset]);
 
     const mutation = useMutation({
         mutationFn: async (data: AdmissionFormData) => {
@@ -149,13 +150,9 @@ const AdmissionForm: React.FC = () => {
 
     return (
         <div className="relative min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
-            <button
-                className="absolute right-10 top-10 z-50 flex items-center gap-3 p-4 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors font-bold rounded-lg shadow-md"
-                onClick={initializeLogout}
-            >
-                Sign Out
-                <LogOut className="h-5 w-5" />
-            </button>
+            <Link href={"/admission"} className="absolute top-10 right-10 z-50 flex items-center gap-3 p-4 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors font-bold rounded-lg shadow-md">
+                Admission Overview
+            </Link>
             <div className="max-w-6xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-8">

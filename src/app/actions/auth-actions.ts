@@ -61,6 +61,7 @@ export const CreateStudentAccount = async (
 		throwFormattedError(response.error);
 		// throw response.error;
 	}
+	console.log('response', response)
 	return response;
 };
 

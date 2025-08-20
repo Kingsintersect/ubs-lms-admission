@@ -7,6 +7,7 @@ import { ModeToggle } from './ui/mood-toggle'
 import { ThemeSelector } from './theme-selector'
 import { Power } from 'lucide-react'
 import { DynamicBreadcrumb } from './ui/dynamic-breadcrumb'
+import Link from 'next/link'
 
 interface SiteHeaderProps {
     logout?: () => void;
@@ -29,6 +30,13 @@ const SiteHeader: React.FC<SiteHeaderProps> = ({ logout }) => {
                 />
             </div>
             <div className="flex items-center gap-4 px-4">
+                <Link href="/admission" className="text-sm font-medium text-gray-700 hover:text-gray-900">
+                    Admission
+                </Link>
+                <Separator
+                    orientation="vertical"
+                    className="data-[orientation=vertical]:h-4"
+                />
                 <ThemeSelector />
                 <ModeToggle />
                 {logout && <Power className="cursor-pointer" color='red' onClick={logout} />}

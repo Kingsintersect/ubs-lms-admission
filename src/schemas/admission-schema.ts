@@ -1,5 +1,5 @@
 import { UserInterface } from "@/config/Types";
-import { baseSignupSchema } from "@/hooks/use-signin-multistep-view-model";
+import { baseSignupSchema } from "@/hooks/use-signUp-multistep-view-model";
 import z from "zod";
 
 

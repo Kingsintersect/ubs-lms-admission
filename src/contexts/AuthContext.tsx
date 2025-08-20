@@ -172,14 +172,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             if (success) {
                 toastSuccess("successfully signed in");
                 let redirectUrl = user.role === Roles.STUDENT
-                    ? `${baseUrl}/dashboard/student`
+                    // ? `${baseUrl}/dashboard/student`
+                    ? `${baseUrl}/admission`
                     : user.role === Roles.TEACHER ? `${baseUrl}/dashboard/teacher`
                         : user.role === Roles.ADMIN ? `${baseUrl}/dashboard/admin`
                             : `${baseUrl}/dashboard/student`;
 
                 if (user.role === Roles.STUDENT) {
                     redirectUrl = (!user.is_applied)
-                        ? `/admission/form`
+                        ? `/admission`
                         : `${redirectUrl}`;
                 }
                 router.push(`${redirectUrl}`);
