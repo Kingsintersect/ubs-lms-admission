@@ -36,9 +36,9 @@ export const AdmissionProgressTrack = ({ user, reloadUser, loadingUser }) => {
                 {
                     id: 3,
                     title: "Upload Documents",
-                    description: "Upload required documents (JAMB result, O'Level certificates, etc.)",
-                    completed: Boolean(hasUnuUploadedDocument),
-                    current: Boolean(hasUnuUploadedDocument)
+                    description: "Upload required documents (BSc result, Transcript Document, O'Level certificates, etc.)",
+                    completed: !Boolean(hasUnuUploadedDocument),
+                    current: !Boolean(hasUnuUploadedDocument)
                 },
                 {
                     id: 4,

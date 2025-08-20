@@ -249,7 +249,8 @@ export const useStudentApplicationStatus = () => {
         ].some(value => value === undefined),
         missingDoc: myApplication
             ? Object.entries(myApplication)
-                .filter(([, value]) => value !== "FULLY_PAID")
+                .filter(([key]) => !key.startsWith("id"))
+                .filter(([, value]) => !String(value).includes("images/") || value === null || value === undefined)
                 .map(([key]) => {
                     const link = `/dashboard/update-application-form?id=${myApplication?.id}`;
                     return ({
