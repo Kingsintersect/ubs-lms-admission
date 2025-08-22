@@ -108,9 +108,12 @@ const StudentProfile = () => {
 
                                  <EditInfoForm
                                     student={{
+                                       id: user.id as number,
                                        first_name: user.first_name as string,
+                                       last_name: user.last_name as string,
+                                       other_name: user.other_name as string,
                                        email: user.email as string,
-                                       phone: user.phone_number as string
+                                       phone_number: user.phone_number as string,
                                     }}
                                  />
                               </div>

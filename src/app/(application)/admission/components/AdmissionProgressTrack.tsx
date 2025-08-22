@@ -5,7 +5,7 @@ import { CheckCircle } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 
 export const AdmissionProgressTrack = ({ user, reloadUser, loadingUser }) => {
-    const { hasUnuUploadedDocument, isLoading } = useStudentApplicationStatus();
+    const { missingDoc, isLoading } = useStudentApplicationStatus();
 
     const [admissionSteps, setAdmissionSteps] = useState<Array<{
         id: number;
@@ -13,10 +13,13 @@ export const AdmissionProgressTrack = ({ user, reloadUser, loadingUser }) => {
         description: string;
         completed: boolean;
         current: boolean;
+        reveal: boolean;
     }>>([]);
 
     useEffect(() => {
         if (loadingUser && isLoading && !user) return;
+        const hasMissingDocuments = (missingDoc?.length ?? 0) > 0;
+
         setAdmissionSteps(
             [
                 {
@@ -25,6 +28,7 @@ export const AdmissionProgressTrack = ({ user, reloadUser, loadingUser }) => {
                     description: `Pay ${formatToCurrency(APPLICATION_FEE)} to start your admission process`,
                     completed: user?.application_payment_status === "FULLY_PAID",
                     current: !user?.application_payment_status || user?.application_payment_status === "UNPAID",
+                    reveal: true,
                 },
                 {
                     id: 2,
@@ -32,13 +36,15 @@ export const AdmissionProgressTrack = ({ user, reloadUser, loadingUser }) => {
                     description: "Complete your admission application with personal and academic details",
                     completed: Boolean(user?.is_applied),
                     current: Boolean(user?.is_applied),
+                    reveal: true,
                 },
                 {
                     id: 3,
                     title: "Upload Documents",
                     description: "Upload required documents (BSc result, Transcript Document, O'Level certificates, etc.)",
-                    completed: !Boolean(hasUnuUploadedDocument),
-                    current: !Boolean(hasUnuUploadedDocument)
+                    completed: hasMissingDocuments,
+                    current: hasMissingDocuments,
+                    reveal: true,
                 },
                 {
                     id: 4,
@@ -46,6 +52,7 @@ export const AdmissionProgressTrack = ({ user, reloadUser, loadingUser }) => {
                     description: "Review and submit your complete application for review",
                     completed: Boolean(user?.admission_status === "INPROGRESS"),
                     current: Boolean(user?.admission_status === "INPROGRESS"),
+                    reveal: true,
                 },
                 {
                     id: 5,
@@ -53,10 +60,11 @@ export const AdmissionProgressTrack = ({ user, reloadUser, loadingUser }) => {
                     description: "Our admissions team will review your application",
                     completed: Boolean(user?.admission_status === "INPROGRESS"),
                     current: Boolean(user?.admission_status === "INPROGRESS"),
+                    reveal: true,
                 }
             ]
         )
-    }, [user, loadingUser, isLoading, hasUnuUploadedDocument]);
+    }, [user, loadingUser, isLoading, missingDoc?.length]);
 
     useEffect(() => {
         reloadUser();

@@ -4,20 +4,21 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { User, Mail, Phone, MapPin, Briefcase, Calendar, Save } from "lucide-react";
+import { User, Mail, Phone, Save } from "lucide-react";
+import { UserInterface } from "@/config/Types";
+import { updateStudentPersonalInfoData } from "@/app/actions/applications";
 
+// Props
 interface StudentInfoProps {
-   student: { first_name: string; email: string; phone: string };
+   student: Partial<UserInterface>;
 }
-
 const schema = z.object({
+   id: z.string().optional(),
    first_name: z.string().min(2, "Name must be at least 2 characters"),
    last_name: z.string().min(2, "Last name must be at least 2 characters").optional(),
+   other_name: z.string().optional(),
    email: z.string().email("Invalid email format"),
-   phone: z.string().min(10, "Phone number must be at least 10 digits"),
-   address: z.string().optional(),
-   department: z.string().optional(),
-   enrollment_date: z.string().optional(),
+   phone_number: z.string().min(10, "Phone number must be at least 10 digits"),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -32,11 +33,12 @@ const EditInfoForm = ({ student }: StudentInfoProps) => {
       formState: { errors, isDirty },
    } = useForm<FormData>({
       defaultValues: {
-         ...student,
-         last_name: "Johnson", // Example default value
-         address: "123 Campus Avenue, University City", // Example default value
-         department: "Computer Science", // Example default value
-         enrollment_date: "2023-09-01", // Example default value
+         id: student.id?.toString() || "",
+         first_name: student.first_name ?? "",
+         last_name: student.last_name ?? "",
+         other_name: student.other_name ?? "",
+         email: student.email ?? "",
+         phone_number: student.phone_number ?? "",
       },
       resolver: zodResolver(schema),
    });
@@ -46,6 +48,7 @@ const EditInfoForm = ({ student }: StudentInfoProps) => {
 
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
+      await updateStudentPersonalInfoData({ id: String(student.id), ...data });
 
       console.log("Updated Info:", data);
       setSuccessMessage("Profile information updated successfully!");
@@ -125,6 +128,13 @@ const EditInfoForm = ({ student }: StudentInfoProps) => {
                required
             />
          </div>
+         <InputField
+            name="other_name"
+            label="Other Name"
+            icon={<User className="h-5 w-5" />}
+            placeholder="Enter your last name"
+            required
+         />
 
          <InputField
             name="email"
@@ -136,7 +146,7 @@ const EditInfoForm = ({ student }: StudentInfoProps) => {
          />
 
          <InputField
-            name="phone"
+            name="phone_number"
             label="Phone Number"
             type="tel"
             icon={<Phone className="h-5 w-5" />}
@@ -144,28 +154,6 @@ const EditInfoForm = ({ student }: StudentInfoProps) => {
             required
          />
 
-         <InputField
-            name="address"
-            label="Address"
-            icon={<MapPin className="h-5 w-5" />}
-            placeholder="Your current address"
-         />
-
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
-            <InputField
-               name="department"
-               label="Department"
-               icon={<Briefcase className="h-5 w-5" />}
-               placeholder="Your department"
-            />
-
-            <InputField
-               name="enrollment_date"
-               label="Enrollment Date"
-               type="date"
-               icon={<Calendar className="h-5 w-5" />}
-            />
-         </div>
 
          <div className="flex justify-end">
             <button

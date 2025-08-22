@@ -51,8 +51,8 @@ export const ChangePasswordForm = ({ isOpen, onClose }: ChangePasswordProps) => 
 
    if (!isOpen) return null;
 
-   const onSubmit: SubmitHandler<ChangePasswordFormData> = async (data, event: any) => {
-      event.preventDefault();
+   const onSubmit: SubmitHandler<ChangePasswordFormData> = async (data, event?: React.BaseSyntheticEvent) => {
+      event?.preventDefault();
       setStatus('submitting');
 
       if (!access_token) {
@@ -153,7 +153,7 @@ export const ChangePasswordForm = ({ isOpen, onClose }: ChangePasswordProps) => 
    );
 
    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-60 backdrop-blur-sm overflow-y-auto">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
          <div
             className="relative w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-2xl transform transition-all"
             onClick={(e) => e.stopPropagation()}

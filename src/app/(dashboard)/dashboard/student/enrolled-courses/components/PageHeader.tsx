@@ -1,23 +1,32 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { UserInterface } from "@/config/Types";
+import { useAuth } from "@/contexts/AuthContext";
 import { ClipboardCopy, BookOpen, Building, GraduationCap } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const PageHeader = ({ student }: { student: UserInterface | null }) => {
+   const { user, loading, initializeLogout } = useAuth();
    const [isClient, setIsClient] = useState(false);
    const [copied, setCopied] = useState(false);
-   const courses: { faculty?: string; department?: string; course_category?: string } = {
-      faculty: "Science",
-      department: "Computer Science",
-      course_category: "Undergraduate",
-   };
+   const [studentProgram, setStudentProgram] = useState<{ faculty?: string; department?: string; course_category?: string } | null>(null);
 
    useEffect(() => {
       if (typeof window !== "undefined") {
          setIsClient(true);
       }
    }, []);
+
+   useEffect(() => {
+      if (user && !loading) {
+         setStudentProgram({
+            faculty: user.program || "Not assigned",
+            department: user.program || "Not assigned",
+            course_category: user.program || "Not assigned",
+         });
+      }
+   }, [user, loading]);
 
    const handleCopy = () => {
       if (isClient && student?.reg_number) {
@@ -28,6 +37,26 @@ const PageHeader = ({ student }: { student: UserInterface | null }) => {
          }, 5000);
       }
    };
+
+   if (!user && !loading) {
+      return (
+         <div className="w-full max-w-7xl mx-auto my-8">
+            <div className="bg-red-100 text-red-800 p-4 rounded-lg shadow-md">
+               <h2 className="text-xl font-bold">Access Denied</h2>
+               <p className="mt-2">You must be logged in to view this page.</p>
+               <Button
+                  className="mt-4 bg-red-400 hover:bg-red-500 text-white"
+                  onClick={initializeLogout}
+                  asChild
+               >
+                  <Link href="/auth/signin">
+                     Go to Login
+                  </Link>
+               </Button>
+            </div>
+         </div>
+      );
+   }
 
    return (
       <div className="w-full max-w-7xl mx-auto my-8">
@@ -52,7 +81,7 @@ const PageHeader = ({ student }: { student: UserInterface | null }) => {
                         </div>
                         <div>
                            <div className="text-sm text-gray-500 dark:text-gray-400">Faculty</div>
-                           <div className="font-medium text-lg">{courses.faculty}</div>
+                           <div className="font-medium text-lg">{studentProgram?.faculty}</div>
                         </div>
                      </div>
 
@@ -62,7 +91,7 @@ const PageHeader = ({ student }: { student: UserInterface | null }) => {
                         </div>
                         <div>
                            <div className="text-sm text-gray-500 dark:text-gray-400">Department</div>
-                           <div className="font-medium text-lg">{courses.department}</div>
+                           <div className="font-medium text-lg">{studentProgram?.department}</div>
                         </div>
                      </div>
 
@@ -72,7 +101,7 @@ const PageHeader = ({ student }: { student: UserInterface | null }) => {
                         </div>
                         <div>
                            <div className="text-sm text-gray-500 dark:text-gray-400">Level</div>
-                           <div className="font-medium text-lg">{courses.course_category}</div>
+                           <div className="font-medium text-lg">{studentProgram?.course_category}</div>
                         </div>
                      </div>
                   </div>
@@ -112,8 +141,11 @@ const PageHeader = ({ student }: { student: UserInterface | null }) => {
                      </div>
 
                      <div className="text-center mt-2">
-                        <Button className="bg-gradient-to-r from-teal-500 to-orange-600 hover:from-teal-600 hover:to-orange-700 text-white transition-all w-full">
-                           Go to Student Dashboard
+                        <Button className="bg-gradient-to-r from-teal-500 to-orange-600 hover:from-teal-600 hover:to-orange-700 text-white transition-all w-full" asChild>
+                           <Link href="/dashboard/student">
+                              <BookOpen className="mr-2 h-4 w-4" />
+                              Go to Student Dashboard
+                           </Link>
                         </Button>
                      </div>
                   </div>
