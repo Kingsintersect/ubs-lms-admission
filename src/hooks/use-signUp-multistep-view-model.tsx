@@ -42,7 +42,7 @@ export const baseSignupSchema = z
 
         // Accademic session
         academic_session: z.string().min(1, 'Invalid value for academic session'),
-        academic_semester: z.string().min(1, 'Invalid value for academic session'),
+        academic_semester: z.string().min(1, 'Invalid value for academic semester'),
         start_year: z.string().min(1, 'Invalid value for start year'),
     })
 export const SignupSchema = baseSignupSchema.refine((data) => data.password === data.password_confirmation, {
@@ -108,6 +108,8 @@ export default function useSignInMultiStepViewModel() {
     const { data: currentSemester, isSuccess: isSemesterLoaded } = useCurrentSemester();
 
     useEffect(() => {
+        console.log('currentSession', currentSession)
+        console.log('currentSemester', currentSemester)
         if (isSessionLoaded && isSemesterLoaded) {
             reset({
                 academic_session: currentSession?.name ?? "",

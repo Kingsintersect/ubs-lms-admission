@@ -10,7 +10,7 @@ import { AdmissionProgressTrack } from './components/AdmissionProgressTrack';
 import { StudentStatusProvider } from '@/contexts/StudentStatusContext';
 
 export default function NewStudentLanding() {
-    const { user, loading, refreshUserData, } = useAuth();
+    const { user, access_token, loading, refreshUserData, } = useAuth();
     const ApplicationPaymentStatus = user?.application_payment_status === "FULLY_PAID";
     const hasApplied = Boolean(user?.is_applied);
 
@@ -32,7 +32,7 @@ export default function NewStudentLanding() {
                             <WelcomeCard user={user} />
 
                             {/* Current Status */}
-                            {!ApplicationPaymentStatus && <ApplicationPaymentCard user={user} />}
+                            {!ApplicationPaymentStatus && <ApplicationPaymentCard access_token={access_token} />}
 
                             {/* Application status */}
                             {(!hasApplied && ApplicationPaymentStatus) && <ApplicationFormCard />}
