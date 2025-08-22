@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
 	/* config options here */
+	basePath: '/application',
+	assetPrefix: '/application',
 	experimental: {
 		serverActions: {
 			bodySizeLimit: '20mb', //increasing the body size limit for server actions
