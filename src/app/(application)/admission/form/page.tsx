@@ -3,7 +3,7 @@
 import { AdmissionFormData, admissionSchema } from "@/schemas/admission-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { AlertCircle, CheckCircle, Loader2, Save } from "lucide-react";
+import { AlertCircle, CheckCircle, Loader2, Save, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { STEPS } from "../../../../components/forms/applicationFormConstants";
@@ -63,6 +63,56 @@ const AdmissionForm: React.FC = () => {
     const allErrors = getReactHookFormErrorMessages(errors);
 
     const { data: currentSession, isSuccess: isSessionLoaded } = useCurrentSession();
+
+    //     const populateProgress = useCallback(async (flag: "SAVE" | "LOAD") => {
+    //         let parsedLocalValues: Record<string, unknown> = {};
+
+    //         // locally stored data
+    //         const savedData = localStorage.getItem(STORAGE_KEY);
+    //         const savedStep = localStorage.getItem(CURRENT_STEP_KEY);
+
+    //         // populated form data if any saved data
+    //         const currentFormValues = getValues();
+
+    //         if (savedData) {
+    //             parsedLocalValues = JSON.parse(savedData);
+    //             console.log('all the data', parsedLocalValues)
+    //         }
+
+    //         if (flag === "LOAD") {
+    //             console.log('flag', flag)
+    //             try {
+    //                 reset({ ...currentFormValues, ...parsedLocalValues });
+    //                 toast.success("Previous progress loaded successfully!");
+    //                 if (savedStep) {
+    //                     const stepNumber = parseInt(savedStep);
+    //                     console.log('stepNumber', stepNumber)
+    //                     if (stepNumber >= 0 && stepNumber < STEPS.length) {
+    //                         setCurrentStep(stepNumber);
+    //                     }
+    //                 }
+    //             } catch (error) {
+    //                 console.error("Failed to load saved progress:", error);
+    //                 toast.error("Failed to load saved progress");
+    //             }
+    //         }
+
+    //         if (flag === "SAVE") {
+    //             setIsSaving(true);
+
+    //             try {
+    //                 localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...parsedLocalValues, ...currentFormValues }));
+    //                 localStorage.setItem(CURRENT_STEP_KEY, currentStep.toString());
+    //                 toast.success("Progress saved successfully!");
+    //             } catch (error) {
+    //                 console.error("Failed to save progress:", error);
+    //                 toast.error("Failed to save progress");
+    //             } finally {
+    //                 setIsSaving(false);
+    //             }
+    //         }
+
+    //     }, [getValues, reset]);
 
     // Load saved progress on component mount
     useEffect(() => {
@@ -262,25 +312,37 @@ const AdmissionForm: React.FC = () => {
                                 </CardDescription>
                             </div>
                             {/* Save Progress Button */}
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={saveProgress}
-                                disabled={isSaving}
-                                className="flex items-center space-x-2 text-blue-600 border-blue-200 hover:bg-blue-50"
-                            >
-                                {isSaving ? (
-                                    <>
-                                        <Loader2 className="w-4 h-4 animate-spin" />
-                                        <span>Saving...</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Save className="w-4 h-4" />
-                                        <span>Save Progress</span>
-                                    </>
-                                )}
-                            </Button>
+                            <div className="flex gap-5">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={handleReset}
+                                    disabled={isSaving}
+                                    className="flex items-center space-x-2 text-red-600 border-red-200 bg-red-100 hover:bg-red-50 "
+                                >
+                                    <X className="w-4 h-4" />
+                                    <span>Clear Saved Data</span>
+                                </Button>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={saveProgress}
+                                    disabled={isSaving}
+                                    className="flex items-center space-x-2 text-blue-600 border-blue-200 hover:bg-blue-50"
+                                >
+                                    {isSaving ? (
+                                        <>
+                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                            <span>Saving...</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Save className="w-4 h-4" />
+                                            <span>Save Progress</span>
+                                        </>
+                                    )}
+                                </Button>
+                            </div>
                         </div>
                     </CardHeader>
 
