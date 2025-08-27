@@ -3,7 +3,7 @@
 import { AdmissionFormData, admissionSchema } from "@/schemas/admission-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { AlertCircle, CheckCircle, Loader2 } from "lucide-react";
+import { AlertCircle, CheckCircle, Loader2, Save } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { STEPS } from "../../../../components/forms/applicationFormConstants";
@@ -27,11 +27,15 @@ import { FormErrorList } from "@/components/forms/FormErrorList";
 import { useCurrentSession } from "@/hooks/useAccademics";
 import Link from "next/link";
 
+const STORAGE_KEY = 'admission_form_progress';
+const CURRENT_STEP_KEY = 'admission_form_current_step';
+
 const AdmissionForm: React.FC = () => {
     const { user, access_token, updateUserInState, refreshUserData } = useAuth();
     const [currentStep, setCurrentStep] = useState(0);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [lauched, setILunched] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
 
     const {
         control,
@@ -58,19 +62,73 @@ const AdmissionForm: React.FC = () => {
     });
     const allErrors = getReactHookFormErrorMessages(errors);
 
-
     const { data: currentSession, isSuccess: isSessionLoaded } = useCurrentSession();
-    // const { data: currentSemester, isSuccess: isSemesterLoaded } = useCurrentSemester();
 
+    // Load saved progress on component mount
+    useEffect(() => {
+        const loadSavedProgress = () => {
+            try {
+                const savedData = localStorage.getItem(STORAGE_KEY);
+                const savedStep = localStorage.getItem(CURRENT_STEP_KEY);
+
+                if (savedData) {
+                    const parsedData = JSON.parse(savedData);
+                    // Reset form with saved data
+                    reset(parsedData);
+                    toast.success("Previous progress loaded successfully!");
+                }
+
+                if (savedStep) {
+                    const stepNumber = parseInt(savedStep);
+                    if (stepNumber >= 0 && stepNumber < STEPS.length) {
+                        setCurrentStep(stepNumber);
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to load saved progress:", error);
+                toast.error("Failed to load saved progress");
+            }
+        };
+
+        loadSavedProgress();
+    }, [reset]);
+
+    // Load session data
     useEffect(() => {
         if (isSessionLoaded) {
+            const currentValues = getValues();
             reset({
+                ...currentValues, // Preserve any loaded data
                 startTerm: currentSession?.name ?? "",
-                // academic_semester: currentSemester?.name ?? "",
-                // start_year: "2025",
             });
         }
-    }, [isSessionLoaded, currentSession, reset]);
+    }, [isSessionLoaded, currentSession, reset, getValues]);
+
+    // Save progress to localStorage
+    const saveProgress = async () => {
+        setIsSaving(true);
+        try {
+            const currentData = getValues();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(currentData));
+            localStorage.setItem(CURRENT_STEP_KEY, currentStep.toString());
+            toast.success("Progress saved successfully!");
+        } catch (error) {
+            console.error("Failed to save progress:", error);
+            toast.error("Failed to save progress");
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    // Clear saved progress
+    const clearSavedProgress = () => {
+        try {
+            localStorage.removeItem(STORAGE_KEY);
+            localStorage.removeItem(CURRENT_STEP_KEY);
+        } catch (error) {
+            console.error("Failed to clear saved progress:", error);
+        }
+    };
 
     const mutation = useMutation({
         mutationFn: async (data: AdmissionFormData) => {
@@ -85,6 +143,8 @@ const AdmissionForm: React.FC = () => {
                 updateUserInState({ ...user, is_applied: Number(true) });
             }
             refreshUserData();
+            // Clear saved progress after successful submission
+            clearSavedProgress();
             toast.success("Application submitted successfully!");
         },
     });
@@ -101,9 +161,10 @@ const AdmissionForm: React.FC = () => {
 
         if (isStepValid && currentStep < STEPS.length - 1) {
             setCurrentStep(currentStep + 1);
+            // Auto-save when moving to next step
+            await saveProgress();
         }
     };
-
 
     const prevStep = () => {
         if (currentStep > 0) {
@@ -120,8 +181,8 @@ const AdmissionForm: React.FC = () => {
     };
 
     const handleReset = () => {
-        // setIsSubmitted(false);
         setCurrentStep(0);
+        clearSavedProgress();
         reset();
     };
 
@@ -188,16 +249,39 @@ const AdmissionForm: React.FC = () => {
                     <FormErrorList allErrors={allErrors} />
                 </div>
 
-
                 {/* Form */}
                 <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
                     <CardHeader className="pb-6">
-                        <CardTitle className="text-2xl font-semibold text-gray-900">
-                            {STEPS[currentStep].title}
-                        </CardTitle>
-                        <CardDescription className="text-gray-600">
-                            Step {currentStep + 1} of {STEPS.length}
-                        </CardDescription>
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <CardTitle className="text-2xl font-semibold text-gray-900">
+                                    {STEPS[currentStep].title}
+                                </CardTitle>
+                                <CardDescription className="text-gray-600">
+                                    Step {currentStep + 1} of {STEPS.length}
+                                </CardDescription>
+                            </div>
+                            {/* Save Progress Button */}
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={saveProgress}
+                                disabled={isSaving}
+                                className="flex items-center space-x-2 text-blue-600 border-blue-200 hover:bg-blue-50"
+                            >
+                                {isSaving ? (
+                                    <>
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                        <span>Saving...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Save className="w-4 h-4" />
+                                        <span>Save Progress</span>
+                                    </>
+                                )}
+                            </Button>
+                        </div>
                     </CardHeader>
 
                     <CardContent>
@@ -226,33 +310,56 @@ const AdmissionForm: React.FC = () => {
                                     <span>Previous</span>
                                 </Button>
 
-                                {currentStep < STEPS.length - 1 ? (
+                                <div className="flex space-x-3">
+                                    {/* Save Progress Button (duplicate for easy access) */}
                                     <Button
                                         type="button"
-                                        onClick={nextStep}
-                                        className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700"
+                                        variant="secondary"
+                                        onClick={saveProgress}
+                                        disabled={isSaving}
+                                        className="flex items-center space-x-2"
                                     >
-                                        <span>Next</span>
-                                    </Button>
-                                ) : (
-                                    <Button
-                                        type="submit"
-                                        disabled={!isValid || mutation.isPending}
-                                        className="flex items-center space-x-2 bg-green-600 hover:bg-green-700"
-                                    >
-                                        {mutation.isPending ? (
+                                        {isSaving ? (
                                             <>
                                                 <Loader2 className="w-4 h-4 animate-spin" />
-                                                <span>Submitting...</span>
+                                                <span>Saving...</span>
                                             </>
                                         ) : (
                                             <>
-                                                <CheckCircle className="w-4 h-4" />
-                                                <span>Submit Application</span>
+                                                <Save className="w-4 h-4" />
+                                                <span>Save</span>
                                             </>
                                         )}
                                     </Button>
-                                )}
+
+                                    {currentStep < STEPS.length - 1 ? (
+                                        <Button
+                                            type="button"
+                                            onClick={nextStep}
+                                            className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700"
+                                        >
+                                            <span>Next</span>
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            type="submit"
+                                            disabled={!isValid || mutation.isPending}
+                                            className="flex items-center space-x-2 bg-green-600 hover:bg-green-700"
+                                        >
+                                            {mutation.isPending ? (
+                                                <>
+                                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                                    <span>Submitting...</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <CheckCircle className="w-4 h-4" />
+                                                    <span>Submit Application</span>
+                                                </>
+                                            )}
+                                        </Button>
+                                    )}
+                                </div>
                             </div>
                         </form>
                     </CardContent>
@@ -261,6 +368,7 @@ const AdmissionForm: React.FC = () => {
                 {/* Footer */}
                 <div className="text-center mt-8 text-gray-500">
                     <p>Need help? Contact our admissions team at support@university.edu</p>
+                    <p className="text-sm mt-2">Your progress is automatically saved when you move between steps.</p>
                 </div>
             </div>
             <TermsAndConditions lauched={lauched} setILunched={setILunched} />
