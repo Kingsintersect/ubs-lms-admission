@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select"
 import { useState, useEffect, useMemo } from 'react';
 import ExportDropdown from '@/components/ExportDropdown';
-import { FetchAllTeachers } from '@/app/actions/ubs.actions';
+import { FetchAllTeachers } from '@/app/actions/portal.actions';
 import { DataTable } from '@/components/ui/datatable/DataTable';
 import { filterData } from '@/lib/utils';
 import { tutors_columns } from './tutors_table.columns';

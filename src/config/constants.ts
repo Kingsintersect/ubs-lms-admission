@@ -28,6 +28,6 @@ export enum Roles {
 	MANAGER = "MANAGER",
 }
 
-export const APPLICATION_FEE = 37500;
+export const APPLICATION_FEE = 37000;
 export const ACCEPTANCE_FEE = 30000;
 export const FULL_TUITION_FEE = 195000;
