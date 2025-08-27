@@ -210,7 +210,7 @@ const AdmissionForm: React.FC = () => {
     }
 
     return (
-        <div className="relative min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+        <div className="relative min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4 mt-20">
             <Link href={"/admission"} className="absolute top-10 right-10 z-50 flex items-center gap-3 p-4 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors font-bold rounded-lg shadow-md">
                 Admission Overview
             </Link>
