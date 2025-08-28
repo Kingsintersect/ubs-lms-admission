@@ -108,8 +108,6 @@ export default function useSignInMultiStepViewModel() {
     const { data: currentSemester, isSuccess: isSemesterLoaded } = useCurrentSemester();
 
     useEffect(() => {
-        console.log('currentSession', currentSession)
-        console.log('currentSemester', currentSemester)
         if (isSessionLoaded && isSemesterLoaded) {
             reset({
                 academic_session: currentSession?.name ?? "",
@@ -162,10 +160,9 @@ export default function useSignInMultiStepViewModel() {
         mutationFn: CreateStudentAccount,
         onSuccess: (res) => {
             notify({ message: "Successfully Created Account", variant: "success", timeout: 5000 });
-            // localStorage.setItem('application_data', JSON.stringify(res.success.data));
-            // router.push(res.success.data.authorizationUrl);
-            const transRef = res.success.data.credoReference;
-            router.push(`${baseUrl}/auth/signin?transRef=${transRef}`);
+            router.push(`${baseUrl}/auth/signin?email=${res.user_email}`);
+            // const transRef = res.response.success.data.credoReference;
+            // router.push(`${baseUrl}/auth/signin?transRef=${transRef}`);
             // reset();
             // setCurrentStep(1);
         },
