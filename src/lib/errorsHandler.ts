@@ -110,7 +110,7 @@ export async function handleApiError(res: Response): Promise<never> {
 		message = "An unknown error occurred while processing the response.";
 		console.log('Raw Error', err)
 	}
-	// console.log('error message', message)
+	console.log('error message', message)
 	throw new Error(message);
 }
 export function throwFormattedError(errorResponse: {

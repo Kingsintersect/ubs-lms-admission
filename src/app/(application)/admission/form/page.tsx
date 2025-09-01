@@ -64,56 +64,6 @@ const AdmissionForm: React.FC = () => {
 
     const { data: currentSession, isSuccess: isSessionLoaded } = useCurrentSession();
 
-    //     const populateProgress = useCallback(async (flag: "SAVE" | "LOAD") => {
-    //         let parsedLocalValues: Record<string, unknown> = {};
-
-    //         // locally stored data
-    //         const savedData = localStorage.getItem(STORAGE_KEY);
-    //         const savedStep = localStorage.getItem(CURRENT_STEP_KEY);
-
-    //         // populated form data if any saved data
-    //         const currentFormValues = getValues();
-
-    //         if (savedData) {
-    //             parsedLocalValues = JSON.parse(savedData);
-    //             console.log('all the data', parsedLocalValues)
-    //         }
-
-    //         if (flag === "LOAD") {
-    //             console.log('flag', flag)
-    //             try {
-    //                 reset({ ...currentFormValues, ...parsedLocalValues });
-    //                 toast.success("Previous progress loaded successfully!");
-    //                 if (savedStep) {
-    //                     const stepNumber = parseInt(savedStep);
-    //                     console.log('stepNumber', stepNumber)
-    //                     if (stepNumber >= 0 && stepNumber < STEPS.length) {
-    //                         setCurrentStep(stepNumber);
-    //                     }
-    //                 }
-    //             } catch (error) {
-    //                 console.error("Failed to load saved progress:", error);
-    //                 toast.error("Failed to load saved progress");
-    //             }
-    //         }
-
-    //         if (flag === "SAVE") {
-    //             setIsSaving(true);
-
-    //             try {
-    //                 localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...parsedLocalValues, ...currentFormValues }));
-    //                 localStorage.setItem(CURRENT_STEP_KEY, currentStep.toString());
-    //                 toast.success("Progress saved successfully!");
-    //             } catch (error) {
-    //                 console.error("Failed to save progress:", error);
-    //                 toast.error("Failed to save progress");
-    //             } finally {
-    //                 setIsSaving(false);
-    //             }
-    //         }
-
-    //     }, [getValues, reset]);
-
     // Load saved progress on component mount
     useEffect(() => {
         const loadSavedProgress = () => {

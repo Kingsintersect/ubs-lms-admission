@@ -108,7 +108,7 @@ export const PersonalInformationStep: React.FC<{ control: Control<AdmissionFormD
                     errors={errors}
                     label="Contact Address"
                     required
-                    placeholder="+234 8123456780"
+                    placeholder="211 resident street, city, state"
                 />
             </div>
         </div>
