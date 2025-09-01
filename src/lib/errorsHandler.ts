@@ -89,57 +89,61 @@ export const getFriendlyError = (error: unknown): string => {
 	return "An unexpected error occurred. Please try again.";
 };
 
+
+/**
+ * Universal API error handler
+ * Normalizes any type of API error response into a clean Error
+ */
 export async function handleApiError(res: Response): Promise<never> {
 	let message = `Request failed with status ${res.status}`;
 
 	try {
 		const contentType = res.headers.get("content-type") || "";
 
+		// ✅ JSON response (most common case)
 		if (contentType.includes("application/json")) {
-			const error = await res.json();
-			message = error?.message || JSON.stringify(error) || message;
-		} else {
+			const errorResponse = await res.json();
+
+			if (errorResponse.errors && typeof errorResponse.errors === "object") {
+				// Format nested field errors
+				const formattedErrors = Object.entries(errorResponse.errors)
+					.map(([field, messages]) => {
+						if (Array.isArray(messages)) {
+							return `${field}: ${messages.join(", ")}`;
+						}
+						return `${field}: ${messages}`;
+					})
+					.join("\n");
+
+				message = formattedErrors || errorResponse.message || message;
+			} else {
+				// Fallback to message or raw JSON
+				message = errorResponse.message || JSON.stringify(errorResponse) || message;
+			}
+		}
+
+		// ✅ Plain text error response
+		else {
 			const text = await res.text();
+
 			if (res.status === 503 && text.includes("Service Unavailable")) {
 				message = "The server is temporarily unavailable (503). Please try again shortly.";
+			} else if (text) {
+				message = text;
 			} else {
 				message = "Unexpected error occurred. Please try again.";
 			}
 		}
 	} catch (err) {
+		// ✅ If parsing itself failed
+		console.error("Error while parsing API error response:", err);
 		message = "An unknown error occurred while processing the response.";
-		console.log('Raw Error', err)
 	}
-	console.log('error message', message)
+
+	console.error("API Error:", message);
 	throw new Error(message);
 }
-export function throwFormattedError(errorResponse: {
-	errors?: Record<string, string[] | string>;
-	message?: string;
-	[key: string]: any;
-}): never {
-	let errorMessage: string;
 
-	// Handle error responses with nested errors object
-	if (errorResponse.errors && typeof errorResponse.errors === 'object') {
-		const formattedErrors = Object.entries(errorResponse.errors)
-			.map(([field, messages]) => {
-				if (Array.isArray(messages)) {
-					return `${field}: ${messages.join(', ')}`;
-				}
-				return `${field}: ${messages}`;
-			})
-			.join('\n');
-
-		errorMessage = formattedErrors;
-	}
-	// Fallback to regular message or stringify
-	else {
-		errorMessage = errorResponse.message || JSON.stringify(errorResponse);
-	}
-
-	throw new Error(errorMessage);
-}
 
 type FieldError = {
 	message?: string;

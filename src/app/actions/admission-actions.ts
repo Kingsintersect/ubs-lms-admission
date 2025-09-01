@@ -3,7 +3,7 @@
 import { remoteApiUrl } from "@/config";
 import { apiCall } from "@/lib/apiCaller";
 import { handleApiError } from "@/lib/errorsHandler";
-import { appendFormData } from "@/lib/formUtils";
+import { appendFormData, seeFormData } from "@/lib/formUtils";
 import { AdmissionFormData } from "@/schemas/admission-schema";
 
 /**
@@ -20,7 +20,7 @@ export const submitAdmissionForm = async (
     // Prepare FormData
     try {
         appendFormData(formData, data);
-        // seeFormData(formData); // for debugging
+        seeFormData(formData); // for debugging
     } catch (error) {
         console.error("FormData preparation failed:", error);
         throw new Error("Failed to prepare form data");
@@ -52,7 +52,6 @@ export const submitAdmissionForm = async (
         );
 
         if (!res.ok) {
-            console.log('erer', res.status, res.statusText);
             await handleApiError(res);
         }
 
