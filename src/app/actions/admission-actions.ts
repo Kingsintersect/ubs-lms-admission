@@ -53,17 +53,20 @@ export const submitAdmissionForm = async (
 
         if (!res.ok) {
             console.log('erer', res.status, res.statusText);
-            // const errorData = await res.json().catch(() => null);
-            // console.error("API Error Details:", errorData);
-
-            // throw new Error(errorData?.message || `HTTP error! status: ${res.status}`);
             await handleApiError(res);
         }
 
         return await res.json();
-    } catch (error) {
+    } catch (error: unknown) {
         console.error("Network or API error:", error);
-        throw new Error("Failed to submit application. Please try again later.");
+
+        if (error instanceof Error) {
+            throw error; // already an Error
+        } else if (typeof error === "string") {
+            throw new Error(error);
+        } else {
+            throw new Error("An unknown error occurred");
+        }
     }
 };
 // ended submit function

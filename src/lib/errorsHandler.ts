@@ -91,7 +91,6 @@ export const getFriendlyError = (error: unknown): string => {
 
 export async function handleApiError(res: Response): Promise<never> {
 	let message = `Request failed with status ${res.status}`;
-	console.log('res', res);
 
 	try {
 		const contentType = res.headers.get("content-type") || "";
@@ -111,7 +110,7 @@ export async function handleApiError(res: Response): Promise<never> {
 		message = "An unknown error occurred while processing the response.";
 		console.log('Raw Error', err)
 	}
-
+	// console.log('error message', message)
 	throw new Error(message);
 }
 export function throwFormattedError(errorResponse: {
