@@ -2,7 +2,7 @@
 import { verifySession } from '@/lib/server.utils';
 import React from 'react'
 import CreateCountry from '../components/CreateCountry';
-import { loginSessionKey } from '@/lib/definitions';
+import { loginSessionKey } from '@/config';
 
 export const dynamic = "force-dynamic";
 

@@ -1,6 +1,6 @@
 import { verifySession } from '@/lib/server.utils';
 import CreateFaculty from '../components/CreateFaculty';
-import { loginSessionKey } from '@/lib/definitions';
+import { loginSessionKey } from '@/config';
 
 export const dynamic = "force-dynamic";
 

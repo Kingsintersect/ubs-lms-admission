@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { SessionData } from "@/types/auth";
-import { Roles } from "@/config";
+import { loginSessionKey, Roles } from "@/config";
 import { getSession } from "@/lib/session";
-import { loginSessionKey } from "@/lib/definitions";
 
 const publicRoutes = [
 	"/auth/signin",

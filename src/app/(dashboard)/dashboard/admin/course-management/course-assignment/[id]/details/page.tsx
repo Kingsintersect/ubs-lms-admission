@@ -1,9 +1,8 @@
 import { GetCoursesAssignedToACategory, GetListOfCourseCategories, GetListOfCourses } from '@/app/actions/server.admin';
-import { baseUrl, PageTypeProps } from '@/config';
+import { baseUrl, loginSessionKey, PageTypeProps } from '@/config';
 import { verifySession } from '@/lib/server.utils';
 import React from 'react';
 import UpdateCourseAssignment from '../../components/UpdateCourseAssignment';
-import { loginSessionKey } from '@/lib/definitions';
 import NotFound from '../not-found';
 
 export const dynamic = "force-dynamic";

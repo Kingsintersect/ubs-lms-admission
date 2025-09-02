@@ -1,7 +1,7 @@
 import { GetListOfFaculties } from '@/app/actions/server.admin';
 import CreateDeparment from '@/app/(dashboard)/dashboard/admin/course-management/department/components/CreateDeparment';
 import { verifySession } from '@/lib/server.utils';
-import { loginSessionKey } from '@/lib/definitions';
+import { loginSessionKey } from '@/config';
 
 export const dynamic = "force-dynamic";
 

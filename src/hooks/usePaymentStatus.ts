@@ -1,6 +1,5 @@
-import { PaymentStatus } from "@/lib/definitions";
+import { PaymentStatus } from "@/config";
 import { useState } from "react";
-// import { PaymentStatus } from "./SetPaymentStatusRecord";
 
 export const usePaymentStatus = () => {
 	const [tuitionPaymentStatus, setTuitionPaymentStatus] =

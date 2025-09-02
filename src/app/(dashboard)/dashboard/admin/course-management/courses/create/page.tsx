@@ -1,7 +1,7 @@
 import CreateCourse from '@/app/(dashboard)/dashboard/admin/course-management/courses/components/CreateCourse'
+import { loginSessionKey } from '@/config';
 import { verifySession } from '@/lib/server.utils';
 import React from 'react'
-import { loginSessionKey } from '@/lib/definitions';
 
 export const dynamic = "force-dynamic";
 

@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight, ChevronsRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import Link from "next/link";
-import { SITE_NAME } from "@/config";
+import { SITE_NAME, SITE_TITLE } from "@/config";
 
 type CarouselImage = {
     url: string;
@@ -18,7 +18,7 @@ const carouselImages: CarouselImage[] = [
     {
         url: "/slides/slide-1.jpg",
         alt: "University campus main building",
-        title: "Welcome to UNIZIK Business School LMS",
+        title: `Welcome to ${SITE_TITLE} LMS`,
         subtitle: "Discover a world of opportunities and excellence",
     },
     {

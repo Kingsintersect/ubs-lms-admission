@@ -1,10 +1,9 @@
 "use server";
 
-import { remoteApiUrl } from "@/config";
+import { loginSessionKey, remoteApiUrl } from "@/config";
 import { UserInterface } from "@/config/Types";
 import { UseDataTableOptions } from "@/hooks/useDataTable";
 import { apiCall } from "@/lib/apiCaller";
-import { loginSessionKey } from "@/lib/definitions";
 import { getSession } from "@/lib/session";
 import { ApplicationChunk, ApplicationDetailsType } from "@/schemas/admission-schema";
 import { ApplicationApproveValues, ApplicationRejectValues } from "@/schemas/applicationReview-schema";
@@ -195,24 +194,24 @@ export const updateStudentPersonalInfoData = async (data: ApplicationChunk): Pro
             ? `/account/user-update`
             : "";
     console.log('routeUrl', routeUrl)
-   try {
-     const response = await fetch(`${remoteApiUrl}${routeUrl}`, {
-         method: 'POST',
-         headers: {
-             'Content-Type': 'application/json',
-             Authorization: `Bearer ${loginSession.access_token}`,
-         },
-         body: JSON.stringify(requestData),
-     });
-       
-     if (!response.ok) {
-         const errorText = await response.text();
-         throw new Error(`Server error: ${response.status} ${errorText}`);
-     }
-     const result = await response.json();
-     return result;
-   } catch (error) {
+    try {
+        const response = await fetch(`${remoteApiUrl}${routeUrl}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${loginSession.access_token}`,
+            },
+            body: JSON.stringify(requestData),
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Server error: ${response.status} ${errorText}`);
+        }
+        const result = await response.json();
+        return result;
+    } catch (error) {
         console.error("Network or API error:", error);
         throw new Error("Failed to update personal information. Please try again later.");
-   }
+    }
 };

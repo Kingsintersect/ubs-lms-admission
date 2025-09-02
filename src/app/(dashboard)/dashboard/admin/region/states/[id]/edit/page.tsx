@@ -1,17 +1,15 @@
-import { GetListOfCountries, GetSingleState } from '@/app/actions/server.admin';
+import { GetSingleState } from '@/app/actions/server.admin';
 import UpdateState from '../../components/UpdateState';
 import { verifySession } from '@/lib/server.utils';
 import React from 'react'
-import { loginSessionKey } from '@/lib/definitions';
-import { PageTypeProps } from '@/config';
+import { loginSessionKey, PageTypeProps } from '@/config';
 
 export const dynamic = "force-dynamic";
 
 const page = async ({ params }: PageTypeProps) => {
    const { id } = await params;
    const session = await verifySession(loginSessionKey);
-   const [country, state] = await Promise.all([
-      GetListOfCountries(),
+   const [state] = await Promise.all([
       GetSingleState(id, session.access_token),
    ]);
 

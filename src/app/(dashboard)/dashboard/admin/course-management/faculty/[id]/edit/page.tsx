@@ -3,8 +3,7 @@ import { verifySession } from '@/lib/server.utils';
 import { notFound } from 'next/navigation';
 import React from 'react'
 import UpdateFaculty from '../../components/UpdateFaculty';
-import { loginSessionKey } from '@/lib/definitions';
-import { PageTypeProps } from '@/config';
+import { loginSessionKey, PageTypeProps } from '@/config';
 
 export const dynamic = "force-dynamic";
 

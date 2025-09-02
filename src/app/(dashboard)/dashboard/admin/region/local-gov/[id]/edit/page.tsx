@@ -2,8 +2,8 @@ import { GetListOfStates, GetSingleLocalGov } from '@/app/actions/server.admin';
 import { verifySession } from '@/lib/server.utils';
 import React from 'react'
 import UpdateLocalGov from '../../components/UpdateLocalGov';
-import { loginSessionKey } from '@/lib/definitions';
 import { PagePropsWithId } from '@/types/generic.types';
+import { loginSessionKey } from '@/config';
 
 export const dynamic = "force-dynamic";
 

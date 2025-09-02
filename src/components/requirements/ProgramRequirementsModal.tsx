@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { X, FileText, Clock, GraduationCap, BookOpen, Download } from 'lucide-react';
+import { SITE_TITLE } from '@/config';
 
 interface ProgramRequirementsModalProps {
     isOpen: boolean;
@@ -46,7 +47,7 @@ const ProgramRequirementsModal: React.FC<ProgramRequirementsModalProps> = ({
                                     Programme Requirements & Duration
                                 </h2>
                                 <p className="text-sm text-gray-500">
-                                    UNIZIK Business School
+                                    {SITE_TITLE}
                                 </p>
                             </div>
                         </div>

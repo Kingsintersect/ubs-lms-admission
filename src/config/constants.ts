@@ -17,9 +17,23 @@ export const sessionPassword =
 export const clientId = process.env.NEXT_PUBLIC_CLIENT_ID_UBS ?? "";
 export const clientSecret = process.env.NEXT_PUBLIC_CLIENT_SECRET_UBS ?? "";
 
+
+export const ssoSessionKey = process.env.NEXT_PUBLIC_SSO_SESSION_KEY ?? "";
+export const loginSessionKey = process.env.NEXT_PUBLIC_LOGIN_SESSION_KEY ?? "";
+export const appSessionKey = process.env.NEXT_PUBLIC_APP_SESSION_KEY ?? "";
+
+export const SITE_SHORT_NAME = process.env.NEXT_PUBLIC_APP_SHORT_NAME ?? "";
+export const SITE_NAME = process.env.NEXT_PUBLIC_APP_NAME ?? "";
+export const SITE_TITLE = process.env.NEXT_PUBLIC_SITE_TITLE ?? "";
+
 const secretKey = process.env.NEXT_PUBLIC_SESSION_SECRET_UBS;
 export const encodedKey = new TextEncoder().encode(secretKey);
-export const SITE_NAME = "UNIZIK BUSINESS SCHOOL LMS"
+export type PaymentStatus = "FULLY_PAID" | "PART_PAID" | "UNPAID" | null;
+
+export type SessionPayload<T = Record<string, any>> = T & {
+	issuedAt?: number;
+	expiresAt: number;
+};
 
 export enum Roles {
 	ADMIN = "ADMIN",

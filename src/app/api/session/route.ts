@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { updateSessionKey } from "@/lib/session";
-import { loginSessionKey } from "@/lib/definitions";
 import { UserInterface } from "@/config/Types";
 import { SessionExists } from "@/lib/server.utils";
+import { loginSessionKey } from "@/config";
 
 export const dynamic = "force-dynamic";
 

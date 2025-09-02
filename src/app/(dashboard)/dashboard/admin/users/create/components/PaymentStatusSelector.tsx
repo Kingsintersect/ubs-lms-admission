@@ -1,4 +1,4 @@
-import { PaymentStatus } from "@/lib/definitions";
+import { PaymentStatus } from "@/config";
 import SetPaymentStatusRecord from "./SetPaymentStatusRecord";
 
 interface PaymentStatusSelectorProps {

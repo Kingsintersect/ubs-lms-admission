@@ -1,4 +1,4 @@
-import { loginSessionKey } from '@/lib/definitions';
+import { loginSessionKey } from '@/config';
 import { verifySession } from '@/lib/server.utils';
 import { redirect } from 'next/navigation';
 

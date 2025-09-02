@@ -6,9 +6,9 @@ import { GradeDistribution } from './components/GradeDistribution';
 import { AcademicStanding } from './components/AcademicStanding';
 import { ReportFooter } from './components/ReportFooter';
 import { verifySession } from '@/lib/server.utils';
-import { loginSessionKey } from '@/lib/definitions';
 import { getStudentGradeReport } from './api/studentGradeReport.api';
 import { generateGPASummary, processGradeReport } from '@/lib/gpa.utils';
+import { loginSessionKey } from '@/config';
 
 const StudentGradeReport = async () => {
     const session = await verifySession(loginSessionKey);

@@ -1,3 +1,4 @@
+import { SITE_TITLE } from '@/config';
 import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Check, X } from 'lucide-react';
@@ -14,7 +15,7 @@ export const ApplicationReviewHeader = () => {
                 <div className="flex items-center justify-between">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900">Review Application</h1>
-                        <p className="text-gray-600">UNIZIK Business School - Application Review</p>
+                        <p className="text-gray-600">{SITE_TITLE} - Application Review</p>
                     </div>
                     <div className="flex items-center space-x-4">
                         {((currentApplication?.admission_status.toLowerCase() === 'pending') && isAdmin) && (

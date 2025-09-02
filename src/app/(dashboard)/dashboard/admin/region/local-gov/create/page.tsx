@@ -3,7 +3,7 @@ import { verifySession } from '@/lib/server.utils';
 import { notFound } from 'next/navigation';
 import React from 'react'
 import CreateLocalGov from '../components/CreateLocalGov';
-import { loginSessionKey } from '@/lib/definitions';
+import { loginSessionKey } from '@/config';
 
 export const dynamic = "force-dynamic";
 

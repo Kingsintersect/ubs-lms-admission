@@ -26,6 +26,7 @@ import TermsAndConditions from "./components/form-inputs/TermsAndConditionsConte
 import { FormErrorList } from "@/components/forms/FormErrorList";
 import { useCurrentSession } from "@/hooks/useAccademics";
 import Link from "next/link";
+import { SITE_TITLE } from "@/config";
 
 const STORAGE_KEY = 'admission_form_progress';
 const CURRENT_STEP_KEY = 'admission_form_current_step';
@@ -218,7 +219,7 @@ const AdmissionForm: React.FC = () => {
                 {/* Header */}
                 <div className="text-center mb-8">
                     <h1 className="text-4xl font-bold text-(--color-site-b-dark) mb-2">
-                        UNIZIK Business School Admission
+                        {SITE_TITLE} Admission
                     </h1>
                     <p className="text-lg text-(--color-site-a-dark)">
                         Take the next step in your business career

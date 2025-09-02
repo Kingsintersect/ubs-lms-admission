@@ -3,7 +3,7 @@ import CreateState from '@/app/(dashboard)/dashboard/admin/region/states/compone
 import { verifySession } from '@/lib/server.utils';
 import { notFound } from 'next/navigation';
 import React from 'react'
-import { loginSessionKey } from '@/lib/definitions';
+import { loginSessionKey } from '@/config';
 
 export const dynamic = "force-dynamic";
 

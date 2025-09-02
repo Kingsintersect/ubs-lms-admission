@@ -1,9 +1,8 @@
 import { GetListOfCourseCategories, GetListOfCourses } from '@/app/actions/server.admin';
-import { baseUrl } from '@/config';
+import { baseUrl, loginSessionKey } from '@/config';
 import { verifySession } from '@/lib/server.utils';
 import React from 'react'
 import CreateCourseAssignment from '../components/CreateCourseAssignment';
-import { loginSessionKey } from '@/lib/definitions';
 
 export const dynamic = "force-dynamic";
 

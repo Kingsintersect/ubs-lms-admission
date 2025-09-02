@@ -1,7 +1,6 @@
 "use server";
 
-import { remoteApiUrl } from "@/config";
-import { loginSessionKey } from "@/lib/definitions";
+import { loginSessionKey, remoteApiUrl } from "@/config";
 import {
 	deleteSession,
 	deleteSessionKey,

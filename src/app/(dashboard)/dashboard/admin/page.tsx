@@ -1,7 +1,6 @@
 import { GetAmissionApprovedStudentList, GetAmissionRejectedStudentList, GetAppliedStudentList, GetUnappliedStudentList } from '@/app/actions/admin';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import { Roles } from '@/config';
-import { loginSessionKey } from '@/lib/definitions';
+import { loginSessionKey, Roles } from '@/config';
 import { verifySession } from '@/lib/server.utils';
 import { SectionCards } from '@/components/section-cards';
 import { BarChartMultitple } from '@/components/ui/bar-chart-multiple';

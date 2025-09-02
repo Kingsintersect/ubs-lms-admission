@@ -1,9 +1,8 @@
 import { GetListOfFaculties } from '@/app/actions/server.admin';
 import CreateCourseCategories from '@/app/(dashboard)/dashboard/admin/course-management/course-categories/components/CreateCategoryCourse';
-import { Semesters, StudyLevels } from '@/config';
+import { loginSessionKey, Semesters, StudyLevels } from '@/config';
 import { verifySession } from '@/lib/server.utils';
 import React from 'react';
-import { loginSessionKey } from '@/lib/definitions';
 import { GetAllProgram } from '@/app/actions/faculty.api';
 
 export const dynamic = "force-dynamic";

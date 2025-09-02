@@ -2,8 +2,7 @@ import { GetSingleCourse } from '@/app/actions/server.admin';
 import { verifySession } from '@/lib/server.utils';
 import React from 'react'
 import UpdateCourse from '../../components/UpdateCourse';
-import { loginSessionKey } from '@/lib/definitions';
-import { PageTypeProps } from '@/config';
+import { loginSessionKey, PageTypeProps } from '@/config';
 
 export const dynamic = "force-dynamic";
 
