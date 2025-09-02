@@ -102,3 +102,11 @@ export const UniversalformatFieldName = (str, options = { separator: '_', replac
 		.replace(/([a-z])([A-Z])/g, '$1 $2') // Adds space before capital letters
 		.replace(/\b\w/g, (c) => c.toUpperCase());
 };
+
+export function getApiHost(url?: string): string {
+	try {
+		return url ? new URL(url).hostname : "";
+	} catch {
+		return "";
+	}
+}

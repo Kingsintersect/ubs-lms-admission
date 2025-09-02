@@ -1,3 +1,4 @@
+import { getApiHost } from "@/lib/utils";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -20,17 +21,12 @@ const nextConfig: NextConfig = {
 			},
 			{
 				protocol: "https",
+				hostname: getApiHost(process.env.NEXT_PUBLIC_API_DOMAIN),
+				pathname: "**",
+			},
+			{
+				protocol: "https",
 				hostname: "res.cloudinary.com",
-				pathname: "**",
-			},
-			{
-				protocol: "https",
-				hostname: "ubs-lms-admission.vercel.app",
-				pathname: "**",
-			},
-			{
-				protocol: "https",
-				hostname: "uni-portal-system-backend.qverselearning.org",
 				pathname: "**",
 			},
 		],

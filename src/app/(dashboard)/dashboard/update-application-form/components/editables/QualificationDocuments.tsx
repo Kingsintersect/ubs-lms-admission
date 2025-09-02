@@ -6,6 +6,7 @@ import { AlertCircle, CheckCircle, Edit3, FileStack, Save, X } from 'lucide-reac
 import React, { useState } from 'react'
 import { useApplicationReview } from '@/contexts/ApplicationReviewContext';
 import { EditableFileUpload } from '@/components/forms/EditableFormFields';
+import { ROOT_IMAGE_URL } from '@/config';
 
 export interface QualificationDocumentsProps {
     application: QualificationDocumentsData;
@@ -224,7 +225,7 @@ export default function QualificationDocuments({
                     maxFiles={1}
                     maxSize={10}
                     isEditing={isEditing}
-                    baseUrl="https://uni-portal-system-backend.qverselearning.org/storage/" // For existing files
+                    baseUrl={`${ROOT_IMAGE_URL}/`} // For existing files
                     showPreview={true} // Enable/disable preview mode
                 />
                 <EditableFileUpload
@@ -237,7 +238,7 @@ export default function QualificationDocuments({
                     maxFiles={1}
                     maxSize={10}
                     isEditing={isEditing}
-                    baseUrl="https://uni-portal-system-backend.qverselearning.org/storage/" // For existing files
+                    baseUrl={`${ROOT_IMAGE_URL}/`} // For existing files
                     showPreview={true} // Enable/disable preview mode
                 />
                 <EditableFileUpload
@@ -250,7 +251,7 @@ export default function QualificationDocuments({
                     maxFiles={1}
                     maxSize={10}
                     isEditing={isEditing}
-                    baseUrl="https://uni-portal-system-backend.qverselearning.org/storage/" // For existing files
+                    baseUrl={`${ROOT_IMAGE_URL}/`} // For existing files
                     showPreview={true} // Enable/disable preview mode
                 />
                 <EditableFileUpload
@@ -263,7 +264,7 @@ export default function QualificationDocuments({
                     maxFiles={1}
                     maxSize={10}
                     isEditing={isEditing}
-                    baseUrl="https://uni-portal-system-backend.qverselearning.org/storage/" // For existing files
+                    baseUrl={`${ROOT_IMAGE_URL}/`} // For existing files
                     showPreview={true} // Enable/disable preview mode
                 />
                 <EditableFileUpload
@@ -276,7 +277,7 @@ export default function QualificationDocuments({
                     maxFiles={1}
                     maxSize={10}
                     isEditing={isEditing}
-                    baseUrl="https://uni-portal-system-backend.qverselearning.org/storage/" // For existing files
+                    baseUrl={`${ROOT_IMAGE_URL}/`} // For existing files
                     showPreview={true} // Enable/disable preview mode
                 />
             </div>
@@ -295,7 +296,7 @@ export default function QualificationDocuments({
                 maxFiles={5}
                 maxSize={10}
                 isEditing={isEditing}
-                baseUrl="https://uni-portal-system-backend.qverselearning.org/storage/" // For existing files
+                baseUrl={`${ROOT_IMAGE_URL}/`} // For existing files
                 showPreview={true} // Enable/disable preview mode
             />
 

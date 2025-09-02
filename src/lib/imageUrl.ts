@@ -1,5 +1,7 @@
-const BASE_IMAGE_URL_DEV = "http://localhost:3000";
-const BASE_IMAGE_URL_PROD = "https://uni-portal-system-backend.qverselearning.org/storage";
+import { baseUrl, ROOT_IMAGE_URL } from "@/config";
+
+const BASE_IMAGE_URL_DEV = baseUrl;
+const BASE_IMAGE_URL_PROD = ROOT_IMAGE_URL;
 
 export function FormatImageUrl(imagePath: string | null | undefined): string {
 	if (
