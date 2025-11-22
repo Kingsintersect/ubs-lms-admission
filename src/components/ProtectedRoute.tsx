@@ -32,7 +32,6 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
                     router.push('/dashboard/student');
                 }
             }
-
         }
     }, [user, loading, router, allowedRoles, pathname]);
 

@@ -1,15 +1,14 @@
 
-import { AdmissionFormData } from "@/schemas/admission-schema";
-import { Control, FieldErrors, UseFormWatch } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 import Fade from "@/components/application/animatives/Fade";
 import { FormField } from "@/components/forms/FormField";
+import { ApplicationFormData } from "@/schemas/admission-schema";
 
 interface NextOfKinInformationStepProps {
-    control: Control<AdmissionFormData>;
-    errors: FieldErrors<AdmissionFormData>;
-    watch: UseFormWatch<AdmissionFormData>;
+    form: UseFormReturn<ApplicationFormData>;
 }
-export const NextOfKinInformationStep: React.FC<NextOfKinInformationStepProps> = ({ control, errors, watch }) => {
+export const NextOfKinInformationStep: React.FC<NextOfKinInformationStepProps> = ({ form }) => {
+    const { control, watch, formState: { errors } } = form;
     const has_sponsor = watch("has_sponsor");
 
     return (

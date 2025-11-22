@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { ObjectType } from "@/types/generic.types";
 import { CreditLoad, Grade, Subject } from "./Types";
-import { ProgramNode } from "@/components/ProgramAccordion";
 
 export interface SidebarNavItem {
 	title: string;

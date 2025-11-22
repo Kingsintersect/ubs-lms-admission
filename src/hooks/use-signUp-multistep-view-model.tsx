@@ -23,18 +23,12 @@ export const baseSignupSchema = z
         gender: z.string().refine((value) => value !== "", {
             message: "Your gender must be selected",
         }),
-        // dob: z.string().min(1, { message: "Required" }),
         nationality: z.string().refine((value) => value !== "", { message: "Nationality is required" }),
         state: z.string().refine((value) => value !== "", { message: "State is required" }),
-        hometown_address: z.string().min(1, { message: "Home Town is required" }),
-        residential_address: z.string().min(1, { message: "Residential address isrequired" }),
         email: z.string().email({ message: "Please enter a valid email." }),
         password: z.string().min(6, { message: "Should be at least 6 characters long" }),
         password_confirmation: z.string(),
-        // department_id: z.string().min(1, { message: "Required" }),
-        // faculty_id: z.string().min(1, { message: "Required" }),
         amount: z.number().min(1, { message: "Amount is requird" }),
-        // accademicSession: z.string().min(1, 'accademic session is missing'),
 
         // Program Selection
         program: z.string().min(1, 'Program selection is required'),
@@ -63,7 +57,7 @@ const steps = [
     {
         id: 1,
         label: "Personal Info",
-        fields: ["first_name", "last_name", "phone_number", "gender", "nationality", "state", "hometown_address", "residential_address"],
+        fields: ["first_name", "last_name", "phone_number", "gender", "nationality", "state"],
     },
     {
         id: 2,

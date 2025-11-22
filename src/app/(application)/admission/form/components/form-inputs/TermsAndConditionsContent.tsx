@@ -4,7 +4,6 @@ import React, { useState } from 'react'
 import { FourWayDrawer, FourWayDrawerClose, FourWayDrawerContent, FourWayDrawerDescription, FourWayDrawerHeader, FourWayDrawerTitle, FourWayDrawerTrigger } from "@/components/four-ways-drawer";
 import { ChevronDown, ChevronRight, Calendar, Mail, Phone, MapPin, Shield, FileText, Users, GraduationCap } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { SITE_TITLE } from '@/config';
 
 interface SectionProps {
     title: string;
@@ -18,6 +17,7 @@ const CollapsibleSection: React.FC<SectionProps> = ({ title, children, icon }) =
     return (
         <div className="border border-gray-200 rounded-lg mb-4 overflow-hidden shadow-sm">
             <button
+                type='button'
                 onClick={() => setIsOpen(!isOpen)}
                 className="w-full px-6 py-4 text-left bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 transition-all duration-200 flex items-center justify-between group"
             >
@@ -71,7 +71,7 @@ const TermsAndConditions = ({ lauched, setILunched }) => {
                                     Terms and Conditions
                                 </h1>
                                 <p className="text-xl text-blue-100 mb-6 max-w-3xl mx-auto">
-                                    Nnnamdi Azikiwe University Business School - Awka, Anambra, Nigeria
+                                    ESUT Open Distant Learning - Enung, Enugu State, Nigeria
                                 </p>
                                 <div className="flex items-center justify-center space-x-2 text-blue-200">
                                     <Calendar className="h-5 w-5" />
@@ -90,7 +90,7 @@ const TermsAndConditions = ({ lauched, setILunched }) => {
                                 Agreement Overview
                             </h2>
                             <p className="text-gray-600 leading-relaxed text-lg">
-                                By enrolling in, attending, or utilizing any services provided by the Nnamdi Azikiwe University Business School,
+                                By enrolling in, attending, or utilizing any services provided by the Enuugu State University Of Science And Technology Enugu (ODL),
                                 you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions.
                                 These terms constitute a legally binding agreement governed by the laws of the Federal Republic of Nigeria.
                             </p>
@@ -259,8 +259,8 @@ const TermsAndConditions = ({ lauched, setILunched }) => {
                                     <div className="space-y-3 text-gray-600">
                                         <div className="flex items-center">
                                             <MapPin className="h-4 w-4 text-blue-600 mr-3 flex-shrink-0" />
-                                            <span>Nnamdi Azikiwe University, awka<br />
-                                                Anambra, Nigeria</span>
+                                            <span>Enuugu State University Of Science And Technology<br />
+                                                Enugu (ODL), Nigeria</span>
                                         </div>
                                         <div className="flex items-center">
                                             <Phone className="h-4 w-4 text-blue-600 mr-3" />
@@ -268,7 +268,7 @@ const TermsAndConditions = ({ lauched, setILunched }) => {
                                         </div>
                                         <div className="flex items-center">
                                             <Mail className="h-4 w-4 text-blue-600 mr-3" />
-                                            <span>academics@unizik.edu.ng</span>
+                                            <span>support.odl@esut.edu.ng</span>
                                         </div>
                                     </div>
                                 </div>
@@ -280,15 +280,15 @@ const TermsAndConditions = ({ lauched, setILunched }) => {
                                     <div className="space-y-3 text-gray-600">
                                         <div className="flex items-center">
                                             <Phone className="h-4 w-4 text-blue-600 mr-3" />
-                                            <span>+234-802-987-6543</span>
+                                            <span>+2347044914032</span>
                                         </div>
                                         <div className="flex items-center">
                                             <Mail className="h-4 w-4 text-blue-600 mr-3" />
-                                            <span>support@unizik.edu.ng</span>
+                                            <span>support.odl@esut.edu.ng</span>
                                         </div>
                                         <div className="flex items-center">
                                             <GraduationCap className="h-4 w-4 text-blue-600 mr-3" />
-                                            <span>www.unizik.edu.ng</span>
+                                            <span>www.odl-esut.qverselearning.org</span>
                                         </div>
                                     </div>
                                 </div>
@@ -317,7 +317,7 @@ const TermsAndConditions = ({ lauched, setILunched }) => {
                     <footer className="bg-gray-900 text-white py-8 mt-16">
                         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                             <p className="text-gray-400">
-                                © 2025 {SITE_TITLE}. All rights reserved.
+                                © 2025 ODL ESUT. All rights reserved.
                             </p>
                             <p className="text-gray-400 mt-2">
                                 This document complies with Nigerian educational regulations and institutional best practices.

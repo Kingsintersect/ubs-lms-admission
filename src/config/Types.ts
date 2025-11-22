@@ -49,6 +49,7 @@ export interface UserInterface extends Record<string, unknown> {
 	first_name: string | null;
 	other_name: string | null;
 	username: string | null;
+	gender: string;
 	faculty_id: string | null;
 	department_id: string | null;
 	program: string | null;
@@ -76,7 +77,6 @@ export interface UserInterface extends Record<string, unknown> {
 }
 export interface StudentApplicationType extends UserInterface {
 	religion: string;
-	gender: string;
 	disability: string;
 	dob: string;
 	hometown: string;
@@ -88,7 +88,7 @@ export interface StudentApplicationType extends UserInterface {
 	sponsor_phone_number: string;
 	sponsor_email: string;
 	sponsor_contact_address: string;
-	application: Record<string, any>;
+	application: Record<string, unknown>;
 }
 export interface Profile {
 	id: number | null;

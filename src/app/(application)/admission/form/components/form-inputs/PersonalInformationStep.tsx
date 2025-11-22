@@ -1,15 +1,21 @@
-import { AdmissionFormData } from "@/schemas/admission-schema";
+import { UseFormReturn } from "react-hook-form";
 import { FormField } from "@/components/forms/FormField";
-import { Control, FieldErrors } from "react-hook-form";
 import { GENDER, RELIGION } from "@/components/forms/applicationFormConstants";
+import { useAuth } from "@/contexts/AuthContext";
+import { useFetchLocalGovermentAreas } from "@/hooks/useExternalPrograms";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircleIcon } from "lucide-react";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { useFetchLocalGovermentAreas } from "@/hooks/useExternalPrograms";
-import { useAuth } from "@/contexts/AuthContext";
+import { ApplicationFormData } from "@/schemas/admission-schema";
 
-export const PersonalInformationStep: React.FC<{ control: Control<AdmissionFormData>; errors: FieldErrors<AdmissionFormData> }> = ({ control, errors }) => {
+interface PersonalInformationStepProps {
+    form: UseFormReturn<ApplicationFormData>;
+}
+
+export const PersonalInformationStep: React.FC<PersonalInformationStepProps> = ({ form }) => {
     const { user, loading } = useAuth();
+    const { control, formState: { errors } } = form;
+
     const {
         data: localGovAreas,
         isLoading,
@@ -24,6 +30,7 @@ export const PersonalInformationStep: React.FC<{ control: Control<AdmissionFormD
             Loading Local Gov Areas...
         </div>
     );
+
     if (isError && !localGovAreas) return (
         <Alert variant="destructive">
             <AlertCircleIcon />
@@ -44,7 +51,7 @@ export const PersonalInformationStep: React.FC<{ control: Control<AdmissionFormD
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                     name="lga"
-                    control={control}
+                    control={form.control}
                     errors={errors}
                     label="Local Government Area"
                     required
@@ -106,11 +113,11 @@ export const PersonalInformationStep: React.FC<{ control: Control<AdmissionFormD
                     name="contact_address"
                     control={control}
                     errors={errors}
-                    label="Contact Address"
+                    label="Residential Address"
                     required
-                    placeholder="211 resident street, city, state"
+                    placeholder="+234 8123456780"
                 />
             </div>
         </div>
     );
-}
+};

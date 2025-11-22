@@ -1,18 +1,17 @@
-"use client";
+import Fade from '@/components/application/animatives/Fade';
+import { FormField } from '@/components/forms/FormField';
+import { ApplicationFormData } from '@/schemas/admission-schema';
+import React, { FC } from 'react'
+import { UseFormReturn } from 'react-hook-form';
+import { TermsAndConditionsTrigger } from '../TermsAndConditionsContent';
+import { FileUploader } from '@/components/forms/FileUploader';
+// import { STUDY_MODES } from '@/components/forms/applicationFormConstants';
 
-import Fade from "@/components/application/animatives/Fade";
-import { FormField } from "@/components/forms/FormField";
-import { STUDY_MODES } from "@/components/forms/applicationFormConstants";
-import { TermsAndConditionsTrigger } from "./TermsAndConditionsContent";
-import { ApplicationFormData } from "@/schemas/admission-schema";
-import { UseFormReturn } from "react-hook-form";
-import { FileUploader } from "@/components/forms/FileUploader";
-
-interface ProgramAndEssaysStepProps {
+interface PassportSumaryStepProps {
     form: UseFormReturn<ApplicationFormData>;
-    setILunched: (boolean) => void;
+    setILunched: (value: boolean) => void;
 }
-export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ form, setILunched }) => {
+export const PassportSumary: FC<PassportSumaryStepProps> = ({ form, setILunched }) => {
     const { control, watch, formState: { errors } } = form;
     const has_disability = watch("has_disability");
 
@@ -23,14 +22,12 @@ export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ form
                 <div className="w-full sm:w-1/2 space-y-4 sm:px-20">
                     <FileUploader
                         name="passport"
-                        label="Passport photograph"
                         control={control}
-                        // errors={errors}
-                        accept="image/*"
-                        maxSize={10}
-                        multiple={false}
+                        label="Passport photograph"
                         required={true}
-                    // showPreview={true}
+                        accept="image/*"
+                        maxSize={1}
+                        multiple={false}
                     />
                 </div>
 
@@ -41,39 +38,6 @@ export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ form
                     </div>
                 </div>
             </div>
-
-
-            <FormField
-                name="studyMode"
-                control={control}
-                errors={errors}
-                label="Study Mode (Online only available for now)"
-                required
-                type="radio"
-                options={STUDY_MODES}
-            />
-
-            <FormField
-                name="personalStatement"
-                control={control}
-                errors={errors}
-                label="Personal Statement"
-                required
-                type="textarea"
-                placeholder="Tell us about yourself, your background, and why you want to pursue this program..."
-                rows={6}
-            />
-
-            <FormField
-                name="careerGoals"
-                control={control}
-                errors={errors}
-                label="Career Goals"
-                required
-                type="textarea"
-                placeholder="Describe your short-term and long-term career goals..."
-                rows={6}
-            />
 
             <div className="space-y-4">
                 <FormField
@@ -96,6 +60,16 @@ export const ProgramAndEssaysStep: React.FC<ProgramAndEssaysStepProps> = ({ form
                     />
                 </Fade>
             </div>
+
+            {/* <FormField
+                name="studyMode"
+                control={control}
+                errors={errors}
+                label="Study Mode (Online only available for now)"
+                required
+                type="radio"
+                options={STUDY_MODES}
+            /> */}
 
             <div className="flex items-center gap-5">
                 <FormField

@@ -41,7 +41,7 @@ const secretKey = process.env.NEXT_PUBLIC_SESSION_SECRET_UBS;
 export const encodedKey = new TextEncoder().encode(secretKey);
 export type PaymentStatus = "FULLY_PAID" | "PART_PAID" | "UNPAID" | null;
 
-export type SessionPayload<T = Record<string, any>> = T & {
+export type SessionPayload<T = Record<string, unknown>> = T & {
 	issuedAt?: number;
 	expiresAt: number;
 };
@@ -53,6 +53,12 @@ export enum Roles {
 	MANAGER = "MANAGER",
 }
 
+// configuration for admission application form
+export enum ProgramType {
+	ODL = "odl",
+	BUSINESS_SCHOOL = "business_school",
+}
+export const SelectedProgramType: ProgramType = ProgramType.BUSINESS_SCHOOL;
 
 // PAYMENT CONFIG
 export const APPLICATION_FEE = 37000;

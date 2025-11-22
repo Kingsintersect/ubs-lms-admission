@@ -1,4 +1,6 @@
 import React from 'react'
+import { Alert, AlertDescription } from '../ui/alert'
+import { AlertCircle } from 'lucide-react'
 
 export const FormErrorList = ({ allErrors }) => {
     return (
@@ -12,6 +14,24 @@ export const FormErrorList = ({ allErrors }) => {
                     </ul>
                 </div>
             )}
+        </>
+    )
+}
+
+
+export const StepErrorDisplay = ({ stepErrors, currentStep }) => {
+    return (
+        <>
+            {
+                stepErrors[currentStep] && stepErrors[currentStep].length > 0 && stepErrors[currentStep].map((error, index) => (
+                    <Alert key={index} className="mt-2 border-red-200 bg-red-50">
+                        <AlertCircle className="h-4 w-4 text-red-600" />
+                        <AlertDescription className="text-red-700">
+                            {error}
+                        </AlertDescription>
+                    </Alert>
+                ))
+            }
         </>
     )
 }

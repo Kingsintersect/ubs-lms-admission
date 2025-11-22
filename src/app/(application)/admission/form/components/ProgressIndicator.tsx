@@ -1,5 +1,5 @@
 import { Progress } from "@/components/ui/progress";
-import { Step } from "../../../../../components/forms/applicationFormConstants";
+import { Step } from "../lib/admission-form-hooks";
 
 export const ProgressIndicator: React.FC<{ currentStep: number; steps: Step[] }> = ({ currentStep, steps }) => {
     const progress = ((currentStep + 1) / steps.length) * 100;

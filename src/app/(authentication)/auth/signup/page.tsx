@@ -119,22 +119,6 @@ export default function SignupPage() {
                                     error={errors.state}
                                     options={NewState.map(item => ({ value: String(item.value), label: String(item.value) }))}
                                 />
-                                <InputFormField<SignupFormData>
-                                    type="text"
-                                    id={'hometown_address'}
-                                    label="Home Town Address"
-                                    name="hometown_address"
-                                    register={register}
-                                    error={errors.hometown_address}
-                                />
-                                <InputFormField<SignupFormData>
-                                    type="text"
-                                    id={'residential_address'}
-                                    label="Residential Address"
-                                    name="residential_address"
-                                    register={register}
-                                    error={errors.residential_address}
-                                />
                             </div>
                         </FormFieldSet>
                     </motion.div>

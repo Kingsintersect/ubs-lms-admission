@@ -12,9 +12,9 @@ const UpdateApplicationForm = () => {
     const id = searchParams.get('id') || '';
     return (
         <ProtectedRoute allowedRoles={[Roles.STUDENT, Roles.ADMIN]}>
-            <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen">
                 <ApplicationReviewProvider>
-                    <ApplicationReviewHeader />
+                    <ApplicationReviewHeader applicationId={id} />
                     <ApplicationContainer id={id} />
                 </ApplicationReviewProvider>
             </div>
