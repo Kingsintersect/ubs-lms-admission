@@ -8,16 +8,16 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from "sonner";
 import { convertImageUrlsToPictures, FormatImageUrl, AcademicImage } from "@/lib/imageUrl";
 import { deleteAcademicImage } from "@/app/actions/admission-actions";
-import { AdmissionFormData } from "@/schemas/admission-schema";
+import { ApplicationFormData } from "@/schemas/admission-schema";
 import { getSafeImageUrl } from "@/lib/imageUrl";
 import { XButton } from "@/components/XButton";
 interface AcademicImageUploaderProps {
     image_id?: number | null;
     imagesUrlArray: string[] | undefined;
-    register?: UseFormReturn<AdmissionFormData>['register'] | null;
-    setValue?: UseFormReturn<AdmissionFormData>['setValue'] | null;
+    register?: UseFormReturn<ApplicationFormData>['register'] | null;
+    setValue?: UseFormReturn<ApplicationFormData>['setValue'] | null;
     previewOnly?: boolean;
-    formKey?: keyof AdmissionFormData;
+    formKey?: keyof ApplicationFormData;
     title?: string;
 }
 const MultiImageUploader = ({ image_id, imagesUrlArray, setValue, register, previewOnly = true, formKey = "other_documents", title = "" }: AcademicImageUploaderProps) => {

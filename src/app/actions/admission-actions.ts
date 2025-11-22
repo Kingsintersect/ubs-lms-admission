@@ -4,13 +4,13 @@ import { remoteApiUrl } from "@/config";
 import { apiCall } from "@/lib/apiCaller";
 import { handleApiError } from "@/lib/errorsHandler";
 import { appendFormData } from "@/lib/formUtils";
-import { AdmissionFormData } from "@/schemas/admission-schema";
+import { ApplicationFormData } from "@/schemas/admission-schema";
 
 /**
  * submit function
  */
 export const submitAdmissionForm = async (
-    data: AdmissionFormData,
+    data: ApplicationFormData,
     access_token: string
 ) => {
     const formData = new FormData();

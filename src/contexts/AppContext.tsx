@@ -1,6 +1,6 @@
 "use client";
-import { Roles } from '@/config';
-import { AdmissionStatusType, SittingCourse, StatusType, UserInterface } from '@/config/Types';
+import { ProgramType, Roles } from '@/config';
+import { AdmissionStatusType, StatusType, UserInterface } from '@/config/Types';
 import { ensureClient } from '@/lib/ensureClient';
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
@@ -8,14 +8,9 @@ type AppState = {
    student: UserInterface;
    isAuthenticated: boolean;
    isPageLoading: boolean;
-   passportUrl: string | null;
-   firstSittingResultUrl: string | null;
-   secondSittingResultUrl: string | null;
-   // firstSittingGrade: SittingCourse[];
-   // secondSittingGrade: SittingCourse[];
-   firstSittingGrade: SittingCourse[];
-   secondSittingGrade: SittingCourse[];
-   examSittingState: boolean;
+   activeProgramType?: ProgramType;
+   isODL?: boolean;
+   isUBS?: boolean;
 };
 
 type AppContextType = {
@@ -23,14 +18,9 @@ type AppContextType = {
    setStudent: (newStudentData: Partial<UserInterface>) => void;
    getStudent: () => UserInterface;
    removeStudent: () => void;
+   setActiveProgramType: (status: ProgramType) => void;
    setAuthentication: (status: boolean) => void;
    setIsPageLoading: (status: boolean) => void;
-   setExamSittingState: (status: boolean) => void;
-   setPassportUrl: (passportUrl: string) => void;
-   setFirstSittingResultUrl: (firstSittingResultUrl: string) => void;
-   setSecondSittingResultUrl: (secondSittingResultUrl: string) => void;
-   setFirstSittingGrade: (grades: SittingCourse) => void;
-   setSecondSittingGrade: (grades: SittingCourse) => void;
 };
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -77,12 +67,9 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
       },
       isPageLoading: false,
       isAuthenticated: false,
-      passportUrl: null,
-      firstSittingResultUrl: null,
-      secondSittingResultUrl: null,
-      firstSittingGrade: [],
-      secondSittingGrade: [],
-      examSittingState: false,
+      activeProgramType: ProgramType.BUSINESS_SCHOOL,
+      isODL: false,
+      isUBS: false,
    });
 
    useEffect(() => {
@@ -93,6 +80,19 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
          console.error(error);
       }
    }, []);
+
+   useEffect(() => {
+      if (state.activeProgramType === ProgramType.BUSINESS_SCHOOL) {
+         setState((prev) => ({ ...prev, isUBS: true }));
+      } else {
+         setState((prev) => ({ ...prev, isUBS: false }));
+      }
+      if (state.activeProgramType === ProgramType.ODL) {
+         setState((prev) => ({ ...prev, isODL: true }));
+      } else {
+         setState((prev) => ({ ...prev, isODL: false }));
+      }
+   }, [state.activeProgramType])
 
    // Function to update student
    const setStudent = (newStudentData: Partial<UserInterface>) => {
@@ -116,7 +116,10 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
       }
    };
 
-   // Function to update authentication status
+   const setActiveProgramType = (value: ProgramType) => {
+      setState((prev) => ({ ...prev, activeProgramType: value }));
+   };
+
    const setAuthentication = (status: boolean) => {
       setState((prev) => ({ ...prev, isAuthenticated: status }));
    };
@@ -125,50 +128,15 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
       setState((prev) => ({ ...prev, isAuthenticated: status }));
    };
 
-   const setExamSittingState = (status: boolean) => {
-      setState((prev) => ({ ...prev, examSittingState: status }));
-   };
-
-   const setPassportUrl = (passportUrl: string) => {
-      setState((prev) => ({ ...prev, passportUrl }));
-   }
-
-   const setFirstSittingResultUrl = (firstSittingResultUrl: string) => {
-      setState((prev) => ({ ...prev, firstSittingResultUrl }))
-   }
-
-   const setSecondSittingResultUrl = (secondSittingResultUrl: string) => {
-      setState((prev) => ({ ...prev, secondSittingResultUrl }))
-   }
-
-   const setFirstSittingGrade = (course: SittingCourse) => {
-      setState((prevState) => ({
-         ...prevState,
-         firstSittingGrade: [...prevState.firstSittingGrade, course],
-      }));
-   }
-
-   const setSecondSittingGrade = (course: SittingCourse) => {
-      setState((prevState) => ({
-         ...prevState,
-         secondSittingGrade: [...prevState.secondSittingGrade, course],
-      }));
-   }
-
    return (
       <AppContext.Provider value={{
          state,
          setStudent,
          getStudent,
          removeStudent,
+         setActiveProgramType,
          setAuthentication,
          setIsPageLoading,
-         setExamSittingState,
-         setFirstSittingGrade,
-         setSecondSittingGrade,
-         setPassportUrl,
-         setFirstSittingResultUrl,
-         setSecondSittingResultUrl,
       }}>
          {children}
       </AppContext.Provider>

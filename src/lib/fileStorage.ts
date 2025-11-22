@@ -7,7 +7,7 @@ export interface StoredFile {
     lastModified: number;
 }
 
-export const serializeFiles = async (files: (File | null)[]): Promise<StoredFile[]> => {
+export const serializeFiles = async (files: (File | string | null)[]): Promise<StoredFile[]> => {
     const serializedFiles: StoredFile[] = [];
 
     for (const file of files) {

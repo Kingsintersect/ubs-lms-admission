@@ -1,5 +1,3 @@
-// lib/storage.ts
-
 interface StoredFile {
     id: string;
     formKey: string;

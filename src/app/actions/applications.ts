@@ -5,7 +5,7 @@ import { UserInterface } from "@/config/Types";
 import { UseDataTableOptions } from "@/hooks/useDataTable";
 import { apiCall } from "@/lib/apiCaller";
 import { getSession } from "@/lib/session";
-import { ApplicationChunk, ApplicationDetailsType } from "@/schemas/admission-schema";
+import { ApplicationDetailsType, ApplicationFormData } from "@/schemas/admission-schema";
 import { ApplicationApproveValues, ApplicationRejectValues } from "@/schemas/applicationReview-schema";
 import { ApiResponseArray, ApiResponseSingle } from "@/types/api.types";
 import { Application } from "@/types/application";
@@ -166,7 +166,42 @@ export async function getApplications(
 }
 
 // review editing
-export const updateStudentApplicationData = async (applicationId: string, data: ApplicationChunk): Promise<void> => {
+// export const updateStudentApplicationData = async (applicationId: string, data: Partial<ApplicationFormData>): Promise<void> => {
+//     const formData = new FormData();
+//     formData.append('application_id', applicationId);
+
+//     try {
+//         appendFormData(formData, data as any);
+//         // seeFormData(formData);
+//     } catch (error) {
+//         console.error("FormData preparation failed:", error);
+//         throw new Error("Failed to prepare form data");
+//     }
+//     const loginSession = (await getSession(loginSessionKey)) as SessionData;
+
+//     // console.log('FormData contents:');
+//     // for (const [key, value] of formData.entries()) {
+//     //     console.log(key, value);
+//     // }
+
+//     const response = await fetch(`${remoteApiUrl}/application/update-application-form`, {
+//         method: 'POST',
+//         headers: {
+//             Authorization: `Bearer ${loginSession.access_token}`,
+//         },
+//         body: formData,
+//     });
+
+//     if (!response.ok) {
+//         const error = await response.json();
+//         console.error('error', error);
+//         throw new Error(error.message || 'Failed to update personal information');
+//     }
+//     const result = await response.json();
+//     console.log('result', result);
+//     return result;
+// };
+export const updateStudentApplicationData = async (applicationId: string, data: Partial<ApplicationFormData>): Promise<void> => {
     const requestData = { application_id: applicationId, ...data };
     const loginSession = (await getSession(loginSessionKey)) as SessionData;
     const response = await fetch(`${remoteApiUrl}/application/update-application-form`, {
@@ -185,17 +220,16 @@ export const updateStudentApplicationData = async (applicationId: string, data: 
     const result = await response.json();
     return result;
 };
-export const updateStudentPersonalInfoData = async (data: ApplicationChunk): Promise<void> => {
+export const updateStudentPersonalInfoData = async (data: Partial<ApplicationFormData>): Promise<void> => {
     const requestData = { ...data };
     const loginSession = (await getSession(loginSessionKey)) as SessionData;
-    const routeUrl = (loginSession.user.role === "STUDENT")
-        ? `/account/user-personal-updates`
-        : (loginSession.user.role === "ADMIN")
-            ? `/account/user-update`
-            : "";
-    console.log('routeUrl', routeUrl)
+    // const routeUrl = (loginSession.user.role === "STUDENT")
+    //     ? `/account/user-personal-updates`
+    //     : (loginSession.user.role === "ADMIN")
+    //         ? `/account/user-update`
+    //         : "";
     try {
-        const response = await fetch(`${remoteApiUrl}${routeUrl}`, {
+        const response = await fetch(`${remoteApiUrl}/account/user-update`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -5,7 +5,7 @@ export const baseUrl = process.env.NEXT_PUBLIC_BASE_URL_UBS ?? "";
 export const apiUrl = (process.env.NEXT_PUBLIC_BASE_URL_UBS ?? "") + "/api";
 
 export const remoteApiUrl = (process.env.NEXT_PUBLIC_API_DOMAIN ?? "") + "/api/v1";
-export const ROOT_IMAGE_URL = (process.env.NEXT_PUBLIC_API_DOMAIN ?? "") + "/storage";
+export const ROOT_IMAGE_URL = (process.env.NEXT_PUBLIC_API_DOMAIN ?? "") + "/storage/";
 export const remoteApiHost = getApiHost(process.env.NEXT_PUBLIC_API_DOMAIN);
 export const lmsLoginUrl = process.env.NEXT_PUBLIC_LMS_LOGIN_URL_UBS ?? "";
 
@@ -58,7 +58,7 @@ export enum ProgramType {
 	ODL = "odl",
 	BUSINESS_SCHOOL = "business_school",
 }
-export const SelectedProgramType: ProgramType = ProgramType.BUSINESS_SCHOOL;
+export const SelectedProgramType = ProgramType.BUSINESS_SCHOOL;
 
 // PAYMENT CONFIG
 export const APPLICATION_FEE = 37000;

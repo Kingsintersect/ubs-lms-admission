@@ -19,7 +19,6 @@ const UpdateApplicationForm = () => {
                 </ApplicationReviewProvider>
             </div>
         </ProtectedRoute>
-
     )
 }
 

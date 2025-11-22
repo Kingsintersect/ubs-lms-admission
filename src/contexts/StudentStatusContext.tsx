@@ -11,7 +11,18 @@ export interface StudentStatus {
         acceptance_fee_payment_status: 'FULLY_PAID' | 'PART_PAID' | 'UNPAID';
         tuition_payment_status: 'FULLY_PAID' | 'PART_PAID' | 'UNPAID';
     }
-    application: Partial<AdmissionFormData> | null;
+    application: StudentApplicationDocuments | null;
+}
+
+// Separate type for just the document fields we care about
+export interface StudentApplicationDocuments {
+    id?: string;
+    first_school_leaving?: string;
+    o_level?: string;
+    hnd?: string;
+    degree?: string;
+    degree_transcript?: string;
+    other_documents?: string[];
 }
 
 export interface StudentStatusResponse {
@@ -20,13 +31,11 @@ export interface StudentStatusResponse {
     status: boolean;
 }
 
-
 import React, { createContext, useContext, ReactNode } from 'react';
 import { useQuery, useMutation, useQueryClient, UseQueryResult } from '@tanstack/react-query';
-import { useAuth } from './AuthContext';
 import { baseUrl, remoteApiUrl } from '@/config';
-import { AdmissionFormData } from '@/schemas/admission-schema';
 import { UniversalformatFieldName } from '@/lib/utils';
+import { useAuth } from '@/contexts/AuthContext';
 
 // API service
 const fetchStudentStatus = async (studentId: string, access_token: string): Promise<StudentStatus> => {
@@ -37,12 +46,18 @@ const fetchStudentStatus = async (studentId: string, access_token: string): Prom
                 Authorization: `Bearer ${access_token}`,
             },
         });
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch student status: ${response.statusText}`);
+        }
+
         const responseData = await response.json();
         const { application, ...rootData } = responseData.data;
         const profileData = rootData;
         const applicationFormData = application;
 
-        const applicationFeild = (!!applicationFormData) ? {
+        // Extract only document-related fields from application
+        const applicationField: StudentApplicationDocuments | null = applicationFormData ? {
             id: profileData.id,
             first_school_leaving: applicationFormData.first_school_leaving,
             o_level: applicationFormData.o_level,
@@ -50,7 +65,7 @@ const fetchStudentStatus = async (studentId: string, access_token: string): Prom
             degree: applicationFormData.degree,
             degree_transcript: applicationFormData.degree_transcript,
             other_documents: applicationFormData.other_documents,
-        } : null
+        } : null;
 
         return {
             id: profileData.id,
@@ -63,14 +78,13 @@ const fetchStudentStatus = async (studentId: string, access_token: string): Prom
                 acceptance_fee_payment_status: profileData.acceptance_fee_payment_status,
                 tuition_payment_status: profileData.tuition_payment_status,
             },
-            application: applicationFeild,
+            application: applicationField,
         };
     } catch (error) {
         console.error('Error fetching data:', error);
         throw error;
     }
 };
-
 
 const updateStudentStatus = async ({
     studentId,
@@ -120,7 +134,8 @@ export const useStudentStatus = () => {
 interface StudentStatusProviderProps {
     children: ReactNode;
 }
-export const StudentStatusProvider: React.FC<StudentStatusProviderProps> = ({ children, }) => {
+
+export const StudentStatusProvider: React.FC<StudentStatusProviderProps> = ({ children }) => {
     const queryClient = useQueryClient();
     const { user, access_token } = useAuth();
     const studentId = String(user?.id);
@@ -206,29 +221,76 @@ export const useStudentPaymentStatus = () => {
         admissionPaymentStatus: myPayments?.application_payment_status,
         acceptanceFeePaymentStatus: myPayments?.acceptance_fee_payment_status,
         tuitionFeePaymentStatus: myPayments?.tuition_payment_status,
-        hasOutstandingPayments: [
-            myPayments?.application_payment_status,
-            myPayments?.acceptance_fee_payment_status,
-            myPayments?.tuition_payment_status,
-        ].some(status => status === 'PART_PAID' || status === 'UNPAID'),
+        hasOutstandingPayments: myPayments
+            ? [
+                myPayments.application_payment_status,
+                myPayments.acceptance_fee_payment_status,
+                myPayments.tuition_payment_status,
+            ].some(status => status === 'PART_PAID' || status === 'UNPAID')
+            : false,
         unpaidFees: myPayments
             ? Object.entries(myPayments)
                 .filter(([, value]) => value !== "FULLY_PAID")
                 .map(([key]) => {
-                    const link = (key === "acceptance_fee_payment_status") ? acceptanceUrl : (key === "tuition_payment_status") ? tuitionUrl : "";
-                    return ({
+                    const link = (key === "acceptance_fee_payment_status")
+                        ? acceptanceUrl
+                        : (key === "tuition_payment_status")
+                            ? tuitionUrl
+                            : "";
+                    return {
                         label: UniversalformatFieldName(key),
-                        url: `${link}`
-                    })
+                        url: link
+                    };
                 })
             : [],
     };
-}; //src\app\(dashboard) \dashboard\student\history\student - payments\tuition
+};
 
 export const useStudentApplicationStatus = () => {
     const { studentStatus } = useStudentStatus();
     const myApplication = studentStatus.data?.application;
-    if (myApplication === null) return {}
+
+    if (myApplication === null) {
+        return {
+            isLoading: studentStatus.isLoading,
+            id: undefined,
+            first_school_leaving: undefined,
+            o_level: undefined,
+            hnd: undefined,
+            degree: undefined,
+            degree_transcript: undefined,
+            other_documents: undefined,
+            hasUnuUploadedDocument: true,
+            missingDoc: [],
+        };
+    }
+
+    const hasUnuUploadedDocument = [
+        myApplication?.first_school_leaving,
+        myApplication?.o_level,
+        myApplication?.degree_transcript,
+        myApplication?.hnd,
+        myApplication?.degree,
+    ].some(value => !value || value === undefined);
+
+    const missingDoc = myApplication
+        ? Object.entries(myApplication)
+            .filter(([key]) => key !== "id") // Exclude id field
+            .filter(([, value]) => {
+                // Check if value is missing or doesn't include "images/"
+                return !value ||
+                    value === null ||
+                    value === undefined ||
+                    (typeof value === 'string' && !value.includes("images/"));
+            })
+            .map(([key]) => {
+                const link = `/dashboard/update-application-form?id=${myApplication?.id}`;
+                return {
+                    label: UniversalformatFieldName(key),
+                    url: link
+                };
+            })
+        : [];
 
     return {
         isLoading: studentStatus.isLoading,
@@ -239,26 +301,8 @@ export const useStudentApplicationStatus = () => {
         degree: myApplication?.degree,
         degree_transcript: myApplication?.degree_transcript,
         other_documents: myApplication?.other_documents,
-        hasUnuUploadedDocument: [
-            myApplication?.first_school_leaving,
-            myApplication?.o_level,
-            myApplication?.degree_transcript,
-            myApplication?.hnd,
-            myApplication?.degree,
-            myApplication?.degree_transcript,
-        ].some(value => value === undefined),
-        missingDoc: myApplication
-            ? Object.entries(myApplication)
-                .filter(([key]) => !key.startsWith("id"))
-                .filter(([, value]) => !String(value).includes("images/") || value === null || value === undefined)
-                .map(([key]) => {
-                    const link = `/dashboard/update-application-form?id=${myApplication?.id}`;
-                    return ({
-                        label: UniversalformatFieldName(key),
-                        url: `${link}`
-                    })
-                })
-            : [],
+        hasUnuUploadedDocument,
+        missingDoc,
     };
 };
 
@@ -283,3 +327,4 @@ export const withStudentStatus = <P extends object>(
         );
     };
 };
+

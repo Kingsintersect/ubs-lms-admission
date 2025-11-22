@@ -1,4 +1,4 @@
-import { AdmissionFormData } from "@/schemas/admission-schema";
+import { ApplicationFormData } from "@/schemas/admission-schema";
 
 export function objectToFormData(obj: Record<string, unknown>): FormData {
     const formData = new FormData();
@@ -25,7 +25,7 @@ export function objectToFormData(obj: Record<string, unknown>): FormData {
     return formData;
 }
 
-export const appendFormData = (formData: FormData, data: AdmissionFormData) => {
+export const appendFormData = (formData: FormData, data: ApplicationFormData) => {
     // Handle regular fields
     Object.entries(data).forEach(([key, value]) => {
 

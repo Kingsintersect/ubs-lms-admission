@@ -1,19 +1,19 @@
-import { AdmissionFormData } from "@/schemas/admission-schema";
+import { ApplicationFormData } from "@/schemas/admission-schema";
 import { Briefcase, FileText, GraduationCap, FileStack, Users, User } from "lucide-react";
 import { Control, FieldErrors, Path } from "react-hook-form";
 
 export interface Step {
     title: string;
     icon: React.ElementType;
-    // fields: (keyof AdmissionFormData)[];
-    fields?: Path<AdmissionFormData>[];
-    getFields?: (values: AdmissionFormData) => Path<AdmissionFormData>[];
+    // fields: (keyof ApplicationFormData)[];
+    fields?: Path<ApplicationFormData>[];
+    getFields?: (values: ApplicationFormData) => Path<ApplicationFormData>[];
 }
 
 export interface FormFieldProps {
-    name: keyof AdmissionFormData;
-    control: Control<AdmissionFormData>;
-    errors: FieldErrors<AdmissionFormData>;
+    name: keyof ApplicationFormData;
+    control: Control<ApplicationFormData>;
+    errors: FieldErrors<ApplicationFormData>;
     label: string;
     required?: boolean;
     type?: 'text' | 'email' | 'date' | 'textarea' | 'select' | 'radio' | 'checkbox';
@@ -31,7 +31,7 @@ export const STEPS: Step[] = [
         title: 'Next of Kin',
         icon: Users,
         getFields: (values) => {
-            const baseFields: Path<AdmissionFormData>[] = [
+            const baseFields: Path<ApplicationFormData>[] = [
                 'has_sponsor',
                 'next_of_kin_name',
                 'next_of_kin_relationship',
@@ -42,7 +42,7 @@ export const STEPS: Step[] = [
                 'next_of_kin_workplace',
             ];
 
-            const sponsorFields: Path<AdmissionFormData>[] = [
+            const sponsorFields: Path<ApplicationFormData>[] = [
                 'sponsor_name',
                 'sponsor_relationship',
                 'sponsor_email',

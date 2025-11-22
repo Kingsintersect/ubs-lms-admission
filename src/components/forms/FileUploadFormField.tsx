@@ -79,13 +79,13 @@ export function FileUploadFormField<T extends FieldValues>({
     // Initialize preview from existing value
     React.useEffect(() => {
         if (value) {
-            console.log('value', value)
-            if (value instanceof File) {
+            console.log('value', value);
+            if (value.constructor.name === 'File') {
                 setPreview({
-                    file: value,
-                    name: value.name,
-                    size: value.size,
-                    type: value.type,
+                    file: value as File,
+                    name: (value as File).name,
+                    size: (value as File).size,
+                    type: (value as File).type,
                 });
             } else if (typeof value === 'string') {
                 // Assume it's a URL

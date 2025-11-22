@@ -26,11 +26,6 @@ export type Grade = {
 	value: string;
 };
 
-export type SittingCourse = {
-	subject: string;
-	Grade: string;
-};
-
 export enum AdmissionStatusType {
 	ADMITTED = "ADMITTED",
 	INPROGRESS = "INPROGRESS",

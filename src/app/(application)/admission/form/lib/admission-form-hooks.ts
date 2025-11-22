@@ -52,8 +52,6 @@ function createDefaultValues(programType: ProgramType): Partial<ApplicationFormD
 
     return defaultValues;
 }
-
-// Helper function to safely extract default values
 function getSchemaDefault(fieldSchema: any): unknown {
     return fieldSchema._def?.defaultValue?.() ?? undefined;
 }
