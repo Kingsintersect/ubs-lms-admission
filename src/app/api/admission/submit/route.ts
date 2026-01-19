@@ -1,4 +1,3 @@
-// app/api/admission/submit/route.ts
 export const runtime = "nodejs"; // IMPORTANT
 
 import { remoteApiUrl } from "@/config";
@@ -38,34 +37,3 @@ export async function POST(req: Request) {
     }
 }
 
-
-
-
-
-// import { remoteApiUrl } from "@/config";
-
-// export const runtime = "nodejs"; // IMPORTANT
-
-// export async function POST(req: Request) {
-//     const formData = await req.formData();
-
-//     const accessToken = req.headers.get("authorization");
-//     if (!accessToken) {
-//         return new Response("Unauthorized", { status: 401 });
-//     }
-
-//     const res = await fetch(`${remoteApiUrl}/application/application-form`, {
-//         method: "POST",
-//         headers: {
-//             Authorization: accessToken,
-//         },
-//         body: formData,
-//     });
-
-//     if (!res.ok) {
-//         const text = await res.text();
-//         return new Response(text, { status: res.status });
-//     }
-
-//     return Response.json(await res.json());
-// }

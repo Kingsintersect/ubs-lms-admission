@@ -208,35 +208,8 @@ export const useFormSubmission = (
         },
     });
 
-
-    // const submitApplicationMutation = useMutation({
-    //     retry: false, // Disable retries for form submission
-    //     mutationFn: async (data: ApplicationFormData) => {
-    //         if (!access_token || typeof access_token !== 'string') {
-    //             throw new Error("Missing access token");
-    //         }
-    //         const transformedData = FormDataTransformer.transform(data, programType);
-    //         return submitAdmissionForm(transformedData, access_token);
-    //     },
-    //     onSuccess: async () => {
-    //         setIsSubmitted(true);
-    //         if (user) {
-    //             updateUserInState({ ...user, is_applied: Number(true) });
-    //         }
-    //         refreshUserData();
-    //         // await clearProgress();
-    //         toast.success("Application submitted successfully!");
-    //         onSubmitSuccess?.();
-    //     },
-    //     onError: (error) => {
-    //         console.error("Submission error:", error);
-    //         toast.error(getAPIFriendlyError(error));
-    //     },
-    // });
-
     return { isSubmitted, submitApplicationMutation }
 };
-// lib/submitAdmissionForm.ts (CLIENT-SAFE)
 export const submitAdmissionForm = async (
     data: ApplicationFormData,
     access_token: string

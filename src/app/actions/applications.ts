@@ -100,6 +100,7 @@ export async function getStudentApplicantion(id: string): Promise<{ data: Applic
         accessToken: loginSession.access_token
     });
 
+    console.log('response.data', response?.data)
     if (response?.status && response.data) {
         return {
             data: response.data,
