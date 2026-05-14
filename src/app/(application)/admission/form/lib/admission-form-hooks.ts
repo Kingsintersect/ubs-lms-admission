@@ -37,7 +37,7 @@ function createDefaultValues(programType: ProgramType): Partial<ApplicationFormD
 
         // Handle program-specific overrides
         if (key === 'startTerm') {
-            defaultValues[key] = '2025/2026';
+            defaultValues[key] = '2026/2027';
             return;
         }
 
@@ -56,36 +56,6 @@ function createDefaultValues(programType: ProgramType): Partial<ApplicationFormD
 function getSchemaDefault(fieldSchema): unknown {
     return fieldSchema._def?.defaultValue?.() ?? undefined;
 }
-// function createDefaultValues(programType: ProgramType): Partial<ApplicationFormData> {
-//     const schemaToUse = programType === ProgramType.ODL ? odlProgramSchema : businessSchoolSchema;
-//     const shape = schemaToUse.shape;
-//     const defaultValues: Record<string, unknown> = { programType };
-
-//     for (const key in shape) {
-//         if (key === 'programType') continue;
-//         if (programType === ProgramType.ODL && key === 'startTerm') {
-//             defaultValues[key] = '2025/2026';
-//             continue;
-//         } else if (programType === ProgramType.BUSINESS_SCHOOL && key === 'startTerm') {
-//             defaultValues[key] = '2025/2026';
-//             continue;
-//         }
-//         if (programType === ProgramType.ODL && key === 'studyMode') {
-//             defaultValues[key] = 'online';
-//             continue;
-//         }
-//         const fieldSchema = shape[key];
-//         // Check if the field has a default value defined in the schema
-//         if ('_def' in fieldSchema && 'defaultValue' in fieldSchema._def) {
-//             defaultValues[key] = fieldSchema._def.defaultValue();
-//         } else {
-//             // Provide a sensible fallback for fields without a .default()
-//             defaultValues[key] = undefined;
-//         }
-//     }
-
-//     return defaultValues as Partial<ApplicationFormData>;
-// }
 
 // ============= CUSTOM HOOK =============
 export const useApplicationForm = (programType: ProgramType) => {
