@@ -7,8 +7,8 @@ import { useMutation } from "@tanstack/react-query";
 // import { submitAdmissionForm } from "@/app/actions/admission-actions";
 import { getAPIFriendlyError } from "@/lib/errorsHandler";
 import { AuthUser } from "@/types/user";
-import { ApplicationFormData, ODLApplication, applicationSchema, businessSchoolSchema, odlProgramSchema } from "@/schemas/admission-schema";
-import { Briefcase, FileText, GraduationCap, FileStack, Users, User, CheckCircle } from "lucide-react";
+import { ApplicationFormData, CertificateApplication, ODLApplication, applicationSchema, businessSchoolSchema, certificateProgramSchema, odlProgramSchema } from "@/schemas/admission-schema";
+import { Briefcase, FileText, GraduationCap, FileStack, Users, User, CheckCircle, Building2, IdCard } from "lucide-react";
 import { Path } from "react-hook-form";
 
 import { useForm } from 'react-hook-form';
@@ -29,7 +29,11 @@ const FORM_CONFIG = {
  * defined in the corresponding schema, ensuring a perfectly valid initial state.
  */
 function createDefaultValues(programType: ProgramType): Partial<ApplicationFormData> {
-    const schema = programType === ProgramType.ODL ? odlProgramSchema : businessSchoolSchema;
+    const schema = programType === ProgramType.ODL
+        ? odlProgramSchema
+        : programType === ProgramType.CERTIFICATE
+            ? certificateProgramSchema
+            : businessSchoolSchema;
     const defaultValues: Partial<ApplicationFormData> = { programType };
 
     Object.entries(schema.shape).forEach(([key, fieldSchema]) => {
@@ -100,9 +104,14 @@ export const useFormPersistence = (
         const loadData = async () => {
             try {
                 const { data, step } = await StorageManager.loadProgress(steps);
-                if (data) {
+                // Only restore progress saved for this same program - switching
+                // program types (e.g. certificate vs business school) should not
+                // leak the other program's saved answers into this form.
+                if (data && data.programType === programType) {
                     reset(data);
                     toast.success("Previous progress loaded successfully!");
+                } else if (data) {
+                    await StorageManager.clearProgress();
                 }
                 return step;
             } catch (error) {
@@ -112,7 +121,7 @@ export const useFormPersistence = (
             }
         };
         loadData();
-    }, [reset, steps, steps.length]);
+    }, [reset, steps, steps.length, programType]);
 
     const saveProgress = async () => {
         setIsSaving(true);
@@ -235,7 +244,15 @@ export const getSteps = (programType: ProgramType): Step[] => {
         {
             title: 'Personal Information',
             icon: User,
-            fields: ['lga', 'religion', 'dob', 'gender', 'hometown', 'hometown_address', 'contact_address']
+            getFields: (values) => {
+                const baseFields: Path<ApplicationFormData>[] = ['lga', 'dob', 'gender', 'hometown_address', 'contact_address'];
+
+                if (values.programType === ProgramType.CERTIFICATE) {
+                    return [...baseFields, 'marital_status', 'state', 'nationality'] as Path<ApplicationFormData>[];
+                }
+
+                return [...baseFields, 'religion', 'hometown'] as Path<ApplicationFormData>[];
+            }
         },
         {
             title: 'Next of Kin',
@@ -342,17 +359,63 @@ export const getSteps = (programType: ProgramType): Step[] => {
         },
     ];
 
+    const certificateSteps: Step[] = [
+        {
+            title: 'Academic & SSCE Details',
+            icon: GraduationCap,
+            getFields: (values: ApplicationFormData) => {
+                const baseFields: Path<ApplicationFormData>[] = ['programme_in_view', 'awaiting_result'];
+
+                if (values.programType === ProgramType.CERTIFICATE) {
+                    const certValues = values as CertificateApplication;
+                    if (!certValues.awaiting_result) {
+                        baseFields.push(
+                            'ssce_exam_1_type' as Path<ApplicationFormData>,
+                            'ssce_exam_1_year' as Path<ApplicationFormData>,
+                            'ssce_exam_1_number' as Path<ApplicationFormData>,
+                        );
+                    }
+                }
+
+                return baseFields;
+            },
+            programs: [ProgramType.CERTIFICATE]
+        },
+        {
+            title: 'Institutions & Experience',
+            icon: Building2,
+            fields: [],
+            programs: [ProgramType.CERTIFICATE]
+        },
+        {
+            title: 'Passport & Declaration',
+            icon: IdCard,
+            getFields: (values) => {
+                const baseFields: Path<ApplicationFormData>[] = ['passport', 'agreeToTerms'];
+
+                if (values.has_disability) {
+                    baseFields.push('disability');
+                }
+
+                return baseFields;
+            },
+            programs: [ProgramType.CERTIFICATE]
+        },
+    ];
+
     const finalStep: Step[] = [
         {
             title: 'Review & Submit',
             icon: CheckCircle,
             fields: ['agreeToTerms'],
-            programs: [ProgramType.BUSINESS_SCHOOL, ProgramType.ODL]
+            programs: [ProgramType.BUSINESS_SCHOOL, ProgramType.ODL, ProgramType.CERTIFICATE]
         }
     ];
 
     if (programType === ProgramType.BUSINESS_SCHOOL) {
         return [...commonSteps, ...businessSteps, ...finalStep];
+    } else if (programType === ProgramType.CERTIFICATE) {
+        return [...commonSteps, ...certificateSteps, ...finalStep];
     } else {
         return [...commonSteps, ...degreeSteps, ...finalStep];
     }

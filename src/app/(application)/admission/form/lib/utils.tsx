@@ -1,7 +1,7 @@
 
 import { ProgramType } from "@/config";
 import { formStorage } from "@/lib/storage";
-import { ApplicationFormData, businessSchoolSchema, odlProgramSchema } from "@/schemas/admission-schema";
+import { ApplicationFormData, businessSchoolSchema, certificateProgramSchema, odlProgramSchema } from "@/schemas/admission-schema";
 import { JSX } from "react";
 import { Control, UseFormReturn, useWatch } from "react-hook-form";
 import { PersonalInformationStep } from "../components/form-inputs/PersonalInformationStep";
@@ -12,6 +12,9 @@ import { ProfessionalExperienceStep } from "../components/form-inputs/Profession
 import { ProgramAndEssaysStep } from "../components/form-inputs/ProgramAndEssaysStep";
 import { AcademinInfoStep } from "../components/form-inputs/odl-forms/AcademinInfoStep";
 import { PassportSumary } from "../components/form-inputs/odl-forms/PassportSumary";
+import { CertificateAcademicStep } from "../components/form-inputs/certificate-forms/CertificateAcademicStep";
+import { CertificateInstitutionsStep } from "../components/form-inputs/certificate-forms/CertificateInstitutionsStep";
+import { CertificatePassportStep } from "../components/form-inputs/certificate-forms/CertificatePassportStep";
 import { ReviewStep } from "../components/ReviewStep";
 import { Step } from "./admission-form-hooks";
 
@@ -28,6 +31,7 @@ export const STEP_TO_SECTION_MAP: Record<string, number> = {
     sponsor: 1,
     business: 2,
     degree: 2,
+    certificate: 2,
 };
 
 // ============= UTILITY FUNCTIONS =============
@@ -62,7 +66,11 @@ export const StorageManager = {
 export const FormDataTransformer = {
     transform(data: ApplicationFormData, programType: ProgramType): ApplicationFormData {
         // Determine the correct schema based on the programType
-        const schemaToUse = programType === ProgramType.ODL ? odlProgramSchema : businessSchoolSchema;
+        const schemaToUse = programType === ProgramType.ODL
+            ? odlProgramSchema
+            : programType === ProgramType.CERTIFICATE
+                ? certificateProgramSchema
+                : businessSchoolSchema;
 
         // Get the set of valid keys from the schema's shape
         const validKeys = new Set(Object.keys(schemaToUse.shape));
@@ -85,7 +93,7 @@ export const StepRenderer = {
         onEdit?: (section: string) => void
     ) {
         const commonSteps: Record<string, JSX.Element> = {
-            'Personal Information': <PersonalInformationStep form={form} />,
+            'Personal Information': <PersonalInformationStep form={form} programType={programType} />,
             'Next of Kin': <NextOfKinInformationStep form={form} />,
         };
 
@@ -101,6 +109,12 @@ export const StepRenderer = {
             'Passport & Summary': <PassportSumary form={form} setILunched={setILunched} />,
         };
 
+        const certificateSteps: Record<string, JSX.Element> = {
+            'Academic & SSCE Details': <CertificateAcademicStep form={form} />,
+            'Institutions & Experience': <CertificateInstitutionsStep form={form} />,
+            'Passport & Declaration': <CertificatePassportStep form={form} setILunched={setILunched} />,
+        };
+
         if (commonSteps[stepTitle]) return commonSteps[stepTitle];
 
         if (programType === ProgramType.BUSINESS_SCHOOL && businessSteps[stepTitle]) {
@@ -109,6 +123,10 @@ export const StepRenderer = {
 
         if (programType === ProgramType.ODL && odlSteps[stepTitle]) {
             return odlSteps[stepTitle];
+        }
+
+        if (programType === ProgramType.CERTIFICATE && certificateSteps[stepTitle]) {
+            return certificateSteps[stepTitle];
         }
 
         if (stepTitle === 'Review & Submit') {

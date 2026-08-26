@@ -87,6 +87,13 @@ export const RELIGION = [
     { value: 'other', label: 'Other' },
 ]
 
+export const MARITAL_STATUS = [
+    { value: 'single', label: 'Single' },
+    { value: 'married', label: 'Married' },
+    { value: 'divorced', label: 'Divorced' },
+    { value: 'widowed', label: 'Widowed' },
+]
+
 export const ACADEMIC_SESSION = [
     { value: '2026/2027', label: '2026 / 2027' },
     { value: '2025/2026', label: '2025 / 2026' },

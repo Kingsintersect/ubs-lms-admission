@@ -38,7 +38,7 @@ export default function ProgramInfo({
                 ? (application.program ?? '')
                 : (application.program ?? ''),
             program_id: application.program_id ?? '',
-            studyMode: application.application.studyMode ?? '',
+            studyMode: (application.application as { studyMode?: string }).studyMode ?? '',
             academic_session: application.academic_session ?? '',
             email: application.email,
             phone_number: application.phone_number,

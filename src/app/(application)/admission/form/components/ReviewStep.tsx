@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FileText, User, Users, GraduationCap, BookOpen, Award, Edit } from "lucide-react";
-import { ApplicationFormData, BusinessApplication, ODLApplication } from "@/schemas/admission-schema";
+import { ApplicationFormData, BusinessApplication, CertificateApplication, ODLApplication } from "@/schemas/admission-schema";
 import React from "react";
 import { ProgramType } from "@/config";
 
@@ -25,6 +25,10 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({ form, programType, onEdi
 
     const isODLApplication = (data: ApplicationFormData): data is ODLApplication => {
         return data.programType === ProgramType.ODL;
+    };
+
+    const isCertificateApplication = (data: ApplicationFormData): data is CertificateApplication => {
+        return data.programType === ProgramType.CERTIFICATE;
     };
 
     const renderSection = (title: string, icon: React.ElementType, content: React.ReactNode, sectionKey: string) => (
@@ -117,12 +121,20 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({ form, programType, onEdi
     const personalInfoContent = (
         <div className="space-y-1">
             {renderField("Local Government Area", values.lga)}
-            {renderField("Religion", values.religion)}
+            {isCertificateApplication(values) ? (
+                <>
+                    {renderField("State", values.state)}
+                    {renderField("Nationality", values.nationality)}
+                    {renderField("Marital Status", values.marital_status)}
+                </>
+            ) : (
+                renderField("Religion", values.religion)
+            )}
             {renderField("Date of Birth", values.dob, 'date')}
             {renderField("Gender", values.gender)}
-            {renderField("Hometown", values.hometown)}
-            {renderField("Hometown Address", values.hometown_address)}
-            {renderField("Contact Address", values.contact_address)}
+            {!isCertificateApplication(values) && renderField("Hometown", values.hometown)}
+            {renderField(isCertificateApplication(values) ? "Home Address" : "Hometown Address", values.hometown_address)}
+            {renderField("Residential/Contact Address", values.contact_address)}
             {renderBooleanField("Has Disability", values.has_disability)}
             {values.has_disability && renderField("Disability Description", values.disability)}
         </div>
@@ -279,6 +291,84 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({ form, programType, onEdi
         </div>
     ) : null;
 
+    // Certificate Programme Specific Content
+    const certificateContent = isCertificateApplication(values) ? (
+        <div className="space-y-4">
+            <div>
+                <h4 className="font-semibold text-gray-800 mb-2">Programme</h4>
+                <div className="space-y-1">
+                    {renderField("Programme in View", values.programme_in_view)}
+                    {renderBooleanField("Awaiting Results", values.awaiting_result)}
+                </div>
+            </div>
+
+            {!values.awaiting_result && (
+                <div>
+                    <h4 className="font-semibold text-gray-800 mb-2">Senior School Certificate Details</h4>
+                    <div className="space-y-3">
+                        <div className="bg-gray-50 p-3 rounded-md">
+                            <h5 className="font-medium text-gray-700 mb-2">Exam (1)</h5>
+                            <div className="space-y-1">
+                                {renderField("Exam Type", values.ssce_exam_1_type)}
+                                {renderField("Exam Year", values.ssce_exam_1_year)}
+                                {renderField("SSCE 1 Exam Number", values.ssce_exam_1_number)}
+                            </div>
+                        </div>
+                        {values.ssce_exam_2_type && (
+                            <div className="bg-gray-50 p-3 rounded-md">
+                                <h5 className="font-medium text-gray-700 mb-2">Exam (2)</h5>
+                                <div className="space-y-1">
+                                    {renderField("Exam Type", values.ssce_exam_2_type)}
+                                    {renderField("Exam Year", values.ssce_exam_2_year)}
+                                    {renderField("SSCE 2 Exam Number", values.ssce_exam_2_number)}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            <div>
+                <h4 className="font-semibold text-gray-800 mb-2">Institution(s) Attached</h4>
+                <div className="space-y-3">
+                    {values.postgraduate_institution?.name_of_institution && (
+                        <div className="bg-gray-50 p-3 rounded-md">
+                            <h5 className="font-medium text-gray-700 mb-2">Postgraduate Degree</h5>
+                            {renderField("Name of Institution", values.postgraduate_institution.name_of_institution)}
+                            {renderField("Certificate Obtained", values.postgraduate_institution.certificate_obtained)}
+                            {renderField("Course of Study", values.postgraduate_institution.course_of_study)}
+                        </div>
+                    )}
+                    {values.first_degree_institution?.name_of_institution && (
+                        <div className="bg-gray-50 p-3 rounded-md">
+                            <h5 className="font-medium text-gray-700 mb-2">First Degree</h5>
+                            {renderField("Name of Institution", values.first_degree_institution.name_of_institution)}
+                            {renderField("Certificate Obtained", values.first_degree_institution.certificate_obtained)}
+                            {renderField("Course of Study", values.first_degree_institution.course_of_study)}
+                        </div>
+                    )}
+                    {values.ssce_institution?.name_of_institution && (
+                        <div className="bg-gray-50 p-3 rounded-md">
+                            <h5 className="font-medium text-gray-700 mb-2">SSCE</h5>
+                            {renderField("Name of Institution", values.ssce_institution.name_of_institution)}
+                            {renderField("Certificate Obtained", values.ssce_institution.certificate_obtained)}
+                            {renderField("Course of Study", values.ssce_institution.course_of_study)}
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            <div>
+                <h4 className="font-semibold text-gray-800 mb-2">Place of Work</h4>
+                <div className="space-y-1">
+                    {renderField("Name of Organization", values.organization_name)}
+                    {renderField("From", values.employment_from)}
+                    {renderField("To", values.employment_to)}
+                </div>
+            </div>
+        </div>
+    ) : null;
+
     // Documents Section
     const documentsContent = (
         <div className="space-y-3">
@@ -293,6 +383,8 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({ form, programType, onEdi
                     {renderField("Degree Transcript", values.degree_transcript, 'file')}
                 </>
             )}
+
+            {isCertificateApplication(values) && renderField("SSCE Certificate", values.ssce_certificate, 'file')}
 
             {values.other_documents && Array.isArray(values.other_documents) && values.other_documents.length > 0 && (
                 <div>
@@ -326,7 +418,11 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({ form, programType, onEdi
             {/* Program Badge */}
             <div className="flex justify-center mb-6">
                 <Badge variant="secondary" className="px-4 py-2 text-lg">
-                    {programType === ProgramType.BUSINESS_SCHOOL ? 'Business School Application' : 'Degree Program Application'}
+                    {programType === ProgramType.BUSINESS_SCHOOL
+                        ? 'Business School Application'
+                        : programType === ProgramType.CERTIFICATE
+                            ? 'Certificate Programme Application'
+                            : 'Degree Program Application'}
                 </Badge>
             </div>
 
@@ -341,6 +437,9 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({ form, programType, onEdi
             }
             {programType === ProgramType.ODL && degreeProgramContent &&
                 renderSection("Degree Program Details", BookOpen, degreeProgramContent, "degree")
+            }
+            {programType === ProgramType.CERTIFICATE && certificateContent &&
+                renderSection("Certificate Programme Details", BookOpen, certificateContent, "certificate")
             }
 
             {renderSection("Documents", FileText, documentsContent, "documents")}
@@ -368,7 +467,11 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({ form, programType, onEdi
                         </div>
                         <div>
                             <div className="text-2xl font-bold text-purple-600">
-                                {programType === ProgramType.BUSINESS_SCHOOL ? 'MBA' : 'BSc'}
+                                {programType === ProgramType.BUSINESS_SCHOOL
+                                    ? 'MBA'
+                                    : programType === ProgramType.CERTIFICATE
+                                        ? 'Certificate'
+                                        : 'BSc'}
                             </div>
                             <div className="text-sm text-purple-700">Program Type</div>
                         </div>

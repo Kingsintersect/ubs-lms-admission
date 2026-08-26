@@ -57,6 +57,7 @@ export enum Roles {
 export enum ProgramType {
 	ODL = "odl",
 	BUSINESS_SCHOOL = "business_school",
+	CERTIFICATE = "certificate",
 }
 export const SelectedProgramType = ProgramType.BUSINESS_SCHOOL;
 

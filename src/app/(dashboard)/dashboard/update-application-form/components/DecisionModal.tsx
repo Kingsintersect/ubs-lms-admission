@@ -37,7 +37,7 @@ export const DecisionModal = ({
     const application_id = String(application?.id);
     const program = application?.program as string;
     const program_id = String(application?.program_id);
-    const study_mode = application?.application.studyMode as string;
+    const study_mode = (application?.application as { studyMode?: string } | undefined)?.studyMode as string;
     const academic_session = application?.academic_session as string;
     const semester = application?.academic_semester as string;
 

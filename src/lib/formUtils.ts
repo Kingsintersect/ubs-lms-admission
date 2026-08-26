@@ -36,10 +36,15 @@ export const appendFormData = (formData: FormData, data: ApplicationFormData) =>
             formData.append(key, value, value.name);
             return;
         } else if (Array.isArray(value)) {
-            // Handle arrays (like other_documents)
+            // Handle arrays (like other_documents, or ssce_subjects_1 which holds
+            // { subject, grade } rows) - object items must be JSON-encoded, otherwise
+            // String(item) collapses them to the literal string "[object Object]"
+            // and every row's data is silently lost.
             value.forEach((item, index) => {
                 if (item instanceof File) {
                     formData.append(`${key}[${index}]`, item, item.name);
+                } else if (typeof item === 'object' && item !== null) {
+                    formData.append(`${key}[${index}]`, JSON.stringify(item));
                 } else {
                     formData.append(`${key}[${index}]`, String(item));
                 }

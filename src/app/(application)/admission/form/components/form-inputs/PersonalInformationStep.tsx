@@ -1,18 +1,22 @@
 import { UseFormReturn } from "react-hook-form";
 import { FormField } from "@/components/forms/FormField";
-import { GENDER, RELIGION } from "@/components/forms/applicationFormConstants";
+import { GENDER, MARITAL_STATUS, RELIGION } from "@/components/forms/applicationFormConstants";
+import { Nationality, State } from "@/config";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFetchLocalGovermentAreas } from "@/hooks/useExternalPrograms";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircleIcon } from "lucide-react";
 import { ApplicationFormData } from "@/schemas/admission-schema";
+import { ProgramType } from "@/config";
 
 interface PersonalInformationStepProps {
     form: UseFormReturn<ApplicationFormData>;
+    programType: ProgramType;
 }
 
-export const PersonalInformationStep: React.FC<PersonalInformationStepProps> = ({ form }) => {
+export const PersonalInformationStep: React.FC<PersonalInformationStepProps> = ({ form, programType }) => {
+    const isCertificate = programType === ProgramType.CERTIFICATE;
     const { user, loading } = useAuth();
     const { control, formState: { errors } } = form;
 
@@ -59,16 +63,29 @@ export const PersonalInformationStep: React.FC<PersonalInformationStepProps> = (
                     placeholder="Select Local Government Area"
                     options={lgaOptions}
                 />
-                <FormField
-                    name="religion"
-                    control={control}
-                    errors={errors}
-                    label="Religion"
-                    required
-                    type="select"
-                    placeholder="Select Religion"
-                    options={RELIGION}
-                />
+                {isCertificate ? (
+                    <FormField
+                        name="state"
+                        control={control}
+                        errors={errors}
+                        label="State"
+                        required
+                        type="select"
+                        placeholder="Select State"
+                        options={State.map(s => ({ value: String(s.value), label: String(s.label) }))}
+                    />
+                ) : (
+                    <FormField
+                        name="religion"
+                        control={control}
+                        errors={errors}
+                        label="Religion"
+                        required
+                        type="select"
+                        placeholder="Select Religion"
+                        options={RELIGION}
+                    />
+                )}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
@@ -83,7 +100,7 @@ export const PersonalInformationStep: React.FC<PersonalInformationStepProps> = (
                     name="gender"
                     control={control}
                     errors={errors}
-                    label="Gender"
+                    label={isCertificate ? "Sex" : "Gender"}
                     required
                     type="select"
                     placeholder="Select Your Gender"
@@ -91,21 +108,46 @@ export const PersonalInformationStep: React.FC<PersonalInformationStepProps> = (
                 />
             </div>
 
-            <FormField
-                name="hometown"
-                control={control}
-                errors={errors}
-                label="Home town"
-                required
-                placeholder="e.g. Awka, Enugu..."
-            />
+            {isCertificate ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                        name="marital_status"
+                        control={control}
+                        errors={errors}
+                        label="Marital Status"
+                        required
+                        type="select"
+                        placeholder="Select Marital Status"
+                        options={MARITAL_STATUS}
+                    />
+                    <FormField
+                        name="nationality"
+                        control={control}
+                        errors={errors}
+                        label="Nationality"
+                        required
+                        type="select"
+                        placeholder="Select Nationality"
+                        options={Nationality.map(n => ({ value: String(n.value), label: String(n.label) }))}
+                    />
+                </div>
+            ) : (
+                <FormField
+                    name="hometown"
+                    control={control}
+                    errors={errors}
+                    label="Home town"
+                    required
+                    placeholder="e.g. Awka, Enugu..."
+                />
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                     name="hometown_address"
                     control={control}
                     errors={errors}
-                    label="Home town address"
+                    label={isCertificate ? "Home Address" : "Home town address"}
                     required
                     placeholder="e.g. 123 Hometown St, City, State"
                 />

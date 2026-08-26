@@ -17,7 +17,7 @@ const fileSchema = z.instanceof(File)
         "Unsupported file type. Only images and documents (PDF, DOC, DOCX) are allowed"
     );
 
-// Common Base Schema (Shared by both programs)
+// Common Base Schema (Shared by all programs)
 const baseApplicationSchema = z.object({
     // Personal Information (Common)
     // id: z.string().optional(),
@@ -25,12 +25,19 @@ const baseApplicationSchema = z.object({
         val !== undefined ? String(val) : undefined
     ),
     lga: z.string().min(1, 'Local Gov. Area is required').default(''),
-    religion: z.string().min(2, 'Religion is required').default(''),
     dob: z.string().min(1, 'Date of birth is required').default(''),
     gender: z.string().min(1, 'Gender is required').default(''),
-    hometown: z.string().min(2, 'Home town is required').default(''),
     hometown_address: z.string().min(2, 'Home town address is required').default(''),
     contact_address: z.string().min(2, 'Contact address is required').default(''),
+
+    // Business School / ODL specific personal fields (required only for those programs, see superRefine)
+    religion: z.string().optional().default(''),
+    hometown: z.string().optional().default(''),
+
+    // Certificate Programme specific personal fields (required only for that program, see superRefine)
+    marital_status: z.string().optional().default(''),
+    state: z.string().optional().default(''),
+    nationality: z.string().optional().default(''),
 
     // Sponsor Information (Common)
     has_sponsor: z.boolean().default(false),
@@ -141,25 +148,87 @@ export const odlProgramSchema = baseApplicationSchema.extend({
     studyMode: z.string().min(1, 'Study mode is required').default('online'),
 });
 
+// Certificate Programme Specific Schema (mirrors the paper "Certificate Programme" application form)
+const institutionEntrySchema = z.object({
+    name_of_institution: z.string().optional().default(''),
+    from: z.string().optional().default(''),
+    to: z.string().optional().default(''),
+    certificate_obtained: z.string().optional().default(''),
+    course_of_study: z.string().optional().default(''),
+});
+
+const emptyInstitutionEntry = () => ({
+    name_of_institution: '',
+    from: '',
+    to: '',
+    certificate_obtained: '',
+    course_of_study: '',
+});
+
+const subjectGradeSchema = z.object({
+    subject: z.string().optional().default(''),
+    grade: z.string().optional().default(''),
+});
+
+const emptySubjectGradeRows = () => Array.from({ length: 9 }, () => ({ subject: '', grade: '' }));
+
+export const certificateProgramSchema = baseApplicationSchema.extend({
+    programType: z.literal("certificate"),
+    awaiting_result: z.boolean().default(false),
+
+    // Programme in view
+    programme_in_view: z.string().min(1, 'Programme in view is required').default(''),
+
+    // Senior School Certificate Details
+    ssce_exam_1_type: z.string().optional().default(''),
+    ssce_exam_1_year: z.string().optional().default(''),
+    ssce_exam_1_number: z.string().optional().default(''),
+    ssce_exam_2_type: z.string().optional().default(''),
+    ssce_exam_2_year: z.string().optional().default(''),
+    ssce_exam_2_number: z.string().optional().default(''),
+    ssce_subjects_1: z.array(subjectGradeSchema).default(emptySubjectGradeRows),
+    ssce_subjects_2: z.array(subjectGradeSchema).default(emptySubjectGradeRows),
+
+    // Institution(s) attached with date(s) and certificate(s) obtained
+    postgraduate_institution: institutionEntrySchema.default(emptyInstitutionEntry),
+    first_degree_institution: institutionEntrySchema.default(emptyInstitutionEntry),
+    ssce_institution: institutionEntrySchema.default(emptyInstitutionEntry),
+
+    // Place of Work
+    organization_name: z.string().optional().default(''),
+    employment_from: z.string().optional().default(''),
+    employment_to: z.string().optional().default(''),
+
+    // Certificate-specific documents
+    ssce_certificate: fileSchema.optional(),
+
+    // Programme Session
+    startTerm: z.string().min(1, 'Academic session is required').default(''),
+});
+
 // Combined Schema with Refinement
 export const applicationSchema = z.discriminatedUnion("programType", [
     businessSchoolSchema,
     odlProgramSchema,
+    certificateProgramSchema,
 ]).superRefine((data, ctx) => {
-    // Common validation logic for both programs
+    // Common validation logic for all programs
     validateSponsorFields(data, ctx);
     validateDisabilityFields(data, ctx);
+    validatePersonalFieldsByProgram(data, ctx);
 
     // Program-specific validations - ONLY validate required fields for the current program type
     if (data.programType === ProgramType.BUSINESS_SCHOOL) {
         validateBusinessSchoolFields(data, ctx);
     } else if (data.programType === ProgramType.ODL) {
         validateDegreeSittingFields(data, ctx);
+    } else if (data.programType === ProgramType.CERTIFICATE) {
+        validateCertificateFields(data, ctx);
     }
 });
 
 // Validation functions
-function validateSponsorFields(data: BusinessApplication | ODLApplication, ctx: z.RefinementCtx) {
+function validateSponsorFields(data: BusinessApplication | ODLApplication | CertificateApplication, ctx: z.RefinementCtx) {
     if (data.has_sponsor) {
         const checks = [
             { field: data.sponsor_name, path: ['sponsor_name'], message: "Sponsor's name is required" },
@@ -185,12 +254,42 @@ function validateSponsorFields(data: BusinessApplication | ODLApplication, ctx: 
     }
 }
 
-function validateDisabilityFields(data: BusinessApplication | ODLApplication, ctx: z.RefinementCtx) {
+function validateDisabilityFields(data: BusinessApplication | ODLApplication | CertificateApplication, ctx: z.RefinementCtx) {
     if (data.has_disability && (!data.disability || data.disability.trim() === '')) {
         ctx.addIssue({
             code: z.ZodIssueCode.custom,
             path: ['disability'],
             message: "Please describe your disability",
+        });
+    }
+}
+
+// Business School & ODL applicants fill in "Religion" and "Home town".
+// Certificate Programme applicants fill in "Marital Status", "State" and "Nationality" instead
+// (see the paper Certificate Programme application form).
+function validatePersonalFieldsByProgram(data: BusinessApplication | ODLApplication | CertificateApplication, ctx: z.RefinementCtx) {
+    if (data.programType === ProgramType.CERTIFICATE) {
+        const checks = [
+            { field: data.marital_status, path: ['marital_status'], message: 'Marital status is required' },
+            { field: data.state, path: ['state'], message: 'State is required' },
+            { field: data.nationality, path: ['nationality'], message: 'Nationality is required' },
+        ];
+
+        checks.forEach(({ field, path, message }) => {
+            if (!field || field.trim() === '') {
+                ctx.addIssue({ code: z.ZodIssueCode.custom, path, message });
+            }
+        });
+    } else {
+        const checks = [
+            { field: data.religion, path: ['religion'], message: 'Religion is required', minLength: 2 },
+            { field: data.hometown, path: ['hometown'], message: 'Home town is required', minLength: 2 },
+        ];
+
+        checks.forEach(({ field, path, message, minLength }) => {
+            if (!field || field.trim().length < minLength) {
+                ctx.addIssue({ code: z.ZodIssueCode.custom, path, message });
+            }
         });
     }
 }
@@ -284,11 +383,38 @@ function validateDegreeSittingFields(data: ODLApplication, ctx: z.RefinementCtx)
     }
 }
 
+function validateCertificateFields(data: CertificateApplication, ctx: z.RefinementCtx) {
+    const checks = [
+        { field: data.programme_in_view, path: ['programme_in_view'], message: 'Programme in view is required' },
+    ];
+
+    checks.forEach(({ field, path, message }) => {
+        if (!field || field.trim() === '') {
+            ctx.addIssue({ code: z.ZodIssueCode.custom, path, message });
+        }
+    });
+
+    if (!data.awaiting_result) {
+        const examOneChecks = [
+            { field: data.ssce_exam_1_type, path: ['ssce_exam_1_type'], message: 'Exam (1) type is required' },
+            { field: data.ssce_exam_1_year, path: ['ssce_exam_1_year'], message: 'Exam (1) year is required' },
+            { field: data.ssce_exam_1_number, path: ['ssce_exam_1_number'], message: 'SSCE 1 exam number is required' },
+        ];
+
+        examOneChecks.forEach(({ field, path, message }) => {
+            if (!field || field.trim() === '') {
+                ctx.addIssue({ code: z.ZodIssueCode.custom, path, message });
+            }
+        });
+    }
+}
+
 
 // Type exports
 export type ApplicationFormData = z.infer<typeof applicationSchema>;
 export type BusinessApplication = z.infer<typeof businessSchoolSchema>;
 export type ODLApplication = z.infer<typeof odlProgramSchema>;
+export type CertificateApplication = z.infer<typeof certificateProgramSchema>;
 
 
 

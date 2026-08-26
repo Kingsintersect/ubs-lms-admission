@@ -13,22 +13,59 @@ import { toast } from "sonner";
 import { getAPIFriendlyError, getReactHookFormErrorMessages } from '@/lib/errorsHandler';
 import { StepErrorDisplay } from "@/components/forms/FormErrorList";
 import Link from "next/link";
-import { ProgramType, SelectedProgramType, SITE_TITLE } from "@/config";
+import { ProgramType, SITE_TITLE } from "@/config";
 import TermsAndConditions from "./components/form-inputs/TermsAndConditionsContent";
 import { ApplicationFormData } from "@/schemas/admission-schema";
 import { UseMutationResult } from "@tanstack/react-query";
 import { useApplicationForm, useFormPersistence, useFormSubmission } from "./lib/admission-form-hooks";
 import { STEP_TO_SECTION_MAP, StepRenderer } from "./lib/utils";
+import { useStudentProgram } from "./lib/student-program";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
-// ============= MAIN COMPONENT =============
+const PROGRAM_LABELS: Record<ProgramType, string> = {
+    [ProgramType.BUSINESS_SCHOOL]: 'Business School',
+    [ProgramType.ODL]: 'ODL Program',
+    [ProgramType.CERTIFICATE]: 'Certificate Programme',
+};
+
+// ============= ENTRY POINT: fetches the logged-in student's paid program =============
 const AdmissionForm = () => {
+    const { data: studentProgram, isLoading, isError } = useStudentProgram();
+
+    if (isLoading) {
+        return (
+            <div className="relative min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4 mt-20 flex flex-col items-center justify-center gap-4">
+                <LoadingSpinner size="lg" />
+                <p className="text-(--color-site-a-dark)">Loading your admission form...</p>
+            </div>
+        );
+    }
+
+    if (isError || !studentProgram) {
+        return (
+            <div className="relative min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4 mt-20 flex items-center justify-center">
+                <Alert variant="destructive" className="max-w-md">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>
+                        Could not determine your admission programme. Please refresh the page or contact support.
+                    </AlertDescription>
+                </Alert>
+            </div>
+        );
+    }
+
+    return <AdmissionFormForProgram key={studentProgram.programType} studentProgram={studentProgram} />;
+};
+
+// ============= MAIN COMPONENT (program-specific fields, visibility & required-ness) =============
+const AdmissionFormForProgram = ({ studentProgram }: { studentProgram: { programType: ProgramType; programName: string } }) => {
     const { user, access_token, updateUserInState, refreshUserData } = useAuth();
     const [currentStep, setCurrentStep] = useState(0);
     const [lauched, setILunched] = useState(false);
     const [stepErrors, setStepErrors] = useState<Record<number, string[]>>({});
 
     const { steps, programType, getDefaultValues, ...form } = useApplicationForm(
-        SelectedProgramType as ProgramType
+        studentProgram.programType
     );
     const { handleSubmit, formState: { errors, isValid }, trigger, reset, getValues } = form;
     const fieldsWithErrors = Object.keys(errors);
@@ -94,8 +131,16 @@ const AdmissionForm = () => {
 
     const handleEditSection = (section: string) => {
         const baseMap = { ...STEP_TO_SECTION_MAP };
-        baseMap.documents = programType === ProgramType.BUSINESS_SCHOOL ? 3 : 2;
-        baseMap.terms = programType === ProgramType.BUSINESS_SCHOOL ? 5 : 3;
+        if (programType === ProgramType.BUSINESS_SCHOOL) {
+            baseMap.documents = 3;
+            baseMap.terms = 5;
+        } else if (programType === ProgramType.CERTIFICATE) {
+            baseMap.documents = 2;
+            baseMap.terms = 4;
+        } else {
+            baseMap.documents = 2;
+            baseMap.terms = 3;
+        }
 
         const stepIndex = baseMap[section];
         if (stepIndex !== undefined && stepIndex < steps.length) {
@@ -121,20 +166,26 @@ const AdmissionForm = () => {
 
     return (
         <div className="relative min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4 mt-20">
-            <Link href="/admission" className="absolute top-10 right-10 z-50 flex items-center gap-3 p-4 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors font-bold rounded-lg shadow-md">
-                Admission Overview
-            </Link>
-
             <div className="max-w-6xl mx-auto">
+                <div className="flex justify-end mb-4">
+                    <Link href="/admission" className="flex items-center gap-3 p-4 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors font-bold rounded-lg shadow-md">
+                        Admission Overview
+                    </Link>
+                </div>
+
                 {/* Header */}
                 <div className="text-center mb-8">
                     <h1 className="text-4xl font-bold text-(--color-site-b-dark) mb-2">
-                        {SITE_TITLE} {programType === ProgramType.BUSINESS_SCHOOL ? 'Business School' : 'ODL Program'} Admission
+                        {programType === ProgramType.BUSINESS_SCHOOL
+                            ? `${SITE_TITLE} Admission`
+                            : `${SITE_TITLE} ${PROGRAM_LABELS[programType]} Admission`}
                     </h1>
                     <p className="text-lg text-(--color-site-a-dark)">
                         {programType === ProgramType.BUSINESS_SCHOOL
                             ? 'Take the next step in your business career'
-                            : 'Start your academic journey with us'}
+                            : programType === ProgramType.CERTIFICATE
+                                ? 'Complete your certificate programme application'
+                                : 'Start your academic journey with us'}
                     </p>
                 </div>
 
@@ -168,7 +219,7 @@ const AdmissionForm = () => {
                                     {steps[currentStep].title}
                                 </CardTitle>
                                 <CardDescription className="text-gray-600">
-                                    Step {currentStep + 1} of {steps.length} • {programType === ProgramType.BUSINESS_SCHOOL ? 'Business School' : 'Degree Program'}
+                                    Step {currentStep + 1} of {steps.length} • {PROGRAM_LABELS[programType]}
                                 </CardDescription>
                             </div>
                             <div className="flex flex-col xs:flex-row gap-3 sm:gap-5 justify-center sm:justify-end">
