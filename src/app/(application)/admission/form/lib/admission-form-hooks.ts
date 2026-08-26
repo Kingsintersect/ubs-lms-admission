@@ -200,6 +200,12 @@ export const submitAdmissionForm = async (
     // Build FormData in the browser (SAFE)
     appendFormData(formData, data);
 
+    // The backend's application record stores an explicit, upper-cased
+    // program_type discriminator (BUSINESS_SCHOOL / CERTIFICATE / ODL),
+    // separate from the lowercase `programType` used for client-side form
+    // logic (schema discriminated union, step visibility, etc.).
+    formData.append("program_type", data.programType.toUpperCase());
+
     // Validate size in browser (SAFE)
     for (const value of formData.values()) {
         if (value instanceof File) {
