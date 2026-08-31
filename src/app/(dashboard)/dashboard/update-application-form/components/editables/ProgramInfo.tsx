@@ -6,8 +6,8 @@ import { STUDY_MODES } from '@/components/forms/applicationFormConstants';
 import { useExternalPrograms } from '@/hooks/useExternalPrograms'; // Your programs hook
 import { EditableProgramOptions, EditableRadioGroup } from '@/components/forms/EditableFormFields';
 import { useEditableSection } from '@/hooks/useEditableSection';
-import { ApplicationDetailsType } from '@/schemas/admission-schema';
-import { ProgramType, SelectedProgramType } from '@/config';
+import { ApplicationDetailsType, resolveApplicationProgramType } from '@/schemas/admission-schema';
+import { ProgramType } from '@/config';
 import { useAppContext } from '@/contexts/AppContext';
 
 export interface ProgramInfoProps {
@@ -118,7 +118,7 @@ export default function ProgramInfo({
                     programs={programs}
                     isLoading={isLoading}
                     isError={isError}
-                    showRequirementLink={SelectedProgramType === ProgramType.BUSINESS_SCHOOL}
+                    showRequirementLink={resolveApplicationProgramType(application) === ProgramType.BUSINESS_SCHOOL}
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -94,16 +94,24 @@ export async function getStudentApplicantion(id: string): Promise<{ data: Applic
             ? `/admin/single-application?id=${id}`
             : "";
 
-    const response = await apiCall<undefined, ApiResponseSingle<ApplicationDetailsType>>({
+    const response = await apiCall<undefined, ApiResponseSingle<ApplicationDetailsType & { '0'?: ApplicationDetailsType }>>({
         url: `${routeUrl}`,
         method: "GET",
         accessToken: loginSession.access_token
     });
 
-    console.log('response.data', response?.data)
     if (response?.status && response.data) {
+        // This endpoint sometimes wraps the single record under a numeric
+        // string key instead of returning it directly - e.g.
+        // { "0": { first_name, email, program, ..., application: {...} } }.
+        // Everything under `application` (dob, lga, next of kin, etc.) still
+        // resolves either way since some backends duplicate that part at the
+        // top level too, but first_name/email/phone_number/gender/program/
+        // admission_status only exist on the wrapped "0" record - unwrap it
+        // so those don't silently render as "Not provided"/undefined.
+        const record = response.data['0'] ?? response.data;
         return {
-            data: response.data,
+            data: record,
         };
     } else {
         console.error("Failed to fetch student application");

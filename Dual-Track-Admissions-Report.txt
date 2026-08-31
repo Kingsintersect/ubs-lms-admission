@@ -1,0 +1,155 @@
+==================================================================
+ DUAL-TRACK ADMISSIONS ROLLOUT
+ Engineering Report -- UNIZIK Business School Portal
+==================================================================
+
+Period        : 21-29 Aug 2026
+Repository    : ubs-portal (branch: main)
+Prepared for  : Kingsintersect
+Status        : Shipped, 2 items open
+
+------------------------------------------------------------------
+SUMMARY
+------------------------------------------------------------------
+The portal serves two kinds of applicants -- Business School and
+Certificate Programme -- who fill out different paperwork. Over this
+period, both the intake form and the admin/student review page were
+changed to detect which programme a given student actually belongs
+to and show the right fields for it, replacing a form that was
+permanently locked to Business School regardless of who was filling
+it out. Alongside that, several bugs were found and fixed where
+applicant data was being silently lost or the page was crashing
+outright.
+
+At a glance:
+  - 11 fixes & features shipped
+  - 2  new certificate review sections built
+  - 2  open follow-ups (see end of report)
+
+------------------------------------------------------------------
+WORKSTREAM 01 -- APPLICATION INTAKE (Admission Form)
+------------------------------------------------------------------
+The form students fill out to apply. Fixed to show Certificate
+Programme fields to Certificate applicants and Business School
+fields to everyone else, determined by a live lookup rather than a
+guess.
+
+01. Fixed an overlapping header and a duplicated title
+    The "Admission Overview" link was pinned to a fixed position and
+    sat directly on top of the programme banner's buttons; the page
+    title also repeated "Business School" twice. Moved the link into
+    normal page flow and corrected the title text.
+    Files: form/page.tsx
+
+02. Replaced simulated programme detection with a live lookup
+    The form previously picked a programme from a small dummy table
+    toggled by a demo switcher. It now calls the real
+    /odl/program-top-parent-category endpoint with the student's own
+    program_id and reads "certificate" in the returned category name
+    to decide which form to render. The demo switcher was removed.
+    Files: student-program.ts
+
+03. Fixed a CORS failure on that lookup
+    The request was being sent with credentials mode "include", which
+    requires a response header the endpoint doesn't send. Since auth
+    here is a bearer token and not a cookie, credentials were switched
+    to "omit" and the call started succeeding.
+    Files: student-program.ts
+
+04. Stopped SSCE subject & grade rows from being silently discarded
+    on submit
+    Each of the 18 subject/grade rows is an object, but the array-to-
+    form-data encoder was converting them with String(item), which
+    produces the literal text "[object Object]" -- every row's data
+    was lost before it left the browser. Object rows are now
+    JSON-encoded instead.
+    Files: formUtils.ts
+
+05. Prevented the same subject being picked twice
+    Nothing stopped an applicant from choosing "English" in three
+    different rows of the same sitting. Each subject dropdown now
+    disables any subject already chosen elsewhere in that sitting's
+    table.
+    Files: CertificateAcademicStep.tsx
+
+06. Added an explicit programme flag to the submitted record
+    Submissions now carry an upper-cased program_type
+    (BUSINESS_SCHOOL / CERTIFICATE / ODL) alongside the existing
+    lower-case value, so the database can key off it directly.
+    Files: admission-form-hooks.ts
+
+07. Fixed the success screen disappearing right after submission
+    A successful submit triggers a background profile refresh; if
+    that refresh came back without a program_id, the whole form --
+    including the success screen the applicant had just reached --
+    was torn down and replaced with a "could not determine your
+    programme" error. The last resolved programme is now retained
+    across that refresh.
+    Files: student-program.ts
+
+------------------------------------------------------------------
+WORKSTREAM 02 -- APPLICATION REVIEW (Update Application Form)
+------------------------------------------------------------------
+The page an admin (or the student themselves) uses to review and
+edit a submitted application. Every section on it was, until this
+period, showing Business School fields no matter which programme the
+applicant had actually completed.
+
+08. Found that programme-based visibility across the page was dead
+    code
+    Five existing sections read a shared flag meant to say "is this
+    a Business School application" -- but that flag was set once, to
+    Business School, when the app started, and nothing ever updated
+    it. Every application, of any programme, was rendering Business
+    School's fields.
+    Files: AppContext.tsx
+
+09. Built a shared resolver and wired it through the page
+    Added one function that reads the program_type recorded on the
+    submitted application itself -- verified directly against a real
+    production record -- and used it to keep the shared flag in sync
+    with whichever application is actually open, fixing the five
+    sections at once and closing the gap above.
+    Files: admission-schema.ts, ApplicationContainer.tsx,
+           ApplicationDetails.tsx
+
+10. Built the two Certificate-only review sections
+    Certificate applications had nowhere to show their own data.
+    Added "Programme & SSCE Details" (exam sittings, both 9-row
+    subject/grade tables) and "Institutions Attended & Place of
+    Work" (postgraduate, first-degree and SSCE institution records),
+    both editable in place in the same style as the existing
+    sections.
+    Files: CertificateAcademicInfo.tsx,
+           CertificateInstitutionsInfo.tsx
+
+11. Fixed a page crash and a subject-table rendering bug
+    The status badge crashed outright when the API returned no
+    admission_status; separately, subject/grade rows came back from
+    the API as JSON-encoded strings rather than objects, which would
+    have rendered every subject and grade blank. Both are now handled
+    defensively.
+    Files: ApplicationDetails.tsx, CertificateAcademicInfo.tsx
+
+------------------------------------------------------------------
+OPEN FOLLOW-UPS
+------------------------------------------------------------------
+[GAP]      Certificate applicants have no upload field for their
+           SSCE certificate.
+           The schema already supports ssce_certificate; the review
+           page's qualification-documents section doesn't expose it
+           yet.
+
+[EDGE CASE] Reopening the form after an application is already
+            submitted.
+            If the backend stops returning program_id once a student
+            has applied, revisiting the admission form afterward
+            could still show "could not determine your programme."
+            Likely the right fix is redirecting an already-applied
+            student away from this page rather than patching the
+            lookup further.
+
+------------------------------------------------------------------
+Compiled from the engineering session's own change log.
+Branch: main -- not yet merged/deployed beyond this branch.
+==================================================================

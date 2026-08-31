@@ -1,4 +1,4 @@
-import { ApplicationDetailsType, BusinessApplication } from '@/schemas/admission-schema';
+import { ApplicationDetailsType, BusinessApplication, resolveApplicationProgramType } from '@/schemas/admission-schema';
 import { AlertCircle, Check, Clock, X } from 'lucide-react';
 import Image from 'next/image';
 import React, { useState } from 'react';
@@ -11,10 +11,12 @@ import ProgramInfo from './editables/ProgramInfo';
 import PersonalStatementInfo from './editables/PersonalStatementInfo';
 import CareerGoalsInfo from './editables/CareerGoalsInfo';
 import QualificationDocuments from './editables/QualificationDocuments';
+import CertificateAcademicInfo from './editables/CertificateAcademicInfo';
+import CertificateInstitutionsInfo from './editables/CertificateInstitutionsInfo';
 import { FormatImageUrl } from '@/lib/imageUrl';
 import { ImagePreviewModal } from '@/components/application/ImagePreviewModal';
 import { Label } from '@/components/ui/label';
-import { ProgramType, SelectedProgramType } from '@/config';
+import { ProgramType } from '@/config';
 
 const getStatusIcon = (status: string) => {
     switch (status) {
@@ -41,6 +43,12 @@ export const ApplicationDetails = ({
     application: ApplicationDetailsType;
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const programType = resolveApplicationProgramType(application);
+    const isBusinessSchool = programType === ProgramType.BUSINESS_SCHOOL;
+    const isCertificate = programType === ProgramType.CERTIFICATE;
+    // The API doesn't always populate admission_status (seen on certificate
+    // applications) - fall back to PENDING rather than crash on `.replace()`.
+    const admissionStatus = application.admission_status || 'PENDING';
 
     return (
         <div className="bg-white rounded-lg shadow-sm">
@@ -107,9 +115,9 @@ export const ApplicationDetails = ({
                         </div>
                     </div>
 
-                    <div className={`px-4 py-2 rounded-full text-sm font-medium flex items-center space-x-2 border ${getStatusColor(application.admission_status)}`}>
-                        {getStatusIcon(application.admission_status)}
-                        <span className="capitalize">{application.admission_status.replace('_', ' ')}</span>
+                    <div className={`px-4 py-2 rounded-full text-sm font-medium flex items-center space-x-2 border ${getStatusColor(admissionStatus)}`}>
+                        {getStatusIcon(admissionStatus)}
+                        <span className="capitalize">{admissionStatus.replace('_', ' ')}</span>
                     </div>
                 </div>
             </div>
@@ -126,28 +134,36 @@ export const ApplicationDetails = ({
                     application={application}
                 />
 
-                {/* Personal Statement */}
-                {SelectedProgramType === ProgramType.BUSINESS_SCHOOL &&
+                {/* Personal Statement (Business School only) */}
+                {isBusinessSchool &&
                     <PersonalStatementInfo application={application} />
                 }
 
-                {/* Career Goals */}
-                {SelectedProgramType === ProgramType.BUSINESS_SCHOOL &&
+                {/* Career Goals (Business School only) */}
+                {isBusinessSchool &&
                     <CareerGoalsInfo application={application} />
                 }
 
                 {/* Qualification Documents */}
                 <QualificationDocuments application={application} />
 
-                {/* Academic Information */}
-                {SelectedProgramType === ProgramType.BUSINESS_SCHOOL &&
+                {/* Academic Information (Business School only) */}
+                {isBusinessSchool &&
                     <AcademicInformation application={application.application as BusinessApplication} />
                 }
 
-                {/* Work Experience */}
-                {SelectedProgramType === ProgramType.BUSINESS_SCHOOL &&
+                {/* Work Experience (Business School only) */}
+                {isBusinessSchool &&
                     <WorkExperienceInfo application={application} />
                 }
+
+                {/* Programme & SSCE Details, Institutions Attended, Place of Work (Certificate Programme only) */}
+                {isCertificate && (
+                    <>
+                        <CertificateAcademicInfo application={application} />
+                        <CertificateInstitutionsInfo application={application} />
+                    </>
+                )}
 
                 {/* Next of Kin */}
                 <NextOfkinInfo application={application} />

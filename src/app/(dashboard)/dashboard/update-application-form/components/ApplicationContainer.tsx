@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from 'react';
 import { useApplication, useApplicationReview } from '@/contexts/ApplicationReviewContext';
 import { ApplicationDetails } from './ApplicationDetails';
 import { DecisionModal } from './DecisionModal';
@@ -7,6 +8,8 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle, AlertCircleIcon } from 'lucide-react';
 import { admissionDecitionActionData, ApplicationApproveValues, ApplicationRejectValues } from '@/schemas/applicationReview-schema';
+import { resolveApplicationProgramType } from '@/schemas/admission-schema';
+import { useAppContext } from '@/contexts/AppContext';
 
 export const ApplicationContainer = ({ id }: { id: string }) => {
     const { data: application, isLoading, error } = useApplication(id);
@@ -17,6 +20,19 @@ export const ApplicationContainer = ({ id }: { id: string }) => {
         approveMutation,
         rejectMutation,
     } = useApplicationReview();
+    const { setActiveProgramType } = useAppContext();
+
+    // The rest of this review page (ProgramInfo, QualificationDocuments,
+    // CareerGoalsInfo, PersonalStatementInfo, WorkExperienceInfo, ...) reads
+    // AppContext's `isUBS`/`isODL` flags to decide which fields to show. Sync
+    // that flag to *this application's* programme - not the logged-in
+    // viewer's own, since an admin reviewing a student's application isn't
+    // enrolled in that programme themselves.
+    useEffect(() => {
+        if (application) {
+            setActiveProgramType(resolveApplicationProgramType(application));
+        }
+    }, [application, setActiveProgramType]);
 
     if (isLoading) {
         return (

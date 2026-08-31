@@ -1,9 +1,9 @@
 "use client";
 
-import { ApplicationDetailsType } from '@/schemas/admission-schema';
+import { ApplicationDetailsType, resolveApplicationProgramType } from '@/schemas/admission-schema';
 import { Edit3, FileStack, Save, X } from 'lucide-react';
 import React, { useState } from 'react';
-import { ROOT_IMAGE_URL } from '@/config';
+import { ProgramType, ROOT_IMAGE_URL } from '@/config';
 import { useEditableSection } from '@/hooks/useEditableSection';
 import { EditableFileUpload } from '@/components/forms/EditableDocumentPreviewer';
 import { useAppContext } from '@/contexts/AppContext';
@@ -19,6 +19,7 @@ type QualificationDocumentsData = {
     degree_transcript?: string | File;
     hnd?: string | File;
     degree?: string | File;
+    ssce_certificate?: string | File;
     other_documents?: (string | File)[];
 };
 
@@ -29,6 +30,7 @@ export default function QualificationDocuments({
     const [originalNewFiles, setOriginalNewFiles] = useState<File[]>([]);
     const [fieldFiles, setFieldFiles] = useState<Record<string, File | null>>({});
     const { state } = useAppContext();
+    const isCertificate = resolveApplicationProgramType(application) === ProgramType.CERTIFICATE;
 
     const buildInitialData = (): QualificationDocumentsData => {
         const baseData: QualificationDocumentsData = {
@@ -46,6 +48,14 @@ export default function QualificationDocuments({
                 degree_transcript: app.degree_transcript || undefined,
                 hnd: app.hnd || undefined,
                 degree: app.degree || undefined,
+            };
+        }
+
+        if (isCertificate) {
+            const app = application.application as QualificationDocumentsData;
+            return {
+                ...baseData,
+                ssce_certificate: app.ssce_certificate || undefined,
             };
         }
 
@@ -209,6 +219,22 @@ export default function QualificationDocuments({
                     baseUrl={ROOT_IMAGE_URL}
                     showPreview={true}
                 />
+
+                {isCertificate && (
+                    <EditableFileUpload
+                        label="SSCE certificate"
+                        value={[getFileValue(formData.ssce_certificate)]}
+                        onChange={(urls) => updateField('ssce_certificate', urls[0])}
+                        onFilesChange={(files) => handleSingleFileChange('ssce_certificate', files)}
+                        accept=".pdf,.doc,.docx,.jpg,.png"
+                        multiple={false}
+                        maxFiles={1}
+                        maxSize={10}
+                        isEditing={isEditing}
+                        baseUrl={ROOT_IMAGE_URL}
+                        showPreview={true}
+                    />
+                )}
 
                 {state.isUBS && (
                     <>

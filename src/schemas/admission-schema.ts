@@ -450,6 +450,35 @@ export interface ApplicationDetailsType extends UserInterface {
     status?: 'PENDING' | 'ADMITTED' | 'NOT_ADMITTED' | 'INPROGRESS';
 }
 
+/**
+ * Resolves which programme category (Business School vs Certificate vs ODL) a
+ * submitted application belongs to, for gating which sections of the review
+ * page are shown. Reviewers (admins) look at an arbitrary student's
+ * application, so this must be derived from the application record itself
+ * rather than the logged-in viewer's own program - it checks, in order: the
+ * backend's `program_type` discriminator (the field the API actually returns,
+ * on either the application sub-object or the outer record), then the
+ * client-side `programType` recorded on the submitted form data, then falls
+ * back to the applicant's human-readable `program` name - the same "does the
+ * name mention certificate" heuristic used to route the admission form itself.
+ */
+export function resolveApplicationProgramType(
+    application?: ApplicationDetailsType | null
+): ProgramType {
+    const submitted = application?.application as
+        | (Partial<ApplicationFormData> & { program_type?: string })
+        | undefined;
+    const outer = application as (ApplicationDetailsType & { program_type?: string }) | null | undefined;
+
+    const raw = String(
+        submitted?.program_type ?? outer?.program_type ?? submitted?.programType ?? application?.program ?? ''
+    ).toLowerCase();
+
+    if (raw.includes('certificate')) return ProgramType.CERTIFICATE;
+    if (raw.includes(ProgramType.ODL)) return ProgramType.ODL;
+    return ProgramType.BUSINESS_SCHOOL;
+}
+
 
 
 // import { UserInterface } from "@/config/Types";

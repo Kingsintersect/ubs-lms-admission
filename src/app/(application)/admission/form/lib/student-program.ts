@@ -3,7 +3,7 @@
 import { ProgramType } from "@/config";
 import { useAuth } from "@/contexts/AuthContext";
 import { apiCall } from "@/lib/apiCaller";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 export interface StudentProgramInfo {
     programType: ProgramType;
@@ -61,12 +61,42 @@ async function fetchStudentProgram(
 }
 
 export const useStudentProgram = () => {
-    const { user, access_token } = useAuth();
+    const { user, access_token, loading: authLoading } = useAuth();
     const programId = user?.program_id;
 
-    return useQuery({
+    if (!authLoading && !programId) {
+        // Surfaces as "Could not determine your admission programme" in the
+        // UI - if you see that and land here, the logged-in user's record
+        // genuinely has no program_id, which likely means the backend's
+        // `/application/profile` response (what populates the session user)
+        // doesn't include that field. Log it to compare against the actual
+        // field name/shape the API returns.
+        console.warn("[useStudentProgram] user has no program_id - full user object:", user);
+    }
+
+    const query = useQuery({
         queryKey: ["student-program", programId],
         queryFn: () => fetchStudentProgram(programId, user?.program, access_token),
-        enabled: !!programId,
+        // Don't attempt this until auth has actually finished resolving -
+        // otherwise `user` is still null on first render, programId comes up
+        // falsy, and (since a disabled react-query v5 query reports
+        // isLoading: false) the caller would flash "could not determine your
+        // programme" before auth even had a chance to populate the user.
+        enabled: !authLoading && !!programId,
+        // Submitting the application triggers a session refresh
+        // (refreshUserData) to pick up the new is_applied flag, and some
+        // backends stop returning program_id once an application exists for
+        // the user. Without this, that refetch flips programId to falsy right
+        // after a successful submit, this query goes back to "pending" for
+        // its new (disabled) key, and the whole form - including the
+        // just-earned SuccessScreen - gets torn down and replaced with the
+        // "could not determine your programme" error. Keeping the last
+        // resolved value around avoids that.
+        placeholderData: keepPreviousData,
     });
+
+    return {
+        ...query,
+        isLoading: authLoading || query.isLoading,
+    };
 };
